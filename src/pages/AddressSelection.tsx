@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, MapPin, Plus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import FlowerShopLink from '@/components/FlowerShopLink';
 
 // Sample address data
 const sampleAddresses = [
@@ -38,11 +39,14 @@ const AddressSelection: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <header className="bg-white sticky top-0 z-10 shadow-sm">
-        <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center">
-          <Link to="/" className="p-2 -ml-2 mr-2">
-            <ArrowLeft size={20} />
-          </Link>
-          <h1 className="text-2xl font-medium">Выбор адреса</h1>
+        <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <Link to="/" className="p-2 -ml-2 mr-2">
+              <ArrowLeft size={20} />
+            </Link>
+            <h1 className="text-2xl font-medium">Выбор адреса</h1>
+          </div>
+          <FlowerShopLink iconOnly />
         </div>
       </header>
       
