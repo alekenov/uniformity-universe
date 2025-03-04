@@ -135,62 +135,72 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
         <ChevronRight size={20} className="text-gray-400 flex-shrink-0 ml-2" />
       </div>
       
-      <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-        <div>
-          <label className="block text-sm text-gray-500 mb-1">Подъезд</label>
-          <input
-            type="text"
-            value={address.entrance || ''}
-            onChange={(e) => onChange('entrance', e.target.value)}
-            className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-          />
+      {deliveryType === 'other' && (
+        <div className="mb-4">
+          <div className="flex items-center space-x-2 mb-4">
+            <Checkbox 
+              id="verifyAddress" 
+              checked={verifyAddress}
+              onCheckedChange={(checked) => setVerifyAddress(checked === true)}
+            />
+            <label
+              htmlFor="verifyAddress"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Уточнить адрес у получателя
+            </label>
+          </div>
         </div>
-        <div>
-          <label className="block text-sm text-gray-500 mb-1">Домофон</label>
-          <input
-            type="text"
-            value={address.intercom || ''}
-            onChange={(e) => onChange('intercom', e.target.value)}
-            className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-          />
+      )}
+      
+      {(!verifyAddress || deliveryType !== 'other') && (
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+          <div>
+            <label className="block text-sm text-gray-500 mb-1">Подъезд</label>
+            <input
+              type="text"
+              value={address.entrance || ''}
+              onChange={(e) => onChange('entrance', e.target.value)}
+              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-500 mb-1">Домофон</label>
+            <input
+              type="text"
+              value={address.intercom || ''}
+              onChange={(e) => onChange('intercom', e.target.value)}
+              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-500 mb-1">Кв./офис</label>
+            <input
+              type="text"
+              value={address.apartment || ''}
+              onChange={(e) => onChange('apartment', e.target.value)}
+              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-500 mb-1">Этаж</label>
+            <input
+              type="text"
+              value={address.floor || ''}
+              onChange={(e) => onChange('floor', e.target.value)}
+              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+            />
+          </div>
         </div>
-        <div>
-          <label className="block text-sm text-gray-500 mb-1">Кв./офис</label>
-          <input
-            type="text"
-            value={address.apartment || ''}
-            onChange={(e) => onChange('apartment', e.target.value)}
-            className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-          />
+      )}
+
+      {verifyAddress && deliveryType === 'other' && (
+        <div className="p-4 bg-[#F9F9F9] rounded-lg border border-[#F0F0F0] mb-4">
+          <p className="text-sm text-gray-600">Адрес будет уточнен у получателя. Курьер свяжется с получателем для согласования деталей доставки.</p>
         </div>
-        <div>
-          <label className="block text-sm text-gray-500 mb-1">Этаж</label>
-          <input
-            type="text"
-            value={address.floor || ''}
-            onChange={(e) => onChange('floor', e.target.value)}
-            className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-          />
-        </div>
-      </div>
+      )}
 
       <div className="mt-6 flex items-center">
-        <div className="flex items-center space-x-2">
-          <Checkbox 
-            id="verifyAddress" 
-            checked={verifyAddress}
-            onCheckedChange={() => setVerifyAddress(!verifyAddress)}
-          />
-          <label
-            htmlFor="verifyAddress"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            Уточнить у получателя адрес
-          </label>
-        </div>
-      </div>
-      
-      <div className="mt-4 flex items-center">
         <div className="flex gap-2 items-center">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5 5C5 4.44772 5.44772 4 6 4H18C18.5523 4 19 4.44772 19 5V6C19 6.55228 18.5523 7 18 7H6C5.44772 7 5 6.55228 5 6V5Z" stroke="currentColor" strokeWidth="2"/>
