@@ -3,7 +3,7 @@ import React from 'react';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export type PaymentMethod = 'card1' | 'card2' | 'card3';
+export type PaymentMethod = string;
 
 interface PaymentCard {
   id: PaymentMethod;
