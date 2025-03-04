@@ -54,7 +54,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
           <div
             key={option.id}
             className={cn(
-              "delivery-option relative rounded-3xl border overflow-hidden",
+              "delivery-option rounded-3xl border overflow-hidden aspect-[4/3]",
               selectedType === option.id 
                 ? "border-primary" 
                 : "border-gray-200",
@@ -78,7 +78,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
               </div>
             )}
             
-            <div className="p-5 pb-7 pt-24">
+            <div className="flex flex-col justify-end h-full p-5">
               <h3 className="text-xl font-bold mb-1">{option.title}</h3>
               {option.subtitle && (
                 <p className="text-base text-gray-700">{option.subtitle}</p>
