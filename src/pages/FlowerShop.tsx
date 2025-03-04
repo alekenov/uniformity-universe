@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Flower, MapPin, Clock, Truck, Heart, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, Flower, MapPin, Clock, Truck, Heart, ShoppingBag, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
@@ -93,36 +93,38 @@ const FlowerShop: React.FC = () => {
       </header>
       
       <main className="container max-w-3xl mx-auto px-4 py-4">
-        {/* Shop cover */}
-        <div className="panel mb-4 overflow-hidden p-0">
-          <div className="relative h-48 bg-[#E5DEFF]/40">
-            <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/50 to-transparent text-white">
-              <h2 className="text-2xl font-medium">{shopInfo.name}</h2>
-              <div className="flex items-center mt-1">
-                <div className="flex items-center">
-                  <span className="text-yellow-400">★</span>
-                  <span className="ml-1">{shopInfo.rating}</span>
+        {/* Compact Shop Cover and Info */}
+        <div className="panel mb-4 p-0 overflow-hidden">
+          <div className="p-4 flex gap-3">
+            <div className="w-14 h-14 rounded-full bg-[#E5DEFF] flex items-center justify-center flex-shrink-0">
+              <Flower size={24} className="text-[#8B5CF6]" />
+            </div>
+            
+            <div className="flex-grow">
+              <div className="flex items-center justify-between mb-1">
+                <h2 className="text-xl font-medium">{shopInfo.name}</h2>
+                <div className="flex items-center text-sm">
+                  <span className="text-yellow-400 mr-1">★</span>
+                  <span>{shopInfo.rating}</span>
+                  <span className="mx-1 text-gray-400">•</span>
+                  <span className="text-gray-500">{shopInfo.reviewCount} отзывов</span>
                 </div>
-                <span className="mx-2">•</span>
-                <span>{shopInfo.reviewCount} отзывов</span>
+              </div>
+              
+              <p className="text-sm text-gray-600 mb-2 line-clamp-2">{shopInfo.description}</p>
+              
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
+                <div className="flex items-center">
+                  <MapPin size={14} className="mr-1" />
+                  <span>{shopInfo.address}</span>
+                </div>
+                
+                <div className="flex items-center">
+                  <Clock size={14} className="mr-1" />
+                  <span>8:00 - 22:00</span>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-        
-        {/* Shop info */}
-        <div className="panel mb-4">
-          <h3 className="font-medium text-lg mb-2">О магазине</h3>
-          <p className="text-gray-700 mb-3">{shopInfo.description}</p>
-          
-          <div className="flex items-center text-sm text-gray-600 mb-1">
-            <MapPin size={16} className="mr-1" />
-            <span>{shopInfo.address}</span>
-          </div>
-          
-          <div className="flex items-center text-sm text-gray-600">
-            <Clock size={16} className="mr-1" />
-            <span>Работаем с 8:00 до 22:00</span>
           </div>
         </div>
         
