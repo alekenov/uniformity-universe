@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -40,7 +41,7 @@ const paymentCards = [
 const Index: React.FC = () => {
   const { toast } = useToast();
   const [products, setProducts] = useState(initialProducts);
-  const [deliveryType, setDeliveryType] = useState<DeliveryType>('self');
+  const [deliveryType, setDeliveryType] = useState<DeliveryType>('standard');
   const [deliveryTime, setDeliveryTime] = useState<DeliveryTime>('today');
   const [paymentMethod, setPaymentMethod] = useState('card1');
   
@@ -82,7 +83,7 @@ const Index: React.FC = () => {
   
   // Calculate order summary
   const subtotal = products.reduce((sum, product) => sum + (product.price * product.quantity), 0);
-  const deliveryFee = 0; // Free delivery
+  const deliveryFee = deliveryType === 'priority' ? 149 : 0;
   const serviceFee = 990;
   const total = subtotal + deliveryFee + serviceFee;
   
@@ -91,7 +92,7 @@ const Index: React.FC = () => {
       <header className="bg-white sticky top-0 z-10 shadow-sm">
         <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center">
           <Link to="/cart" className="p-2 -ml-2 mr-2">
-            <ArrowLeft size={20} />
+            <ArrowLeft size={24} />
           </Link>
           <h1 className="text-2xl font-medium">Оформление заказа</h1>
           {products.length > 0 && (
