@@ -57,9 +57,30 @@ const initialStores: Store[] = [
   {
     id: '2',
     name: 'METRO',
-    status: 'Закрыто',
-    total: 0,
-    products: [],
+    status: 'Открыто',
+    total: 21700,
+    products: [
+      {
+        id: 'm1',
+        name: 'Сыр "Пармезан" выдержанный 24 месяца',
+        description: 'Италия',
+        price: 12900,
+        oldPrice: 14500,
+        quantity: 1,
+        weight: '250 г',
+        image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
+      },
+      {
+        id: 'm2',
+        name: 'Виноград красный "Кишмиш"',
+        description: 'Узбекистан',
+        price: 8800,
+        quantity: 1,
+        unit: 'кг',
+        weight: '1 кг',
+        image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig',
+      },
+    ],
   },
 ];
 
