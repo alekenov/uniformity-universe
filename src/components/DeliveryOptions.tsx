@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -41,6 +41,18 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   onTypeChange,
   onTimeChange,
 }) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -120 : 120;
+      scrollContainerRef.current.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Доставка</h2>
@@ -103,22 +115,33 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
         </div>
       </div>
       
-      <div className="flex flex-wrap gap-3">
-        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full font-medium text-primary">
-          Как можно скорее
+      <div className="relative">
+        <div 
+          ref={scrollContainerRef}
+          className="flex overflow-x-auto pb-2 scrollbar-hide gap-3 scroll-smooth"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full font-medium text-primary flex-shrink-0">
+            Как можно скорее
+          </div>
+          <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full flex-shrink-0">
+            12-15 час
+          </div>
+          <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full flex-shrink-0">
+            15-18 час
+          </div>
+          <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full flex-shrink-0">
+            18-21 час
+          </div>
+          <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full flex-shrink-0">
+            21-23 час
+          </div>
         </div>
-        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
-          12-15 час
-        </div>
-        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
-          15-18 час
-        </div>
-        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
-          18-21 час
-        </div>
-        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
-          21-23 час
-        </div>
+        <style jsx>{`
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
       </div>
     </div>
   );
