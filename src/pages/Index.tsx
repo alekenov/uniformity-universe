@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -115,22 +116,6 @@ const Index: React.FC = () => {
       <main className="container max-w-3xl mx-auto px-4 py-6 pb-24">
         {products.length > 0 ? (
           <>
-            <div className="panel mb-4">
-              <div className="mb-2">
-                {products.map((product) => (
-                  <CartItem
-                    key={product.id}
-                    {...product}
-                    onQuantityChange={handleQuantityChange}
-                  />
-                ))}
-              </div>
-              
-              <button className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline">
-                Перейти в магазин
-              </button>
-            </div>
-            
             <DeliveryOptions
               selectedType={deliveryType}
               selectedTime={deliveryTime}
