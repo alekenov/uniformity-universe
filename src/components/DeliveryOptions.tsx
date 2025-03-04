@@ -122,15 +122,21 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
       </div>
       
       <div className="flex flex-wrap gap-3">
-        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
-          120-150 мин
+        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full font-medium text-primary">
+          Как можно скорее
         </div>
-        <button className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full flex items-center">
-          Места на Завтра
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-1">
-            <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
+        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
+          12-15 час
+        </div>
+        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
+          15-18 час
+        </div>
+        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
+          18-21 час
+        </div>
+        <div className="bg-[#F8F8F8] text-sm py-2 px-4 rounded-full">
+          21-23 час
+        </div>
       </div>
     </div>
   );
