@@ -1,6 +1,6 @@
 
 import React, { useRef } from 'react';
-import { Clock, Package, User, Home } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export type DeliveryType = 'other' | 'self' | 'pickup';
@@ -11,7 +11,6 @@ interface DeliveryOption {
   title: string;
   description?: string;
   additionalPrice?: number;
-  icon: React.ReactNode;
   color: string;
 }
 
@@ -26,19 +25,16 @@ const deliveryOptions: DeliveryOption[] = [
   {
     id: 'other',
     title: 'Заказ другому',
-    icon: <Package size={24} />,
     color: '#E5DEFF',
   },
   {
     id: 'self',
     title: 'Сам получатель',
-    icon: <User size={24} />,
     color: '#FEF7CD',
   },
   {
     id: 'pickup',
     title: 'Самовывоз',
-    icon: <Home size={24} />,
     color: '#F2FCE2',
   },
 ];
@@ -82,15 +78,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
                 +{option.additionalPrice} ₽
               </div>
             )}
-            <div className="flex flex-col items-center justify-center p-4 rounded-[16px]">
-              <div className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center mb-2",
-                selectedType === option.id 
-                  ? "bg-primary/10 text-primary" 
-                  : `bg-[${option.color}] text-gray-600`
-              )}>
-                {option.icon}
-              </div>
+            <div className="flex flex-col items-center justify-center p-2 rounded-[16px]">
               <span className="text-sm font-medium">{option.title}</span>
             </div>
             {option.description && (
