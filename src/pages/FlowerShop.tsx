@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -459,15 +458,14 @@ const FlowerShop: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
+      {/* Modified header - removed title and cart icon */}
       <header className="bg-white sticky top-0 z-10 shadow-sm">
         <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center">
-          <Link to="/" className="p-2 -ml-2 mr-2">
+          <Link to="/" className="p-2 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors">
             <ArrowLeft size={20} />
           </Link>
-          <h1 className="text-xl font-medium">Цветочный магазин</h1>
-          <div className="ml-auto">
-            <CartIcon />
-          </div>
+          {/* Title removed */}
+          {/* Cart icon temporarily removed */}
         </div>
       </header>
       
