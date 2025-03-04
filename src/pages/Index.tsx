@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -131,6 +132,7 @@ const Index: React.FC = () => {
                   description: "Здесь будет форма редактирования адреса",
                 });
               }}
+              deliveryType={deliveryType}
             />
             
             <PaymentOptions
