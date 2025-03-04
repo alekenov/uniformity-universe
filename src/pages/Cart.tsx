@@ -3,7 +3,8 @@ import { ArrowLeft, Trash2, ShoppingBag, ChevronRight } from 'lucide-react';
 import CartItem from '@/components/CartItem';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import FlowerShopLink from '@/components/FlowerShopLink';
 
 // Define store types
 interface Store {
@@ -118,6 +119,7 @@ const suggestionProducts: Product[] = [
 
 const Cart: React.FC = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [stores, setStores] = useState(initialStores);
   const [activeStoreId, setActiveStoreId] = useState(initialStores[0].id);
   
@@ -200,7 +202,10 @@ const Cart: React.FC = () => {
     <div className="min-h-screen bg-[#F9F9F9]">
       <header className="bg-white sticky top-0 z-10 shadow-sm">
         <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center">
-          <button className="p-2 -ml-2 mr-2">
+          <button 
+            className="p-2 -ml-2 mr-2"
+            onClick={() => navigate('/flower-shop')}
+          >
             <ArrowLeft size={20} />
           </button>
           <h1 className="text-2xl font-medium">Корзина</h1>
