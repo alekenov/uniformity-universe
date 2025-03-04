@@ -3,7 +3,7 @@ import React from 'react';
 import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-export type DeliveryType = 'priority' | 'standard' | 'someone';
+export type DeliveryType = 'other' | 'self' | 'pickup';
 export type DeliveryTime = 'today' | 'tomorrow';
 
 interface DeliveryOption {
@@ -22,18 +22,16 @@ interface DeliveryOptionsProps {
 
 const deliveryOptions: DeliveryOption[] = [
   {
-    id: 'priority',
-    title: 'Приоритет',
-    description: 'Самая быстрая',
-    additionalPrice: 199,
-  },
-  {
-    id: 'standard',
-    title: 'Стандарт',
-  },
-  {
-    id: 'someone',
+    id: 'other',
     title: 'Заказ другому',
+  },
+  {
+    id: 'self',
+    title: 'Сам получатель',
+  },
+  {
+    id: 'pickup',
+    title: 'Самовывоз',
   },
 ];
 
@@ -66,27 +64,30 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
                 ? "bg-primary text-white" 
                 : "bg-[#F8F8F8] text-gray-400"
             )}>
-              {option.id === 'priority' && (
-                <div className="w-4 h-4 rounded-full bg-white"></div>
-              )}
-              {option.id === 'standard' && (
+              {option.id === 'other' && (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 13L9 17L19 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M8.5 11C10.7091 11 12.5 9.20914 12.5 7C12.5 4.79086 10.7091 3 8.5 3C6.29086 3 4.5 4.79086 4.5 7C4.5 9.20914 6.29086 11 8.5 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M20 8L20 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M23 11L17 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               )}
-              {option.id === 'someone' && (
+              {option.id === 'self' && (
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2"/>
                   <path d="M18 20C18 16.6863 15.3137 14 12 14C8.68629 14 6 16.6863 6 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
+              )}
+              {option.id === 'pickup' && (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 9V1M19 9H5C3.89543 9 3 9.89543 3 11V15C3 16.1046 3.89543 17 5 17H19C20.1046 17 21 16.1046 21 15V11C21 9.89543 20.1046 9 19 9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M17 21L14 17H10L7 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               )}
             </div>
             <span className="text-sm font-medium">{option.title}</span>
             {option.description && (
               <span className="text-xs text-gray-500">{option.description}</span>
-            )}
-            {option.id === 'priority' && (
-              <span className="text-xs text-[#4BA3E3]">Сразу к вам</span>
             )}
           </div>
         ))}
