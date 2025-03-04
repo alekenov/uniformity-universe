@@ -52,16 +52,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </div>
         </>
       )}
-      
-      <div className="mt-2">
-        <button 
-          className="flex items-center justify-between w-full py-2 text-[#4BA3E3] border-t border-[#F0F0F0] pt-2"
-          onClick={() => {}}
-        >
-          <span className="font-medium">Комментарий магазину</span>
-          <ChevronRight size={16} />
-        </button>
-      </div>
     </div>
   );
 };
