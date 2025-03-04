@@ -60,23 +60,23 @@ const CartItem: React.FC<CartItemProps> = ({
         </div>
       </div>
       <div className="flex items-center justify-end ml-4">
-        <div className="flex items-center bg-[#F8F8F8] rounded-full">
+        <div className="flex items-center bg-[#F8F8F8] rounded-full h-7">
           <button
             onClick={() => onQuantityChange(id, Math.max(0, quantity - 1))}
-            className="w-8 h-8 flex items-center justify-center text-gray-500"
+            className="w-7 h-7 flex items-center justify-center text-gray-500"
             aria-label="Decrease quantity"
           >
-            <Minus size={16} />
+            <Minus size={14} strokeWidth={2.5} />
           </button>
-          <span className="w-8 text-center font-medium">
+          <span className="w-7 text-center font-medium text-sm">
             {unit === "кг" ? `${quantity.toFixed(1)}кг` : quantity}
           </span>
           <button
             onClick={() => onQuantityChange(id, quantity + 1)}
-            className="w-8 h-8 flex items-center justify-center text-gray-500"
+            className="w-7 h-7 flex items-center justify-center text-gray-500"
             aria-label="Increase quantity"
           >
-            <Plus size={16} />
+            <Plus size={14} strokeWidth={2.5} />
           </button>
         </div>
       </div>
