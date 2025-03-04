@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, Heart, ShoppingBag, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -114,11 +113,6 @@ const FlowerShop: React.FC = () => {
               <p className="text-sm text-gray-600 mb-2 line-clamp-2">{shopInfo.description}</p>
               
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
-                <div className="flex items-center">
-                  <MapPin size={14} className="mr-1" />
-                  <span>{shopInfo.address}</span>
-                </div>
-                
                 <div className="flex items-center">
                   <Clock size={14} className="mr-1" />
                   <span>8:00 - 22:00</span>
