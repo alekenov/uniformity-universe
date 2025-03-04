@@ -124,16 +124,18 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Куда</h2>
       
-      <div className="flex items-start border-b border-[#F0F0F0] pb-4 mb-4 cursor-pointer" onClick={handleAddressClick}>
-        <div className="flex-shrink-0 w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center mr-3">
-          <Home size={16} className="text-gray-600" />
+      {(!verifyAddress || deliveryType !== 'other') && (
+        <div className="flex items-start border-b border-[#F0F0F0] pb-4 mb-4 cursor-pointer" onClick={handleAddressClick}>
+          <div className="flex-shrink-0 w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center mr-3">
+            <Home size={16} className="text-gray-600" />
+          </div>
+          <div className="flex-grow">
+            <div className="font-medium">{address.street}</div>
+            <div className="text-sm text-gray-500">{address.city}</div>
+          </div>
+          <ChevronRight size={20} className="text-gray-400 flex-shrink-0 ml-2" />
         </div>
-        <div className="flex-grow">
-          <div className="font-medium">{address.street}</div>
-          <div className="text-sm text-gray-500">{address.city}</div>
-        </div>
-        <ChevronRight size={20} className="text-gray-400 flex-shrink-0 ml-2" />
-      </div>
+      )}
       
       {deliveryType === 'other' && (
         <div className="mb-4">
