@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,6 +6,8 @@ import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useCart } from '@/contexts/CartContext';
+import CartIcon from '@/components/CartIcon';
 
 interface FlowerProduct {
   id: string;
@@ -266,7 +267,21 @@ const ProductImageSlider = ({ images }: { images: string[] }) => {
   );
 };
 
-const ProductCard = ({ product }: { product: FlowerProduct }) => {
+const ProductCard = ({ product, shopId, shopName }: { product: FlowerProduct, shopId: string, shopName: string }) => {
+  const { addToCart } = useCart();
+  
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      quantity: 1,
+      shopId,
+      shopName
+    });
+  };
+  
   return (
     <div className="bg-white border border-[#F0F0F0] rounded-lg overflow-hidden">
       <div className="aspect-square overflow-hidden relative">
@@ -296,7 +311,10 @@ const ProductCard = ({ product }: { product: FlowerProduct }) => {
         
         <div className="flex justify-between items-center">
           <div className="font-medium">{product.price} ₸</div>
-          <button className="w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center hover:bg-[#F0F0F0] transition-colors">
+          <button 
+            className="w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center hover:bg-[#F0F0F0] transition-colors"
+            onClick={handleAddToCart}
+          >
             <ShoppingBag size={16} className="text-gray-600" />
           </button>
         </div>
@@ -433,6 +451,9 @@ const FlowerShop: React.FC = () => {
             <ArrowLeft size={20} />
           </Link>
           <h1 className="text-xl font-medium">Цветочный магазин</h1>
+          <div className="ml-auto">
+            <CartIcon />
+          </div>
         </div>
       </header>
       
@@ -577,7 +598,10 @@ const FlowerShop: React.FC = () => {
                       <div className="text-sm">{shopInfo.rating} <span className="text-gray-500">• {shopInfo.reviewCount} отзывов</span></div>
                     </div>
                     
-                    <button className="flex items-center justify-center gap-1 bg-[#8B5CF6] text-white py-2 px-4 rounded-lg hover:bg-[#7C3AED] transition-colors">
+                    <button 
+                      className="flex items-center justify-center gap-1 bg-[#8B5CF6] text-white py-2 px-4 rounded-lg hover:bg-[#7C3AED] transition-colors"
+                      onClick={() => handleAddToCart(product)}
+                    >
                       <ShoppingBag size={16} />
                       <span>В корзину</span>
                     </button>
@@ -594,7 +618,12 @@ const FlowerShop: React.FC = () => {
           
           <div className="grid grid-cols-2 gap-3">
             {flowerProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard 
+                key={product.id} 
+                product={product}
+                shopId="flower-shop-1"
+                shopName={shopInfo.name}
+              />
             ))}
           </div>
           
@@ -609,7 +638,7 @@ const FlowerShop: React.FC = () => {
           
           <div className="grid grid-cols-2 gap-3">
             {birthdayProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} shopId="flower-shop-1" shopName={shopInfo.name} />
             ))}
           </div>
           
@@ -624,7 +653,7 @@ const FlowerShop: React.FC = () => {
           
           <div className="grid grid-cols-2 gap-3">
             {specialOfferProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} shopId="flower-shop-1" shopName={shopInfo.name} />
             ))}
           </div>
           
