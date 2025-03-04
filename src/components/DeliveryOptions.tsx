@@ -1,3 +1,4 @@
+
 import React, { useRef } from 'react';
 import { Clock, Package, User, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -81,23 +82,16 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
                 +{option.additionalPrice} ₽
               </div>
             )}
-            <div className="w-full pb-[75%] relative">
+            <div className="flex flex-col items-center justify-center p-4 rounded-[16px]">
               <div className={cn(
-                "absolute inset-0 flex flex-col items-center justify-center rounded-[16px]",
+                "w-10 h-10 rounded-full flex items-center justify-center mb-2",
                 selectedType === option.id 
-                  ? "bg-white text-primary border border-primary/20" 
+                  ? "bg-primary/10 text-primary" 
                   : `bg-[${option.color}] text-gray-600`
               )}>
-                <div className={cn(
-                  "w-10 h-10 rounded-full flex items-center justify-center mb-2",
-                  selectedType === option.id 
-                    ? "bg-primary/10 text-primary" 
-                    : "bg-white/60 text-gray-600"
-                )}>
-                  {option.icon}
-                </div>
-                <span className="text-sm font-medium">{option.title}</span>
+                {option.icon}
               </div>
+              <span className="text-sm font-medium">{option.title}</span>
             </div>
             {option.description && (
               <span className="text-xs text-gray-500">{option.description}</span>
