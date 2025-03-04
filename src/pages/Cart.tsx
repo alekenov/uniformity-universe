@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2, ShoppingBag, ChevronRight } from 'lucide-react';
 import CartItem from '@/components/CartItem';
@@ -250,12 +249,12 @@ const Cart: React.FC = () => {
               }}
             />
             
-            {/* Suggestions section */}
-            <div className="mt-8">
-              <h2 className="text-2xl font-medium mb-4">Что-то ещё?</h2>
-              <div className="grid grid-cols-3 gap-4">
+            {/* Suggestions section - more compact now */}
+            <div className="mt-5">
+              <h2 className="text-lg font-medium mb-3">Что-то ещё?</h2>
+              <div className="grid grid-cols-3 gap-3">
                 {suggestionProducts.map(product => (
-                  <div key={product.id} className="bg-white rounded-lg overflow-hidden">
+                  <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm">
                     <div className="aspect-square bg-[#f9f9f9] flex items-center justify-center">
                       <img 
                         src={product.image} 
@@ -263,15 +262,15 @@ const Cart: React.FC = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="p-3">
-                      <div className="font-medium text-lg">{product.price} ₸</div>
-                      <div className="text-sm">{product.name}</div>
-                      <div className="text-xs text-gray-500">{product.weight}</div>
+                    <div className="p-2">
+                      <div className="font-medium text-sm">{product.price} ₸</div>
+                      <div className="text-xs line-clamp-1">{product.name}</div>
+                      <div className="text-xs text-gray-500 mb-1">{product.weight}</div>
                       <button 
                         onClick={() => addSuggestionToCart(product)}
-                        className="mt-2 w-full flex items-center justify-center py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                        className="w-full flex items-center justify-center py-1.5 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 text-xs"
                       >
-                        <span className="text-xl">+</span>
+                        <span className="text-lg">+</span>
                       </button>
                     </div>
                   </div>
