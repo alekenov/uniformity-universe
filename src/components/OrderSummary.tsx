@@ -33,7 +33,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       
       <div className="flex justify-between mb-3">
         <span>Товары в заказе</span>
-        <span className="font-medium">{subtotal} ₽</span>
+        <span className="font-medium">{subtotal} ₸</span>
       </div>
       
       {isExpanded && (
@@ -43,12 +43,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
               <span>Доставка</span>
               <ChevronDown size={16} className="ml-1 text-gray-400" />
             </div>
-            <span>{deliveryFee === 0 ? "0 ₽" : `${deliveryFee} ₽`}</span>
+            <span>{deliveryFee === 0 ? "0 ₸" : `${deliveryFee} ₸`}</span>
           </div>
           
           <div className="flex justify-between mb-4">
             <span>Сервисный сбор</span>
-            <span>{serviceFee} ₽</span>
+            <span>{serviceFee} ₸</span>
           </div>
         </>
       )}
@@ -56,7 +56,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       <div className="mt-6">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center">
-            <span className="font-medium text-lg">{total} ₽</span>
+            <span className="font-medium text-lg">{total} ₸</span>
             <button 
               className="ml-2 text-xs text-gray-500 hover:text-gray-700 underline"
               onClick={() => setIsExpanded(!isExpanded)}

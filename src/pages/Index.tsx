@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,23 +8,23 @@ import PaymentOptions from '@/components/PaymentOptions';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
 
-// Sample product data
+// Sample product data - flower bouquets
 const initialProducts = [
   {
     id: '1',
-    name: 'Соус для обжаривания лапши Sen Soy Premium Wok',
-    description: '310 г',
-    price: 159,
-    oldPrice: 199,
+    name: 'Букет "Нежная весна" из розовых тюльпанов',
+    description: '15 шт',
+    price: 15900,
+    oldPrice: 19900,
     quantity: 1,
     image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig',
   },
   {
     id: '2',
-    name: 'Зубная щетка Splat Special Blackwood Medium средней жесткости',
-    description: '1 шт',
-    price: 179,
-    oldPrice: 224,
+    name: 'Букет "Солнечный день" из желтых роз',
+    description: '11 шт',
+    price: 17900,
+    oldPrice: 22400,
     quantity: 1,
     image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
   },
@@ -84,7 +83,7 @@ const Index: React.FC = () => {
   // Calculate order summary
   const subtotal = products.reduce((sum, product) => sum + (product.price * product.quantity), 0);
   const deliveryFee = 0; // Free delivery
-  const serviceFee = 99;
+  const serviceFee = 990;
   const total = subtotal + deliveryFee + serviceFee;
   
   return (

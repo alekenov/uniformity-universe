@@ -44,11 +44,11 @@ const CartItem: React.FC<CartItemProps> = ({
           )}
           <div className="flex items-center mt-1">
             <span className="text-[#FF6633] font-medium mr-2">
-              {price} ₽
+              {price} ₸
             </span>
             {oldPrice && (
               <span className="text-gray-400 text-sm line-through">
-                {oldPrice} ₽
+                {oldPrice} ₸
               </span>
             )}
             {unit && unit !== "шт" && (
