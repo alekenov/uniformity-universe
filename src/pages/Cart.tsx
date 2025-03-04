@@ -259,19 +259,8 @@ const Cart: React.FC = () => {
               </button>
             </div>
             
-            <OrderSummary
-              subtotal={subtotal}
-              deliveryFee={deliveryFee}
-              serviceFee={serviceFee}
-              total={total}
-              onSubmit={() => {
-                // Navigate to checkout page
-                window.location.href = '/';
-              }}
-            />
-            
-            {/* Suggestions section - more compact now */}
-            <div className="mt-5">
+            {/* Suggestions section - moved up */}
+            <div className="mb-4">
               <h2 className="text-lg font-medium mb-3">Что-то ещё?</h2>
               <div className="grid grid-cols-3 gap-3">
                 {suggestionProducts.map(product => (
@@ -298,6 +287,17 @@ const Cart: React.FC = () => {
                 ))}
               </div>
             </div>
+            
+            <OrderSummary
+              subtotal={subtotal}
+              deliveryFee={deliveryFee}
+              serviceFee={serviceFee}
+              total={total}
+              onSubmit={() => {
+                // Navigate to checkout page
+                window.location.href = '/';
+              }}
+            />
             
             <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
               <div className="container max-w-3xl mx-auto">
