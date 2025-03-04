@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -588,7 +589,7 @@ const FlowerShop: React.FC = () => {
         </div>
         
         {/* Popular Products */}
-        <div className="panel">
+        <div className="panel mb-4">
           <h3 className="font-medium text-lg mb-4">Популярные товары</h3>
           
           <div className="grid grid-cols-2 gap-3">
@@ -603,7 +604,7 @@ const FlowerShop: React.FC = () => {
         </div>
         
         {/* Birthday Products */}
-        <div className="panel">
+        <div className="panel mb-4">
           <h3 className="font-medium text-lg mb-4">Букеты на день рождения</h3>
           
           <div className="grid grid-cols-2 gap-3">
@@ -618,7 +619,7 @@ const FlowerShop: React.FC = () => {
         </div>
         
         {/* Special Offers */}
-        <div className="panel">
+        <div className="panel mb-4">
           <h3 className="font-medium text-lg mb-4">Специальные предложения</h3>
           
           <div className="grid grid-cols-2 gap-3">
@@ -627,4 +628,52 @@ const FlowerShop: React.FC = () => {
             ))}
           </div>
           
-          <Button className="w
+          <Button className="w-full mt-4">
+            Смотреть все предложения
+          </Button>
+        </div>
+        
+        {/* Reviews Section */}
+        <div className="panel">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-medium text-lg">Отзывы клиентов</h3>
+            <Button variant="outline" size="sm" className="gap-1">
+              <MessageCircle size={16} />
+              Все отзывы
+            </Button>
+          </div>
+          
+          <div className="space-y-4">
+            {reviews.map((review) => (
+              <div key={review.id} className="p-4 bg-[#F8F8F8] rounded-lg">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <div className="font-medium">{review.author}</div>
+                    <div className="text-xs text-gray-500">{review.date}</div>
+                  </div>
+                  <div className="flex items-center">
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <Star 
+                        key={idx} 
+                        size={14} 
+                        className={idx < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-sm text-gray-700 mb-2">{review.text}</p>
+                <div className="flex items-center text-xs text-gray-500">
+                  <button className="flex items-center gap-1 hover:text-gray-700">
+                    <span>{review.helpful} пользователям помог этот отзыв</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default FlowerShop;
