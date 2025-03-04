@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { Home, ChevronRight } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
+import { useNavigate } from 'react-router-dom';
 
 interface AddressInfo {
   street: string;
@@ -20,12 +20,17 @@ interface AddressPanelProps {
 
 const AddressPanel: React.FC<AddressPanelProps> = ({ address, onChange, onEdit }) => {
   const [verifyAddress, setVerifyAddress] = useState(false);
+  const navigate = useNavigate();
+  
+  const handleAddressClick = () => {
+    navigate('/address-selection');
+  };
   
   return (
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Куда</h2>
       
-      <div className="flex items-start border-b border-[#F0F0F0] pb-4 mb-4 cursor-pointer" onClick={onEdit}>
+      <div className="flex items-start border-b border-[#F0F0F0] pb-4 mb-4 cursor-pointer" onClick={handleAddressClick}>
         <div className="flex-shrink-0 w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center mr-3">
           <Home size={16} className="text-gray-600" />
         </div>
