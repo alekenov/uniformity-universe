@@ -45,23 +45,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           <span className="text-gray-600">Товары в заказе</span>
           <span className="font-medium">{subtotal} ₸</span>
         </div>
-        
-        {isExpanded && (
-          <div className={cn(
-            "space-y-3 transition-all duration-200",
-            isExpanded ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
-          )}>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600">Доставка</span>
-              <span>{deliveryFee === 0 ? "Бесплатно" : `${deliveryFee} ₸`}</span>
-            </div>
-            
-            <div className="flex justify-between">
-              <span className="text-gray-600">Сервисный сбор</span>
-              <span>{serviceFee} ₸</span>
-            </div>
-          </div>
-        )}
 
         <div className="border-t border-gray-100 pt-3 mt-3">
           <div className="flex justify-between mb-5">
