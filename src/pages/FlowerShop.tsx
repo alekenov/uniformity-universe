@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, Heart, ShoppingBag, Info, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -104,18 +103,6 @@ const flowerProducts: FlowerProduct[] = [
 const ProductImageSlider = ({ images }: { images: string[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const goToPrevious = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const goToNext = () => {
-    const isLastSlide = currentIndex === images.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    setCurrentIndex(newIndex);
-  };
-
   const goToSlide = (slideIndex: number) => {
     setCurrentIndex(slideIndex);
   };
@@ -130,21 +117,6 @@ const ProductImageSlider = ({ images }: { images: string[] }) => {
       
       {images.length > 1 && (
         <>
-          {/* Navigation arrows */}
-          <button 
-            onClick={(e) => { e.stopPropagation(); goToPrevious(); }} 
-            className="absolute top-1/2 left-3 -translate-y-1/2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md z-10"
-          >
-            <ChevronLeft size={16} className="text-gray-700" />
-          </button>
-          
-          <button 
-            onClick={(e) => { e.stopPropagation(); goToNext(); }} 
-            className="absolute top-1/2 right-3 -translate-y-1/2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md z-10"
-          >
-            <ChevronRight size={16} className="text-gray-700" />
-          </button>
-          
           {/* Thumbnail dots */}
           <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {images.map((_, slideIndex) => (
