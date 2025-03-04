@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, Heart, ShoppingBag, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -138,48 +137,7 @@ const FlowerShop: React.FC = () => {
           </div>
         </div>
         
-        {/* Featured Products - Large Airbnb-style Cards */}
-        <div className="mb-6">
-          <div className="space-y-6">
-            {featuredProducts.map((product) => (
-              <div key={product.id} className="relative rounded-2xl overflow-hidden shadow-md bg-white border border-[#F0F0F0]">
-                <div className="aspect-[16/9] overflow-hidden">
-                  <img 
-                    src={product.image} 
-                    alt={product.name} 
-                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
-                  />
-                  <button className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
-                    <Heart size={20} className="text-gray-600 hover:text-pink-500 transition-colors" />
-                  </button>
-                </div>
-                
-                <div className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-lg">{product.name}</h3>
-                    <span className="bg-[#F8F8F8] py-1 px-3 rounded-full text-sm font-medium">{product.price} ₸</span>
-                  </div>
-                  
-                  <p className="text-gray-600 text-sm mb-4">{product.description}</p>
-                  
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <div className="text-yellow-400 mr-1">★</div>
-                      <div className="text-sm">{shopInfo.rating} <span className="text-gray-500">• {shopInfo.reviewCount} отзывов</span></div>
-                    </div>
-                    
-                    <button className="flex items-center justify-center gap-1 bg-[#8B5CF6] text-white py-2 px-4 rounded-lg hover:bg-[#7C3AED] transition-colors">
-                      <ShoppingBag size={16} />
-                      <span>В корзину</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Delivery info */}
+        {/* Delivery info - MOVED UP */}
         <div className="panel mb-4">
           <h3 className="font-medium text-lg mb-3">Доставка</h3>
           
@@ -253,6 +211,47 @@ const FlowerShop: React.FC = () => {
           )}
         </div>
         
+        {/* Featured Products - Large Airbnb-style Cards */}
+        <div className="mb-6">
+          <div className="space-y-6">
+            {featuredProducts.map((product) => (
+              <div key={product.id} className="relative rounded-2xl overflow-hidden shadow-md bg-white border border-[#F0F0F0]">
+                <div className="aspect-square overflow-hidden">
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                  />
+                  <button className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
+                    <Heart size={20} className="text-gray-600 hover:text-pink-500 transition-colors" />
+                  </button>
+                </div>
+                
+                <div className="p-4">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-medium text-lg">{product.name}</h3>
+                    <span className="bg-[#F8F8F8] py-1 px-3 rounded-full text-sm font-medium">{product.price} ₸</span>
+                  </div>
+                  
+                  <p className="text-gray-600 text-sm mb-4">{product.description}</p>
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <div className="text-yellow-400 mr-1">★</div>
+                      <div className="text-sm">{shopInfo.rating} <span className="text-gray-500">• {shopInfo.reviewCount} отзывов</span></div>
+                    </div>
+                    
+                    <button className="flex items-center justify-center gap-1 bg-[#8B5CF6] text-white py-2 px-4 rounded-lg hover:bg-[#7C3AED] transition-colors">
+                      <ShoppingBag size={16} />
+                      <span>В корзину</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
         {/* Products */}
         <div className="panel">
           <h3 className="font-medium text-lg mb-4">Популярные товары</h3>
@@ -260,7 +259,7 @@ const FlowerShop: React.FC = () => {
           <div className="grid grid-cols-2 gap-3">
             {flowerProducts.map((product) => (
               <div key={product.id} className="bg-white border border-[#F0F0F0] rounded-lg overflow-hidden">
-                <div className="h-40 overflow-hidden relative">
+                <div className="aspect-square overflow-hidden relative">
                   <img 
                     src={product.image} 
                     alt={product.name} 
