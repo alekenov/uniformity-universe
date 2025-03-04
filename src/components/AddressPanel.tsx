@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Home, ChevronRight, MapPin, Clock } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -115,19 +116,6 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Куда</h2>
       
-      {(!verifyAddress || deliveryType !== 'other') && (
-        <div className="flex items-start border-b border-[#F0F0F0] pb-4 mb-4 cursor-pointer" onClick={handleAddressClick}>
-          <div className="flex-shrink-0 w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center mr-3">
-            <Home size={16} className="text-gray-600" />
-          </div>
-          <div className="flex-grow">
-            <div className="font-medium">{address.street}</div>
-            <div className="text-sm text-gray-500">{address.city}</div>
-          </div>
-          <ChevronRight size={20} className="text-gray-400 flex-shrink-0 ml-2" />
-        </div>
-      )}
-      
       {deliveryType === 'other' && (
         <div className="mb-4">
           <div className="flex items-center space-x-2 mb-4">
@@ -143,54 +131,67 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
               Уточнить адрес у получателя
             </label>
           </div>
+          
+          {verifyAddress && (
+            <div className="p-4 bg-[#F9F9F9] rounded-lg border border-[#F0F0F0] mb-4">
+              <p className="text-sm text-gray-600">Адрес будет уточнен у получателя. Курьер свяжется с получателем для согласования деталей доставки.</p>
+            </div>
+          )}
         </div>
       )}
       
       {(!verifyAddress || deliveryType !== 'other') && (
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-          <div>
-            <label className="block text-sm text-gray-500 mb-1">Подъезд</label>
-            <input
-              type="text"
-              value={address.entrance || ''}
-              onChange={(e) => onChange('entrance', e.target.value)}
-              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-            />
+        <>
+          <div className="flex items-start border-b border-[#F0F0F0] pb-4 mb-4 cursor-pointer" onClick={handleAddressClick}>
+            <div className="flex-shrink-0 w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center mr-3">
+              <Home size={16} className="text-gray-600" />
+            </div>
+            <div className="flex-grow">
+              <div className="font-medium">{address.street}</div>
+              <div className="text-sm text-gray-500">{address.city}</div>
+            </div>
+            <ChevronRight size={20} className="text-gray-400 flex-shrink-0 ml-2" />
           </div>
-          <div>
-            <label className="block text-sm text-gray-500 mb-1">Домофон</label>
-            <input
-              type="text"
-              value={address.intercom || ''}
-              onChange={(e) => onChange('intercom', e.target.value)}
-              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-            />
+          
+          <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+            <div>
+              <label className="block text-sm text-gray-500 mb-1">Подъезд</label>
+              <input
+                type="text"
+                value={address.entrance || ''}
+                onChange={(e) => onChange('entrance', e.target.value)}
+                className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-500 mb-1">Домофон</label>
+              <input
+                type="text"
+                value={address.intercom || ''}
+                onChange={(e) => onChange('intercom', e.target.value)}
+                className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-500 mb-1">Кв./офис</label>
+              <input
+                type="text"
+                value={address.apartment || ''}
+                onChange={(e) => onChange('apartment', e.target.value)}
+                className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gray-500 mb-1">Этаж</label>
+              <input
+                type="text"
+                value={address.floor || ''}
+                onChange={(e) => onChange('floor', e.target.value)}
+                className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm text-gray-500 mb-1">Кв./офис</label>
-            <input
-              type="text"
-              value={address.apartment || ''}
-              onChange={(e) => onChange('apartment', e.target.value)}
-              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-500 mb-1">Этаж</label>
-            <input
-              type="text"
-              value={address.floor || ''}
-              onChange={(e) => onChange('floor', e.target.value)}
-              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-            />
-          </div>
-        </div>
-      )}
-
-      {verifyAddress && deliveryType === 'other' && (
-        <div className="p-4 bg-[#F9F9F9] rounded-lg border border-[#F0F0F0] mb-4">
-          <p className="text-sm text-gray-600">Адрес будет уточнен у получателя. Курьер свяжется с получателем для согласования деталей доставки.</p>
-        </div>
+        </>
       )}
 
       <div className="mt-6 flex items-center">
