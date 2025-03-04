@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { ChevronDown, CreditCard } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -20,52 +22,62 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const [isExpanded, setIsExpanded] = React.useState(false);
   
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 mb-24 text-sm">
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-base font-medium">Что в цене</h2>
+    <div className="bg-white rounded-lg shadow-sm p-5 mb-24 text-sm">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-base font-medium text-gray-900">Что в цене</h2>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="text-gray-400 hover:text-gray-600"
+          className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-50 transition-colors"
+          aria-label={isExpanded ? "Свернуть детали" : "Развернуть детали"}
         >
-          <ChevronDown size={16} className={isExpanded ? "rotate-180 transform" : ""} />
+          <ChevronDown 
+            size={18} 
+            className={cn(
+              "transition-transform duration-200",
+              isExpanded ? "rotate-180 transform" : ""
+            )} 
+          />
         </button>
       </div>
       
-      <div className="flex justify-between mb-2">
-        <span>Товары в заказе</span>
-        <span className="font-medium">{subtotal} ₸</span>
-      </div>
-      
-      {isExpanded && (
-        <>
-          <div className="flex justify-between items-center mb-2">
-            <div className="flex items-center">
-              <span>Доставка</span>
-              <ChevronDown size={14} className="ml-1 text-gray-400" />
-            </div>
-            <span>{deliveryFee === 0 ? "0 ₸" : `${deliveryFee} ₸`}</span>
-          </div>
-          
-          <div className="flex justify-between mb-2">
-            <span>Сервисный сбор</span>
-            <span>{serviceFee} ₸</span>
-          </div>
-        </>
-      )}
-
-      <div className="border-t border-gray-100 mt-3 pt-3">
-        <div className="flex justify-between mb-4">
-          <span className="font-medium">Итого</span>
-          <span className="font-bold text-base">{total} ₸</span>
+      <div className="space-y-3">
+        <div className="flex justify-between">
+          <span className="text-gray-600">Товары в заказе</span>
+          <span className="font-medium">{subtotal} ₸</span>
         </div>
         
-        <button
-          onClick={onSubmit}
-          className="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors"
-        >
-          <CreditCard size={20} />
-          <span>Оплатить</span>
-        </button>
+        {isExpanded && (
+          <div className={cn(
+            "space-y-3 transition-all duration-200",
+            isExpanded ? "opacity-100" : "opacity-0 h-0 overflow-hidden"
+          )}>
+            <div className="flex justify-between items-center">
+              <span className="text-gray-600">Доставка</span>
+              <span>{deliveryFee === 0 ? "Бесплатно" : `${deliveryFee} ₸`}</span>
+            </div>
+            
+            <div className="flex justify-between">
+              <span className="text-gray-600">Сервисный сбор</span>
+              <span>{serviceFee} ₸</span>
+            </div>
+          </div>
+        )}
+
+        <div className="border-t border-gray-100 pt-3 mt-3">
+          <div className="flex justify-between mb-5">
+            <span className="font-medium text-gray-800">Итого</span>
+            <span className="font-bold text-base">{total} ₸</span>
+          </div>
+          
+          <Button
+            onClick={onSubmit}
+            className="w-full py-6 rounded-xl text-base"
+            size="lg"
+          >
+            <CreditCard size={20} />
+            <span>Оплатить</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
