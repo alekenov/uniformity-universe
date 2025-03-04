@@ -54,18 +54,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       )}
       
       <div className="mt-2">
-        <div className="flex items-center justify-between">
-          <span className="font-medium text-base">{total} ₸</span>
-          <button 
-            className="text-xs text-gray-500 hover:text-gray-700 underline"
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            Что в цене
-          </button>
-        </div>
-      </div>
-      
-      <div className="mt-2">
         <button 
           className="flex items-center justify-between w-full py-2 text-[#4BA3E3] border-t border-[#F0F0F0] pt-2"
           onClick={() => {}}
