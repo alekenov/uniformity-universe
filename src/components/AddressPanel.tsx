@@ -1,6 +1,7 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Home, ChevronRight } from 'lucide-react';
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface AddressInfo {
   street: string;
@@ -18,6 +19,8 @@ interface AddressPanelProps {
 }
 
 const AddressPanel: React.FC<AddressPanelProps> = ({ address, onChange, onEdit }) => {
+  const [verifyAddress, setVerifyAddress] = useState(false);
+  
   return (
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Куда</h2>
@@ -69,6 +72,22 @@ const AddressPanel: React.FC<AddressPanelProps> = ({ address, onChange, onEdit }
             onChange={(e) => onChange('floor', e.target.value)}
             className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
           />
+        </div>
+      </div>
+
+      <div className="mt-6 flex items-center">
+        <div className="flex items-center space-x-2">
+          <Checkbox 
+            id="verifyAddress" 
+            checked={verifyAddress}
+            onCheckedChange={() => setVerifyAddress(!verifyAddress)}
+          />
+          <label
+            htmlFor="verifyAddress"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Уточнить у получателя адрес
+          </label>
         </div>
       </div>
       
