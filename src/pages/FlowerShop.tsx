@@ -1,10 +1,8 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
-import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useCart } from '@/contexts/CartContext';
@@ -233,45 +231,12 @@ const reviews = [
   }
 ];
 
-const ProductImageSlider = ({ images }: { images: string[] }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const goToSlide = (slideIndex: number) => {
-    setCurrentIndex(slideIndex);
-  };
-
-  return (
-    <div className="relative aspect-square overflow-hidden">
-      <img 
-        src={images[currentIndex]} 
-        alt="Product" 
-        className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
-      />
-      
-      {images.length > 1 && (
-        <>
-          {/* Thumbnail dots */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-            {images.map((_, slideIndex) => (
-              <div 
-                key={slideIndex}
-                onClick={(e) => { e.stopPropagation(); goToSlide(slideIndex); }}
-                className={`w-2 h-2 rounded-full cursor-pointer transition-all ${
-                  currentIndex === slideIndex ? 'bg-white scale-125' : 'bg-white/60'
-                }`}
-              />
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
-
 const ProductCard = ({ product, shopId, shopName }: { product: FlowerProduct, shopId: string, shopName: string }) => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   
-  const handleAddToCart = () => {
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent navigation when clicking add to cart
     addToCart({
       id: product.id,
       name: product.name,
@@ -283,8 +248,15 @@ const ProductCard = ({ product, shopId, shopName }: { product: FlowerProduct, sh
     });
   };
   
+  const handleClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+  
   return (
-    <div className="bg-white border border-[#F0F0F0] rounded-lg overflow-hidden">
+    <div 
+      className="bg-white border border-[#F0F0F0] rounded-lg overflow-hidden cursor-pointer"
+      onClick={handleClick}
+    >
       <div className="aspect-square overflow-hidden relative">
         <img 
           src={product.images[0]} 
@@ -439,39 +411,22 @@ const FlowerShop: React.FC = () => {
   const [delivery, setDelivery] = useState<'delivery' | 'pickup'>('delivery');
   const [selectedAddress, setSelectedAddress] = useState("Выберите адрес доставки");
   const [searchQuery, setSearchQuery] = useState("");
-  const { addToCart } = useCart();
   
   const handleAddressSelect = () => {
     navigate('/address-selection');
   };
 
-  const handleAddToCart = (product: FlowerProduct) => {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.images[0],
-      quantity: 1,
-      shopId: "flower-shop-1",
-      shopName: shopInfo.name
-    });
-  };
-
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
-      {/* Modified header - removed title and cart icon */}
       <header className="bg-white sticky top-0 z-10 shadow-sm">
         <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center">
           <Link to="/" className="p-2 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors">
             <ArrowLeft size={20} />
           </Link>
-          {/* Title removed */}
-          {/* Cart icon temporarily removed */}
         </div>
       </header>
       
       <main className="container max-w-3xl mx-auto px-4 py-4">
-        {/* Compact Shop Cover and Info */}
         <div className="panel mb-4 p-0 overflow-hidden">
           <div className="p-3 flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-[#E5DEFF] flex items-center justify-center flex-shrink-0">
@@ -492,10 +447,7 @@ const FlowerShop: React.FC = () => {
           </div>
         </div>
         
-        {/* Delivery info - removed title */}
         <div className="panel mb-4">
-          
-          
           <div className="flex mb-4 bg-[#F8F8F8] rounded-lg p-1">
             <button
               className={cn(
@@ -565,7 +517,6 @@ const FlowerShop: React.FC = () => {
           )}
         </div>
         
-        {/* Search and filter bar */}
         <div className="panel mb-4">
           <div className="relative mb-4">
             <input
@@ -592,13 +543,19 @@ const FlowerShop: React.FC = () => {
           </div>
         </div>
         
-        {/* Featured Products - Large Airbnb-style Cards */}
         <div className="mb-6">
           <div className="space-y-6">
             {featuredProducts.map((product) => (
-              <div key={product.id} className="relative rounded-2xl overflow-hidden shadow-md bg-white border border-[#F0F0F0]">
-                <ProductImageSlider images={product.images} />
-                
+              <div 
+                key={product.id} 
+                className="relative rounded-2xl overflow-hidden shadow-md bg-white border border-[#F0F0F0] cursor-pointer"
+                onClick={() => navigate(`/product/${product.id}`)}
+              >
+                <img 
+                  src={product.images[0]} 
+                  alt={product.name} 
+                  className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                />
                 <div className="p-4">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-medium text-lg">{product.name}</h3>
@@ -608,12 +565,23 @@ const FlowerShop: React.FC = () => {
                   <div className="flex justify-between items-center">
                     <div className="flex items-center">
                       <div className="text-yellow-400 mr-1">★</div>
-                      <div className="text-sm">{shopInfo.rating} <span className="text-gray-500">• {shopInfo.reviewCount} отзывов</span></div>
+                      <div className="text-sm">{product.rating} <span className="text-gray-500">• {product.reviewCount} отзывов</span></div>
                     </div>
                     
                     <button 
                       className="flex items-center justify-center gap-1 bg-[#8B5CF6] text-white py-2 px-4 rounded-lg hover:bg-[#7C3AED] transition-colors"
-                      onClick={() => handleAddToCart(product)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToCart({
+                          id: product.id,
+                          name: product.name,
+                          price: product.price,
+                          image: product.images[0],
+                          quantity: 1,
+                          shopId: "flower-shop-1",
+                          shopName: shopInfo.name
+                        });
+                      }}
                     >
                       <ShoppingBag size={16} />
                       <span>В корзину</span>
@@ -625,7 +593,6 @@ const FlowerShop: React.FC = () => {
           </div>
         </div>
         
-        {/* Popular Products */}
         <div className="panel mb-4">
           <h3 className="font-medium text-lg mb-4">Популярные товары</h3>
           
@@ -645,7 +612,6 @@ const FlowerShop: React.FC = () => {
           </Button>
         </div>
         
-        {/* Birthday Products */}
         <div className="panel mb-4">
           <h3 className="font-medium text-lg mb-4">Букеты на день рождения</h3>
           
@@ -665,7 +631,6 @@ const FlowerShop: React.FC = () => {
           </Button>
         </div>
         
-        {/* Special Offers */}
         <div className="panel mb-4">
           <h3 className="font-medium text-lg mb-4">Специальные предложения</h3>
           
@@ -685,7 +650,6 @@ const FlowerShop: React.FC = () => {
           </Button>
         </div>
         
-        {/* Reviews Section */}
         <div className="panel">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-medium text-lg">Отзывы клиентов</h3>
