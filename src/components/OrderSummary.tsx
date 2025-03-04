@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, CreditCard } from 'lucide-react';
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -20,8 +20,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const [isExpanded, setIsExpanded] = React.useState(false);
   
   return (
-    <div className="bg-white rounded-lg shadow-sm p-3 mb-3 text-sm">
-      <div className="flex items-center justify-between mb-2">
+    <div className="bg-white rounded-lg shadow-sm p-4 mb-24 text-sm">
+      <div className="flex items-center justify-between mb-3">
         <h2 className="text-base font-medium">Что в цене</h2>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
@@ -52,6 +52,21 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </div>
         </>
       )}
+
+      <div className="border-t border-gray-100 mt-3 pt-3">
+        <div className="flex justify-between mb-4">
+          <span className="font-medium">Итого</span>
+          <span className="font-bold text-base">{total} ₸</span>
+        </div>
+        
+        <button
+          onClick={onSubmit}
+          className="w-full bg-primary hover:bg-primary/90 text-white py-3 px-4 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors"
+        >
+          <CreditCard size={20} />
+          <span>Оплатить</span>
+        </button>
+      </div>
     </div>
   );
 };
