@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -20,7 +20,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const [isExpanded, setIsExpanded] = React.useState(false);
   
   return (
-    <div className="panel">
+    <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-medium">Что в цене</h2>
         <button
@@ -53,8 +53,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         </>
       )}
       
-      <div className="mt-6">
-        <div className="flex items-center justify-between mb-3">
+      <div className="mt-4">
+        <div className="flex items-center justify-between">
           <div className="flex items-center">
             <span className="font-medium text-lg">{total} ₸</span>
             <button 
@@ -64,12 +64,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
               Что в цене
             </button>
           </div>
-          <button
-            onClick={onSubmit}
-            className="checkout-button"
-          >
-            Оплатить
-          </button>
         </div>
       </div>
       
@@ -84,6 +78,16 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           <p className="text-sm font-medium mb-1">Помощь рядом</p>
           <p className="text-xs text-gray-600">Подключите округление заказов, чтобы помогать благотворительным фондам</p>
         </div>
+      </div>
+      
+      <div className="mt-4">
+        <button 
+          className="flex items-center justify-between w-full py-3 text-[#4BA3E3] border-t border-[#F0F0F0] pt-3"
+          onClick={() => {}}
+        >
+          <span className="font-medium">Комментарий магазину</span>
+          <ChevronRight size={20} />
+        </button>
       </div>
     </div>
   );
