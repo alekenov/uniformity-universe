@@ -1,7 +1,11 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 export type DeliveryType = 'other' | 'self' | 'pickup';
 export type DeliveryTime = 'today' | 'tomorrow';
@@ -46,6 +50,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   onTimeChange,
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -113,6 +118,27 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
           >
             Завтра
           </button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                className="px-4 py-1 text-sm rounded-full transition-all duration-200 text-gray-600 hover:bg-white/50"
+              >
+                {selectedDate ? 
+                  format(selectedDate, 'dd MMM', { locale: ru }) : 
+                  'Выбрать дату'}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="center">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                disabled={{ before: new Date() }}
+                initialFocus
+                locale={ru}
+              />
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
       
