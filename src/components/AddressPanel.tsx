@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Home, ChevronRight, MapPin, Clock } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
@@ -18,7 +17,6 @@ interface StoreLocation {
   id: string;
   name: string;
   address: string;
-  distance: string;
   readyTime: string;
 }
 
@@ -35,21 +33,18 @@ const storeLocations: StoreLocation[] = [
     id: 'store1',
     name: 'Магазин на Достоевского',
     address: 'ул. Достоевского, 3с2',
-    distance: '1.2 км от вас',
     readyTime: 'через 30 мин',
   },
   {
     id: 'store2',
     name: 'Магазин на Пушкинской',
     address: 'ул. Пушкинская, 10',
-    distance: '2.5 км от вас',
     readyTime: 'через 45 мин',
   },
   {
     id: 'store3',
     name: 'Магазин на Ленина',
     address: 'пр. Ленина, 42',
-    distance: '3.7 км от вас',
     readyTime: 'через 1 час',
   },
 ];
@@ -91,11 +86,7 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
             <div className="flex-grow">
               <div className="font-medium">{store.name}</div>
               <div className="text-sm text-gray-600">{store.address}</div>
-              <div className="flex items-center mt-2 text-xs text-gray-500 gap-4">
-                <div className="flex items-center">
-                  <MapPin size={12} className="mr-1" />
-                  {store.distance}
-                </div>
+              <div className="flex items-center mt-2 text-xs text-gray-500">
                 <div className="flex items-center">
                   <Clock size={12} className="mr-1" />
                   Готово {store.readyTime}
