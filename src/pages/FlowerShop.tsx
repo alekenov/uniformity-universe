@@ -94,28 +94,19 @@ const FlowerShop: React.FC = () => {
       <main className="container max-w-3xl mx-auto px-4 py-4">
         {/* Compact Shop Cover and Info */}
         <div className="panel mb-4 p-0 overflow-hidden">
-          <div className="p-4 flex gap-3">
-            <div className="w-14 h-14 rounded-full bg-[#E5DEFF] flex items-center justify-center flex-shrink-0">
-              <Flower size={24} className="text-[#8B5CF6]" />
+          <div className="p-3 flex items-center gap-3">
+            <div className="w-12 h-12 rounded-full bg-[#E5DEFF] flex items-center justify-center flex-shrink-0">
+              <Flower size={20} className="text-[#8B5CF6]" />
             </div>
             
             <div className="flex-grow">
-              <div className="flex items-center justify-between mb-1">
-                <h2 className="text-xl font-medium">{shopInfo.name}</h2>
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-medium">{shopInfo.name}</h2>
                 <div className="flex items-center text-sm">
                   <span className="text-yellow-400 mr-1">★</span>
                   <span>{shopInfo.rating}</span>
                   <span className="mx-1 text-gray-400">•</span>
                   <span className="text-gray-500">{shopInfo.reviewCount} отзывов</span>
-                </div>
-              </div>
-              
-              <p className="text-sm text-gray-600 mb-2 line-clamp-2">{shopInfo.description}</p>
-              
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
-                <div className="flex items-center">
-                  <Clock size={14} className="mr-1" />
-                  <span>8:00 - 22:00</span>
                 </div>
               </div>
             </div>
