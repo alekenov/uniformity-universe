@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { MapPin, ArrowRight, Clock, Star } from 'lucide-react';
+import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -43,6 +43,40 @@ const featuredProducts = [
     image: 'https://avatars.mds.yandex.net/get-eda/3705709/cfcc71439a902ffd979d5c5fd0bc04e9/orig',
     shopId: '4',
     shopName: 'Твой Букет'
+  }
+];
+
+// Flower categories data
+const flowerCategories = [
+  {
+    id: 'roses',
+    name: 'Розы',
+    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig'
+  },
+  {
+    id: 'bouquets',
+    name: 'Букеты',
+    image: 'https://avatars.mds.yandex.net/get-eda/3093654/8aff52cdf0f4057ccaf44adb5c95e917/orig'
+  },
+  {
+    id: 'compositions',
+    name: 'Композиции',
+    image: 'https://avatars.mds.yandex.net/get-eda/3705709/cfcc71439a902ffd979d5c5fd0bc04e9/orig'
+  },
+  {
+    id: 'gifts',
+    name: 'Подарки',
+    image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig'
+  },
+  {
+    id: 'plants',
+    name: 'Растения',
+    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig'
+  },
+  {
+    id: 'wedding',
+    name: 'Свадебные',
+    image: 'https://avatars.mds.yandex.net/get-eda/3093654/8aff52cdf0f4057ccaf44adb5c95e917/orig'
   }
 ];
 
@@ -262,7 +296,55 @@ const HomePage: React.FC = () => {
         {/* Promotional Banners Section */}
         <PromotionalBanners />
 
-        {/* Featured Products Section - NEW SECTION */}
+        {/* Categories Section - NEW SECTION */}
+        <div className="mb-6 mt-8">
+          <div className="overflow-x-auto pb-4">
+            <div className="flex gap-4">
+              {flowerCategories.map((category) => (
+                <div key={category.id} className="flex flex-col items-center cursor-pointer">
+                  <div className="w-20 h-20 rounded-full overflow-hidden mb-2">
+                    <img 
+                      src={category.image} 
+                      alt={category.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <span className="text-sm font-medium text-center">{category.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        {/* Filters Section - NEW SECTION */}
+        <div className="mb-8">
+          <div className="overflow-x-auto">
+            <div className="flex gap-2 py-2">
+              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
+                <Filter size={16} />
+                <span>Фильтры</span>
+              </button>
+              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
+                <ArrowUpDown size={16} />
+                <span>Сортировка</span>
+              </button>
+              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
+                <Clock size={16} />
+                <span>До 45 мин</span>
+              </button>
+              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
+                <Truck size={16} />
+                <span>Доставка 0₸</span>
+              </button>
+              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
+                <Star size={16} />
+                <span>Рейтинг 4+</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Featured Products Section */}
         <div className="mb-16">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">Популярные букеты</h2>
