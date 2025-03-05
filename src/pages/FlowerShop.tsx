@@ -1,4 +1,4 @@
-<lov-code>
+
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle, SlidersHorizontal } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -438,6 +438,18 @@ const FlowerShop: React.FC = () => {
   const [selectedAddress, setSelectedAddress] = useState("Выберите адрес доставки");
   const [searchQuery, setSearchQuery] = useState("");
   const { addToCart } = useCart();
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+  
+  // All filter tags
+  const allTags = [
+    "Розы", "Тюльпаны", "Пионы", "Лилии", "Герберы", "Орхидеи",
+    "Премиум", "Скидка", "Акция", "День рождения", "Свадебные",
+    "Классика", "Нежные", "Яркие", "Композиция", "Комплект"
+  ];
+  
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
   
   const handleAddressSelect = () => {
     navigate('/address-selection');
@@ -454,15 +466,6 @@ const FlowerShop: React.FC = () => {
       shopName: shopInfo.name
     });
   };
-
-  // All filter tags
-  const allTags = [
-    "Розы", "Тюльпаны", "Пионы", "Лилии", "Герберы", "Орхидеи",
-    "Премиум", "Скидка", "Акция", "День рождения", "Свадебные",
-    "Классика", "Нежные", "Яркие", "Композиция", "Комплект"
-  ];
-  
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -630,4 +633,168 @@ const FlowerShop: React.FC = () => {
                     </div>
                   )}
                 </div>
-                <div className="p-
+                <div className="p-4">
+                  <h3 className="font-medium text-base mb-1">{product.name}</h3>
+                  
+                  {product.rating && (
+                    <div className="flex items-center gap-1 mb-2">
+                      <Star size={14} className="text-yellow-400 fill-yellow-400" />
+                      <span className="text-sm">{product.rating} <span className="text-gray-500">({product.reviewCount})</span></span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="font-medium">{product.price} ₸</div>
+                    <button 
+                      className="w-9 h-9 bg-[#F8F8F8] rounded-full flex items-center justify-center hover:bg-[#F0F0F0] transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                    >
+                      <ShoppingBag size={18} className="text-gray-600" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Filter button (floating) */}
+        <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
+          <SheetTrigger asChild>
+            <button 
+              className="fixed bottom-20 right-4 z-30 bg-[#8B5CF6] text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:bg-[#7C3AED] transition-colors"
+            >
+              <SlidersHorizontal size={20} />
+            </button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[85vw] sm:max-w-md">
+            <div className="h-full flex flex-col">
+              <div className="py-2 border-b">
+                <h3 className="text-lg font-medium">Фильтры</h3>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto py-4">
+                <div className="mb-6">
+                  <h4 className="font-medium mb-3">Категории</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {allTags.map(tag => (
+                      <div key={tag} className="flex items-center space-x-2">
+                        <Checkbox 
+                          id={`filter-tag-${tag}`} 
+                          checked={selectedTags.includes(tag)}
+                          onCheckedChange={() => toggleTag(tag)}
+                        />
+                        <label
+                          htmlFor={`filter-tag-${tag}`}
+                          className="text-sm cursor-pointer"
+                        >
+                          {tag}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <h4 className="font-medium mb-3">Цена</h4>
+                  <div className="px-2">
+                    <div className="flex justify-between mb-4">
+                      <div>
+                        <span className="text-sm text-gray-500">От</span>
+                        <div className="font-medium">{priceRange[0]} ₸</div>
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-500">До</span>
+                        <div className="font-medium">{priceRange[1]} ₸</div>
+                      </div>
+                    </div>
+                    
+                    {/* Price range slider would go here */}
+                    <div className="h-1 bg-gray-200 rounded-full relative my-4">
+                      <div 
+                        className="absolute h-full bg-[#8B5CF6] rounded-full" 
+                        style={{ 
+                          left: `${(priceRange[0] / 10000) * 100}%`, 
+                          right: `${100 - (priceRange[1] / 10000) * 100}%` 
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <h4 className="font-medium mb-3">Доставка</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="free-delivery" />
+                      <label htmlFor="free-delivery" className="text-sm cursor-pointer">
+                        Бесплатная доставка
+                      </label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox id="same-day" />
+                      <label htmlFor="same-day" className="text-sm cursor-pointer">
+                        Доставка сегодня
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <h4 className="font-medium mb-3">Рейтинг</h4>
+                  <div className="space-y-2">
+                    {[5, 4, 3, 2, 1].map(rating => (
+                      <div key={rating} className="flex items-center space-x-2">
+                        <Checkbox 
+                          id={`rating-${rating}`} 
+                          checked={selectedRating === rating}
+                          onCheckedChange={() => {
+                            setSelectedRating(selectedRating === rating ? null : rating);
+                          }}
+                        />
+                        <label htmlFor={`rating-${rating}`} className="flex items-center text-sm cursor-pointer">
+                          {Array.from({ length: rating }).map((_, i) => (
+                            <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" />
+                          ))}
+                          {Array.from({ length: 5 - rating }).map((_, i) => (
+                            <Star key={i} size={14} className="text-gray-300" />
+                          ))}
+                          <span className="ml-1">и выше</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="py-4 border-t flex gap-3">
+                <Button 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => {
+                    setSelectedTags([]);
+                    setPriceRange([0, 10000]);
+                    setSelectedRating(null);
+                  }}
+                >
+                  Сбросить
+                </Button>
+                <Button 
+                  className="flex-1"
+                  onClick={() => setIsFilterSheetOpen(false)}
+                >
+                  Применить
+                </Button>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </main>
+    </div>
+  );
+};
+
+export default FlowerShop;
