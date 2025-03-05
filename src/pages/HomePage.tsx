@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { MapPin, ArrowRight, Clock, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -5,6 +6,45 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import LocationFinder from '@/components/LocationFinder';
 import PromotionalBanners from '@/components/PromotionalBanners';
+import ProductCard from '@/components/ProductCard';
+
+// Sample products data
+const featuredProducts = [
+  {
+    id: 'p1',
+    name: 'Букет "Нежность" из белых роз и эустомы',
+    price: 3990,
+    oldPrice: 4990,
+    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
+    shopId: '1',
+    shopName: 'Цветочный Рай'
+  },
+  {
+    id: 'p2',
+    name: 'Букет "Яркое лето" из гербер и хризантем',
+    price: 2990,
+    image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig',
+    shopId: '2',
+    shopName: 'Букет Столицы'
+  },
+  {
+    id: 'p3',
+    name: 'Букет "Романтика" из розовых пионов',
+    price: 4590,
+    oldPrice: 5500,
+    image: 'https://avatars.mds.yandex.net/get-eda/3093654/8aff52cdf0f4057ccaf44adb5c95e917/orig',
+    shopId: '3',
+    shopName: 'Флорист и Я'
+  },
+  {
+    id: 'p4',
+    name: 'Композиция "Элегантность" в шляпной коробке',
+    price: 5990,
+    image: 'https://avatars.mds.yandex.net/get-eda/3705709/cfcc71439a902ffd979d5c5fd0bc04e9/orig',
+    shopId: '4',
+    shopName: 'Твой Букет'
+  }
+];
 
 // Sample flower shops data
 const flowerShops = [
@@ -221,6 +261,36 @@ const HomePage: React.FC = () => {
 
         {/* Promotional Banners Section */}
         <PromotionalBanners />
+
+        {/* Featured Products Section - NEW SECTION */}
+        <div className="mb-16">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Популярные букеты</h2>
+            <Button 
+              variant="ghost" 
+              className="text-sm"
+              onClick={() => navigate('/flower-shop')}
+            >
+              Смотреть все
+              <ArrowRight className="ml-1" size={16} />
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {featuredProducts.map((product) => (
+              <ProductCard 
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                price={product.price}
+                oldPrice={product.oldPrice}
+                image={product.image}
+                shopId={product.shopId}
+                shopName={product.shopName}
+              />
+            ))}
+          </div>
+        </div>
 
         {/* Flower Shops Section */}
         <div className="mb-16" id="shops-section">
