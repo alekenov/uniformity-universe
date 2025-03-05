@@ -3,6 +3,7 @@ import React from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface ProductCardProps {
   id: string;
@@ -23,7 +24,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
   shopId,
   shopName
 }) => {
-  const { addToCart } = useCart();
+  const { addToCart, setCartPanelOpen } = useCart();
+  const { toast } = useToast();
 
   const handleAddToCart = () => {
     addToCart({
@@ -34,6 +36,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
       quantity: 1,
       shopId,
       shopName
+    });
+    
+    // Set the cart panel to be visible
+    setCartPanelOpen(true);
+    
+    // Show toast notification
+    toast({
+      title: "Товар добавлен в корзину",
+      description: name,
     });
   };
 
