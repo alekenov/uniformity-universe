@@ -166,31 +166,31 @@ const HomePage: React.FC = () => {
         {/* Flower Shops Section */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold mb-6">Популярные цветочные магазины</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {flowerShops.map((shop) => (
               <div 
                 key={shop.id} 
-                className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+                className="bg-white rounded-md shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
                 onClick={() => handleShopClick(shop.id)}
               >
-                <div className="aspect-[4/3] relative">
+                <div className="aspect-[3/2] relative">
                   <img 
                     src={shop.image} 
                     alt={shop.name}
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="p-3">
-                  <h3 className="font-medium text-base mb-1">{shop.name}</h3>
-                  <p className="text-gray-500 text-sm mb-2">{shop.address}</p>
+                <div className="p-2">
+                  <h3 className="font-medium text-sm mb-0.5 truncate">{shop.name}</h3>
+                  <p className="text-gray-500 text-xs mb-1.5 truncate">{shop.address}</p>
                   <div className="flex justify-between items-center">
                     <div className="flex items-center">
-                      <Star size={14} className="text-yellow-400 mr-1" />
-                      <span className="text-sm font-medium">{shop.rating}</span>
+                      <Star size={12} className="text-yellow-400 mr-0.5" />
+                      <span className="text-xs font-medium">{shop.rating}</span>
                     </div>
                     <div className="flex items-center text-gray-500">
-                      <Clock size={14} className="mr-1" />
-                      <span className="text-xs">{shop.deliveryTime}</span>
+                      <Clock size={12} className="mr-0.5" />
+                      <span className="text-[10px]">{shop.deliveryTime}</span>
                     </div>
                   </div>
                 </div>
