@@ -1,6 +1,6 @@
-
+<lov-code>
 import React, { useState } from 'react';
-import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle, SlidersHorizontal } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useCart } from '@/contexts/CartContext';
 import CartIcon from '@/components/CartIcon';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 interface FlowerProduct {
   id: string;
@@ -454,6 +455,23 @@ const FlowerShop: React.FC = () => {
     });
   };
 
+  // All filter tags
+  const allTags = [
+    "Розы", "Тюльпаны", "Пионы", "Лилии", "Герберы", "Орхидеи",
+    "Премиум", "Скидка", "Акция", "День рождения", "Свадебные",
+    "Классика", "Нежные", "Яркие", "Композиция", "Комплект"
+  ];
+  
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  
+  const toggleTag = (tag: string) => {
+    if (selectedTags.includes(tag)) {
+      setSelectedTags(selectedTags.filter(t => t !== tag));
+    } else {
+      setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <header className="bg-white sticky top-0 z-10 shadow-sm">
@@ -464,7 +482,7 @@ const FlowerShop: React.FC = () => {
         </div>
       </header>
       
-      <main className="container max-w-3xl mx-auto px-4 py-4">
+      <main className="container max-w-3xl mx-auto px-4 py-4 pb-20">
         <div className="panel mb-4 p-0 overflow-hidden">
           <div className="p-3 flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-[#E5DEFF] flex items-center justify-center flex-shrink-0">
@@ -612,137 +630,4 @@ const FlowerShop: React.FC = () => {
                     </div>
                   )}
                 </div>
-                <div className="p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium text-lg">{product.name}</h3>
-                    <span className="bg-[#F8F8F8] py-1 px-3 rounded-full text-sm font-medium">{product.price} ₸</span>
-                  </div>
-                  
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <div className="text-yellow-400 mr-1">★</div>
-                      <div className="text-sm">{product.rating} <span className="text-gray-500">• {product.reviewCount} отзывов</span></div>
-                    </div>
-                    
-                    <button 
-                      className="flex items-center justify-center gap-1 bg-[#8B5CF6] text-white py-2 px-4 rounded-lg hover:bg-[#7C3AED] transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAddToCart(product);
-                      }}
-                    >
-                      <ShoppingBag size={16} />
-                      <span>В корзину</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="panel mb-4">
-          <h3 className="font-medium text-lg mb-4">Популярные товары</h3>
-          
-          <div className="grid grid-cols-2 gap-3">
-            {flowerProducts.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product}
-                shopId="flower-shop-1"
-                shopName={shopInfo.name}
-              />
-            ))}
-          </div>
-          
-          <Button className="w-full mt-4">
-            Смотреть все товары
-          </Button>
-        </div>
-        
-        <div className="panel mb-4">
-          <h3 className="font-medium text-lg mb-4">Букеты на день рождения</h3>
-          
-          <div className="grid grid-cols-2 gap-3">
-            {birthdayProducts.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                shopId="flower-shop-1" 
-                shopName={shopInfo.name} 
-              />
-            ))}
-          </div>
-          
-          <Button className="w-full mt-4">
-            Смотреть все букеты
-          </Button>
-        </div>
-        
-        <div className="panel mb-4">
-          <h3 className="font-medium text-lg mb-4">Специальные предложения</h3>
-          
-          <div className="grid grid-cols-2 gap-3">
-            {specialOfferProducts.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                shopId="flower-shop-1" 
-                shopName={shopInfo.name} 
-              />
-            ))}
-          </div>
-          
-          <Button className="w-full mt-4">
-            Смотреть все акции
-          </Button>
-        </div>
-        
-        <div className="panel mb-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-medium text-lg">Отзывы</h3>
-            <Button variant="outline" size="sm" className="gap-1">
-              <MessageCircle size={16} />
-              Написать отзыв
-            </Button>
-          </div>
-          
-          <div className="space-y-4">
-            {reviews.map((review) => (
-              <div key={review.id} className="bg-[#F8F8F8] rounded-lg p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <div className="font-medium">{review.author}</div>
-                    <div className="text-xs text-gray-500">{review.date}</div>
-                  </div>
-                  <div className="flex items-center">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star 
-                        key={i} 
-                        size={14} 
-                        className={i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-sm mb-2">{review.text}</p>
-                <div className="flex items-center text-xs text-gray-500">
-                  <button className="flex items-center gap-1 hover:text-gray-700">
-                    <span>Полезно</span>
-                    <span>({review.helpful})</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <Button variant="outline" className="w-full mt-4">
-            Смотреть все отзывы
-          </Button>
-        </div>
-      </main>
-    </div>
-  );
-};
-
-export default FlowerShop;
+                <div className="p-
