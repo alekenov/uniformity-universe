@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Gift, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Gift } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import useEmblaCarousel from 'embla-carousel-react';
 
@@ -60,19 +60,20 @@ const Banner: React.FC<BannerProps> = ({
 };
 
 const PromotionalBanners: React.FC = () => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false);
-  const [canScrollNext, setCanScrollNext] = React.useState(true);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: 'start',
+    slidesToScroll: 1,
+    dragFree: true,
+  });
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [scrollSnaps, setScrollSnaps] = React.useState<number[]>([]);
 
-  // Update scroll button states when the carousel changes
+  // Update states when the carousel changes
   React.useEffect(() => {
     if (!emblaApi) return;
 
     const onSelect = () => {
-      setCanScrollPrev(emblaApi.canScrollPrev());
-      setCanScrollNext(emblaApi.canScrollNext());
       setSelectedIndex(emblaApi.selectedScrollSnap());
     };
 
@@ -86,45 +87,16 @@ const PromotionalBanners: React.FC = () => {
     };
   }, [emblaApi]);
 
-  // Scroll functions
-  const scrollPrev = React.useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = React.useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
-
   return (
     <section className="mb-16">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Специальные предложения</h2>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="rounded-full"
-            onClick={scrollPrev}
-            disabled={!canScrollPrev}
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="rounded-full"
-            onClick={scrollNext}
-            disabled={!canScrollNext}
-          >
-            <ChevronRight className="h-5 w-5" />
-          </Button>
-        </div>
       </div>
       
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-6">
           {/* Ramadan Banner */}
-          <div className="min-w-[360px] sm:min-w-[360px] md:min-w-[400px] flex-grow-0 flex-shrink-0">
+          <div className="min-w-[280px] sm:min-w-[280px] md:min-w-[320px] flex-grow-0 flex-shrink-0">
             <Banner
               backgroundColor="#5D4777"
               title="Священный месяц Рамадан"
@@ -134,7 +106,7 @@ const PromotionalBanners: React.FC = () => {
           </div>
           
           {/* Invite Friends Banner */}
-          <div className="min-w-[360px] sm:min-w-[360px] md:min-w-[400px] flex-grow-0 flex-shrink-0">
+          <div className="min-w-[280px] sm:min-w-[280px] md:min-w-[320px] flex-grow-0 flex-shrink-0">
             <Banner
               backgroundColor="#00B2B0"
               title="Зови друзей и получай баллы"
@@ -150,7 +122,7 @@ const PromotionalBanners: React.FC = () => {
           </div>
           
           {/* Discount Banner */}
-          <div className="min-w-[360px] sm:min-w-[360px] md:min-w-[400px] flex-grow-0 flex-shrink-0">
+          <div className="min-w-[280px] sm:min-w-[280px] md:min-w-[320px] flex-grow-0 flex-shrink-0">
             <Banner
               backgroundColor="#FF5757"
               title="20% скидка"
@@ -165,7 +137,7 @@ const PromotionalBanners: React.FC = () => {
           </div>
           
           {/* Additional Banner */}
-          <div className="min-w-[360px] sm:min-w-[360px] md:min-w-[400px] flex-grow-0 flex-shrink-0">
+          <div className="min-w-[280px] sm:min-w-[280px] md:min-w-[320px] flex-grow-0 flex-shrink-0">
             <Banner
               backgroundColor="#FF9D42"
               title="Доставка за 30 минут"
