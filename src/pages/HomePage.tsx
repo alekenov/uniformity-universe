@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag, UserRound } from 'lucide-react';
+import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag, UserRound, Mail, Phone, Instagram, Facebook, ChevronDown, ChevronUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -225,6 +225,37 @@ const HomePage: React.FC = () => {
     document.getElementById('shops-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // FAQ state
+  const [openFaqItem, setOpenFaqItem] = useState<number | null>(null);
+  
+  const toggleFaqItem = (index: number) => {
+    setOpenFaqItem(openFaqItem === index ? null : index);
+  };
+
+  // FAQ data
+  const faqItems = [
+    {
+      question: "Как работает доставка цветов?",
+      answer: "Мы доставляем цветы из ближайшего к вам флориста. После оформления заказа наш курьер доставит букет по указанному адресу в течение 1-2 часов."
+    },
+    {
+      question: "Можно ли заказать цветы на определенное время?",
+      answer: "Да, при оформлении заказа вы можете выбрать желаемое время доставки. Мы доставим букет в указанный временной интервал."
+    },
+    {
+      question: "Что делать, если получателя нет дома?",
+      answer: "Если получателя нет дома, наш курьер свяжется с вами для уточнения дальнейших действий. Мы можем оставить букет у соседей, консьержа или договориться о другом времени доставки."
+    },
+    {
+      question: "Как долго простоят цветы?",
+      answer: "Срок свежести зависит от типа цветов. В среднем букеты сохраняют свежесть 5-7 дней. К каждому букету прилагается инструкция по уходу для максимального продления свежести."
+    },
+    {
+      question: "Можно ли оформить возврат?",
+      answer: "Если качество букета вас не устроило, сделайте фото в течение 24 часов после получения и свяжитесь с нашей службой поддержки. Мы вернем деньги или заменим букет."
+    }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -412,8 +443,36 @@ const HomePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-                
-                {/* Reviews section has been removed */}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold mb-6">Часто задаваемые вопросы</h2>
+          <div className="space-y-4">
+            {faqItems.map((item, index) => (
+              <div 
+                key={index} 
+                className="bg-white rounded-lg shadow-sm overflow-hidden"
+              >
+                <button
+                  className="w-full flex justify-between items-center p-4 text-left font-medium text-gray-900 hover:bg-gray-50 transition-colors"
+                  onClick={() => toggleFaqItem(index)}
+                >
+                  <span>{item.question}</span>
+                  {openFaqItem === index ? (
+                    <ChevronUp size={18} className="text-gray-500 flex-shrink-0" />
+                  ) : (
+                    <ChevronDown size={18} className="text-gray-500 flex-shrink-0" />
+                  )}
+                </button>
+                {openFaqItem === index && (
+                  <div className="p-4 pt-0 text-gray-600 border-t border-gray-100">
+                    <p>{item.answer}</p>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -421,9 +480,67 @@ const HomePage: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#F8F8F8] py-6">
-        <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-          © 2023 ЦветоМаркет. Все права защищены.
+      <footer className="bg-[#F8F8F8] pt-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <div>
+              <h3 className="font-bold text-lg mb-4">О компании</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-600 hover:text-primary">О нас</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Контакты</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Вакансии</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Для бизнеса</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-4">Помощь</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-600 hover:text-primary">Доставка и оплата</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Возврат</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Вопросы и ответы</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Обратная связь</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-4">Партнерам</h3>
+              <ul className="space-y-2">
+                <li><a href="#" className="text-gray-600 hover:text-primary">Стать партнером</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Для магазинов</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Для курьеров</a></li>
+                <li><a href="#" className="text-gray-600 hover:text-primary">Правила платформы</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-4">Контакты</h3>
+              <ul className="space-y-3">
+                <li>
+                  <a href="tel:+78001234567" className="flex items-center text-gray-600 hover:text-primary">
+                    <Phone size={16} className="mr-2" />
+                    8 (800) 123-45-67
+                  </a>
+                </li>
+                <li>
+                  <a href="mailto:info@tsvetomarket.ru" className="flex items-center text-gray-600 hover:text-primary">
+                    <Mail size={16} className="mr-2" />
+                    info@tsvetomarket.ru
+                  </a>
+                </li>
+                <li className="pt-2">
+                  <div className="flex items-center gap-3">
+                    <a href="#" className="text-gray-600 hover:text-primary">
+                      <Instagram size={20} />
+                    </a>
+                    <a href="#" className="text-gray-600 hover:text-primary">
+                      <Facebook size={20} />
+                    </a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-200 py-6 text-center text-gray-500 text-sm">
+            © 2023 ЦветоМаркет. Все права защищены.
+          </div>
         </div>
       </footer>
     </div>
