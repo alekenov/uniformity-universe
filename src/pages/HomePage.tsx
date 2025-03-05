@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
-import { MapPin, ArrowRight, Clock, Star, MessageCircle } from 'lucide-react';
+import { MapPin, ArrowRight, Clock, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import LocationFinder from '@/components/LocationFinder';
-import ShopReviews from '@/components/ShopReviews';
 
 // Sample flower shops data
 const flowerShops = [
@@ -75,36 +73,6 @@ const flowerShops = [
   },
 ];
 
-// Sample reviews data
-const shopReviews = {
-  1: [
-    { id: 1, author: "Анна К.", date: "12 июня 2023", text: "Замечательный магазин, всегда свежие цветы.", rating: 5 },
-    { id: 2, author: "Иван П.", date: "3 мая 2023", text: "Быстрая доставка, хорошее качество.", rating: 4 }
-  ],
-  2: [
-    { id: 1, author: "Мария С.", date: "20 июня 2023", text: "Прекрасные букеты, но немного дороговато.", rating: 4 },
-    { id: 2, author: "Дмитрий В.", date: "11 мая 2023", text: "Отличный сервис, рекомендую!", rating: 5 }
-  ],
-  3: [
-    { id: 1, author: "Елена Т.", date: "15 июня 2023", text: "Лучший цветочный магазин в городе!", rating: 5 }
-  ],
-  4: [
-    { id: 1, author: "Александр К.", date: "10 июня 2023", text: "Приятное обслуживание, букет был красивым.", rating: 4 }
-  ],
-  5: [
-    { id: 1, author: "Ольга Н.", date: "2 июня 2023", text: "Цветы свежие, но доставили с опозданием.", rating: 3 }
-  ],
-  6: [
-    { id: 1, author: "Сергей М.", date: "25 мая 2023", text: "Хороший выбор, качественные цветы.", rating: 4 }
-  ],
-  7: [
-    { id: 1, author: "Татьяна Л.", date: "18 мая 2023", text: "Безупречный сервис и прекрасные букеты!", rating: 5 }
-  ],
-  8: [
-    { id: 1, author: "Павел К.", date: "8 мая 2023", text: "Все понравилось, буду заказывать еще.", rating: 4 }
-  ]
-};
-
 // Calculate distance between two coordinates
 const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
   const R = 6371; // Radius of the earth in km
@@ -154,11 +122,8 @@ const HomePage: React.FC = () => {
   };
 
   const handleShopClick = (shopId: number) => {
-    if (selectedShop === shopId) {
-      setSelectedShop(null);
-    } else {
-      setSelectedShop(shopId);
-    }
+    // No longer need to toggle reviews
+    navigate(`/flower-shop?id=${shopId}`);
   };
 
   const handleShopDetails = (shopId: number) => {
@@ -296,24 +261,7 @@ const HomePage: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* Reviews section (expanded when shop is selected) */}
-                {selectedShop === shop.id && (
-                  <div className="mt-2 bg-white rounded-md shadow-sm p-3 text-sm">
-                    <div className="flex justify-between items-center mb-2">
-                      <div className="font-medium flex items-center gap-1">
-                        <MessageCircle size={14} />
-                        Отзывы
-                      </div>
-                      <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => handleShopDetails(shop.id)}>
-                        К магазину
-                      </Button>
-                    </div>
-                    <ShopReviews 
-                      shopId={shop.id} 
-                      reviews={shopReviews[shop.id as keyof typeof shopReviews] || []} 
-                    />
-                  </div>
-                )}
+                {/* Reviews section has been removed */}
               </div>
             ))}
           </div>
