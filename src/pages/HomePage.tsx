@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import LocationFinder from '@/components/LocationFinder';
+import PromotionalBanners from '@/components/PromotionalBanners';
 
 // Sample flower shops data
 const flowerShops = [
@@ -217,6 +218,9 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Promotional Banners Section */}
+        <PromotionalBanners />
 
         {/* Flower Shops Section */}
         <div className="mb-16" id="shops-section">
