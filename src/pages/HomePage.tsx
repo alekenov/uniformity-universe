@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import LocationFinder from '@/components/LocationFinder';
+import CategorySelector from '@/components/CategorySelector';
 
 // Sample flower shops data
 const flowerShops = [
@@ -101,6 +102,7 @@ const HomePage: React.FC = () => {
   const [address, setAddress] = useState('');
   const [shops, setShops] = useState(shopsWithCoordinates);
   const [selectedShop, setSelectedShop] = useState<number | null>(null);
+  const [showCategorySelector, setShowCategorySelector] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -125,9 +127,18 @@ const HomePage: React.FC = () => {
       return;
     }
 
-    // Store the address and navigate to flower shop
+    // Show category selector after address is entered
+    setShowCategorySelector(true);
+  };
+
+  const handleCategorySelected = (mainCategory: string, subCategory: string) => {
+    // Store the address and category information
     localStorage.setItem('deliveryAddress', address);
-    navigate('/flower-shop');
+    localStorage.setItem('selectedMainCategory', mainCategory);
+    localStorage.setItem('selectedSubCategory', subCategory);
+    
+    // Navigate to flower shop with category parameters
+    navigate(`/flower-shop?category=${mainCategory}&subcategory=${subCategory}`);
   };
 
   const handleLocationFound = (lat: number, lng: number) => {
@@ -190,33 +201,46 @@ const HomePage: React.FC = () => {
         </div>
 
         {/* Address Input Section */}
-        <div className="max-w-xl mx-auto mb-16">
-          <div className="panel p-6 bg-white rounded-lg shadow-sm">
-            <h2 className="text-xl font-medium mb-4">Куда доставить цветы?</h2>
-            <div className="relative mb-4">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <MapPin size={20} />
+        {!showCategorySelector ? (
+          <div className="max-w-xl mx-auto mb-16">
+            <div className="panel p-6 bg-white rounded-lg shadow-sm">
+              <h2 className="text-xl font-medium mb-4">Куда доставить цветы?</h2>
+              <div className="relative mb-4">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <MapPin size={20} />
+                </div>
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Введите адрес доставки"
+                  className="w-full bg-[#F8F8F8] border-0 rounded-md py-3 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                />
               </div>
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Введите адрес доставки"
-                className="w-full bg-[#F8F8F8] border-0 rounded-md py-3 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 focus:outline-none"
-              />
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                onClick={handleAddressSubmit} 
-                className="flex-1 py-6 text-base font-medium rounded-md flex items-center justify-center"
-              >
-                Перейти к каталогу
-                <ArrowRight className="ml-2" size={18} />
-              </Button>
-              <LocationFinder onLocationFound={handleLocationFound} />
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button 
+                  onClick={handleAddressSubmit} 
+                  className="flex-1 py-6 text-base font-medium rounded-md flex items-center justify-center"
+                >
+                  Продолжить
+                  <ArrowRight className="ml-2" size={18} />
+                </Button>
+                <LocationFinder onLocationFound={handleLocationFound} />
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="max-w-xl mx-auto mb-16">
+            <CategorySelector onCategorySelected={handleCategorySelected} />
+            <Button 
+              variant="outline" 
+              onClick={() => setShowCategorySelector(false)}
+              className="w-full"
+            >
+              Изменить адрес доставки
+            </Button>
+          </div>
+        )}
 
         {/* Flower Shops Section */}
         <div className="mb-16" id="shops-section">
