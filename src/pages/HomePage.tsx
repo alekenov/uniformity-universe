@@ -1,9 +1,77 @@
 
 import React, { useState } from 'react';
-import { MapPin, ArrowRight } from 'lucide-react';
+import { MapPin, ArrowRight, Clock, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+
+// Sample flower shops data
+const flowerShops = [
+  {
+    id: 1,
+    name: 'Цветочный Рай',
+    address: 'ул. Ленина, 42',
+    rating: 4.8,
+    deliveryTime: '30-40 мин',
+    image: '/placeholder.svg'
+  },
+  {
+    id: 2,
+    name: 'Букет Столицы',
+    address: 'ул. Пушкина, 10',
+    rating: 4.7,
+    deliveryTime: '40-50 мин',
+    image: '/placeholder.svg'
+  },
+  {
+    id: 3,
+    name: 'Флорист и Я',
+    address: 'пр. Мира, 15',
+    rating: 4.9,
+    deliveryTime: '20-30 мин',
+    image: '/placeholder.svg'
+  },
+  {
+    id: 4,
+    name: 'Твой Букет',
+    address: 'ул. Гагарина, 23',
+    rating: 4.6,
+    deliveryTime: '35-45 мин',
+    image: '/placeholder.svg'
+  },
+  {
+    id: 5,
+    name: 'Цветочная Лавка',
+    address: 'ул. Достоевского, 8',
+    rating: 4.7,
+    deliveryTime: '25-35 мин',
+    image: '/placeholder.svg'
+  },
+  {
+    id: 6,
+    name: 'Розовый Сад',
+    address: 'ул. Чехова, 33',
+    rating: 4.5,
+    deliveryTime: '45-55 мин',
+    image: '/placeholder.svg'
+  },
+  {
+    id: 7,
+    name: 'Цветы от Ольги',
+    address: 'пр. Победы, 12',
+    rating: 4.8,
+    deliveryTime: '30-45 мин',
+    image: '/placeholder.svg'
+  },
+  {
+    id: 8,
+    name: 'ФлораМаркет',
+    address: 'ул. Тургенева, 5',
+    rating: 4.9,
+    deliveryTime: '20-35 мин',
+    image: '/placeholder.svg'
+  },
+];
 
 const HomePage: React.FC = () => {
   const [address, setAddress] = useState('');
@@ -25,6 +93,10 @@ const HomePage: React.FC = () => {
     // Store the address and navigate to flower shop
     localStorage.setItem('deliveryAddress', address);
     navigate('/flower-shop');
+  };
+
+  const handleShopClick = (shopId: number) => {
+    navigate(`/flower-shop?id=${shopId}`);
   };
 
   return (
@@ -67,8 +139,8 @@ const HomePage: React.FC = () => {
         </div>
 
         {/* Address Input Section */}
-        <div className="max-w-xl mx-auto">
-          <div className="panel p-6">
+        <div className="max-w-xl mx-auto mb-16">
+          <div className="panel p-6 bg-white rounded-lg shadow-sm">
             <h2 className="text-xl font-medium mb-4">Куда доставить цветы?</h2>
             <form onSubmit={handleAddressSubmit}>
               <div className="relative mb-4">
@@ -88,6 +160,42 @@ const HomePage: React.FC = () => {
                 <ArrowRight className="ml-2" size={18} />
               </Button>
             </form>
+          </div>
+        </div>
+
+        {/* Flower Shops Section */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-bold mb-6">Популярные цветочные магазины</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {flowerShops.map((shop) => (
+              <div 
+                key={shop.id} 
+                className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+                onClick={() => handleShopClick(shop.id)}
+              >
+                <div className="aspect-[4/3] relative">
+                  <img 
+                    src={shop.image} 
+                    alt={shop.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-3">
+                  <h3 className="font-medium text-base mb-1">{shop.name}</h3>
+                  <p className="text-gray-500 text-sm mb-2">{shop.address}</p>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <Star size={14} className="text-yellow-400 mr-1" />
+                      <span className="text-sm font-medium">{shop.rating}</span>
+                    </div>
+                    <div className="flex items-center text-gray-500">
+                      <Clock size={14} className="mr-1" />
+                      <span className="text-xs">{shop.deliveryTime}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </main>
