@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import AddressSelection from "./pages/AddressSelection";
 import FlowerShop from "./pages/FlowerShop";
 import ProductDetail from "./pages/ProductDetail";
+import HomePage from "./pages/HomePage";
 import { CartProvider } from "./contexts/CartContext";
 import CartPanel from "./components/CartPanel";
 
@@ -23,7 +24,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/checkout" element={<Index />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/address-selection" element={<AddressSelection />} />
             <Route path="/flower-shop" element={<FlowerShop />} />
