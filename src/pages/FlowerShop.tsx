@@ -589,11 +589,29 @@ const FlowerShop: React.FC = () => {
                 className="relative rounded-2xl overflow-hidden shadow-md bg-white border border-[#F0F0F0] cursor-pointer"
                 onClick={() => navigate(`/product/${product.id}`)}
               >
-                <img 
-                  src={product.images[0]} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
-                />
+                <div className="aspect-square relative overflow-hidden">
+                  <img 
+                    src={product.images[0]} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                  />
+                  
+                  {/* Image navigation dots for featured products */}
+                  {product.images.length > 1 && (
+                    <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+                      {product.images.map((_, idx) => (
+                        <button 
+                          key={idx} 
+                          className={`w-2 h-2 rounded-full ${idx === 0 ? 'bg-white' : 'bg-white/40'}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Future implementation for carousel
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <div className="p-4">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-medium text-lg">{product.name}</h3>
