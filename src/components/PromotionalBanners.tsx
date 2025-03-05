@@ -27,20 +27,20 @@ const Banner: React.FC<BannerProps> = ({
 }) => {
   return (
     <div 
-      className="relative overflow-hidden rounded-[24px] p-5 flex flex-col justify-between min-h-[200px] border-2 border-white"
+      className="relative overflow-hidden rounded-[20px] p-4 flex flex-col justify-between min-h-[180px] border border-white"
       style={{ backgroundColor }}
     >
       <div className="z-10 max-w-[70%]">
-        <h3 className="text-white text-lg font-bold mb-1 leading-tight">{title}</h3>
-        <p className="text-white/90 mb-4 text-sm leading-tight">{subtitle}</p>
+        <h3 className="text-white text-base font-bold mb-1 leading-tight">{title}</h3>
+        <p className="text-white/90 mb-3 text-xs leading-tight">{subtitle}</p>
         
         {buttonText && (
           <Button 
             onClick={onButtonClick} 
-            className="rounded-full px-4 py-2 h-auto text-sm font-medium"
+            className="rounded-full px-3 py-1 h-auto text-xs font-medium"
             style={{ backgroundColor: buttonBackgroundColor, color: "#000" }}
           >
-            {iconComponent && <span className="mr-2">{iconComponent}</span>}
+            {iconComponent && <span className="mr-1">{iconComponent}</span>}
             {buttonText}
           </Button>
         )}
@@ -94,9 +94,9 @@ const PromotionalBanners: React.FC = () => {
       </div>
       
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           {/* Ramadan Banner */}
-          <div className="min-w-[240px] sm:min-w-[240px] md:min-w-[280px] flex-grow-0 flex-shrink-0">
+          <div className="min-w-[200px] sm:min-w-[200px] md:min-w-[220px] flex-grow-0 flex-shrink-0">
             <Banner
               backgroundColor="#5D4777"
               title="Священный месяц Рамадан"
@@ -106,14 +106,14 @@ const PromotionalBanners: React.FC = () => {
           </div>
           
           {/* Invite Friends Banner */}
-          <div className="min-w-[240px] sm:min-w-[240px] md:min-w-[280px] flex-grow-0 flex-shrink-0">
+          <div className="min-w-[200px] sm:min-w-[200px] md:min-w-[220px] flex-grow-0 flex-shrink-0">
             <Banner
               backgroundColor="#00B2B0"
               title="Зови друзей и получай баллы"
               subtitle="Приглашайте друзей и получайте бонусы"
               buttonText="Баллы за друга"
               buttonBackgroundColor="#FFF8E0"
-              iconComponent={<Gift size={16} />}
+              iconComponent={<Gift size={14} />}
               onButtonClick={() => {
                 console.log('Invite friends clicked');
                 // Add functionality here
@@ -122,7 +122,7 @@ const PromotionalBanners: React.FC = () => {
           </div>
           
           {/* Discount Banner */}
-          <div className="min-w-[240px] sm:min-w-[240px] md:min-w-[280px] flex-grow-0 flex-shrink-0">
+          <div className="min-w-[200px] sm:min-w-[200px] md:min-w-[220px] flex-grow-0 flex-shrink-0">
             <Banner
               backgroundColor="#FF5757"
               title="20% скидка"
@@ -137,7 +137,7 @@ const PromotionalBanners: React.FC = () => {
           </div>
           
           {/* Additional Banner */}
-          <div className="min-w-[240px] sm:min-w-[240px] md:min-w-[280px] flex-grow-0 flex-shrink-0">
+          <div className="min-w-[200px] sm:min-w-[200px] md:min-w-[220px] flex-grow-0 flex-shrink-0">
             <Banner
               backgroundColor="#FF9D42"
               title="Доставка за 30 минут"
