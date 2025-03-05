@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -296,48 +295,48 @@ const HomePage: React.FC = () => {
         {/* Promotional Banners Section */}
         <PromotionalBanners />
 
-        {/* Categories Section - NEW SECTION */}
-        <div className="mb-6 mt-8">
-          <div className="overflow-x-auto pb-4">
-            <div className="flex gap-4">
+        {/* Categories Section */}
+        <div className="mb-4 mt-6">
+          <div className="overflow-x-auto pb-2">
+            <div className="flex gap-3">
               {flowerCategories.map((category) => (
                 <div key={category.id} className="flex flex-col items-center cursor-pointer">
-                  <div className="w-20 h-20 rounded-full overflow-hidden mb-2">
+                  <div className="w-16 h-16 rounded-full overflow-hidden mb-1.5">
                     <img 
                       src={category.image} 
                       alt={category.name}
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <span className="text-sm font-medium text-center">{category.name}</span>
+                  <span className="text-xs font-medium text-center">{category.name}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
         
-        {/* Filters Section - NEW SECTION */}
-        <div className="mb-8">
-          <div className="overflow-x-auto">
-            <div className="flex gap-2 py-2">
-              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
-                <Filter size={16} />
+        {/* Filters Section - More compact version */}
+        <div className="mb-6">
+          <div className="overflow-x-auto -mx-4 px-4">
+            <div className="flex gap-2 py-1">
+              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
+                <Filter size={14} className="text-[#8E9196]" />
                 <span>Фильтры</span>
               </button>
-              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
-                <ArrowUpDown size={16} />
+              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
+                <ArrowUpDown size={14} className="text-[#8E9196]" />
                 <span>Сортировка</span>
               </button>
-              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
-                <Clock size={16} />
+              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
+                <Clock size={14} className="text-[#8E9196]" />
                 <span>До 45 мин</span>
               </button>
-              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
-                <Truck size={16} />
+              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
+                <Truck size={14} className="text-[#8E9196]" />
                 <span>Доставка 0₸</span>
               </button>
-              <button className="flex items-center gap-1 bg-gray-100 text-gray-800 px-4 py-2 rounded-full text-sm">
-                <Star size={16} />
+              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
+                <Star size={14} className="text-[#8E9196]" />
                 <span>Рейтинг 4+</span>
               </button>
             </div>
