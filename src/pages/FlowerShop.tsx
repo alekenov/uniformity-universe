@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -235,6 +234,7 @@ const reviews = [
 const ProductCard = ({ product, shopId, shopName }: { product: FlowerProduct, shopId: string, shopName: string }) => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent navigation when clicking add to cart
@@ -252,6 +252,13 @@ const ProductCard = ({ product, shopId, shopName }: { product: FlowerProduct, sh
   const handleClick = () => {
     navigate(`/product/${product.id}`);
   };
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (product.images.length > 1) {
+      setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+    }
+  };
   
   return (
     <div 
@@ -260,7 +267,7 @@ const ProductCard = ({ product, shopId, shopName }: { product: FlowerProduct, sh
     >
       <div className="aspect-square overflow-hidden relative">
         <img 
-          src={product.images[0]} 
+          src={product.images[currentImageIndex] || product.images[0]} 
           alt={product.name} 
           className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
         />
@@ -269,6 +276,22 @@ const ProductCard = ({ product, shopId, shopName }: { product: FlowerProduct, sh
             <span className="bg-white/80 backdrop-blur-sm text-xs px-2 py-1 rounded-full">
               {product.tags[0]}
             </span>
+          </div>
+        )}
+        
+        {/* Image navigation dots */}
+        {product.images.length > 1 && (
+          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+            {product.images.map((_, idx) => (
+              <button 
+                key={idx} 
+                className={`w-1.5 h-1.5 rounded-full ${idx === currentImageIndex ? 'bg-white' : 'bg-white/40'}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentImageIndex(idx);
+                }}
+              />
+            ))}
           </div>
         )}
       </div>
@@ -607,95 +630,4 @@ const FlowerShop: React.FC = () => {
               <ProductCard 
                 key={product.id} 
                 product={product}
-                shopId="flower-shop-1"
-                shopName={shopInfo.name}
-              />
-            ))}
-          </div>
-          
-          <Button className="w-full mt-4">
-            Смотреть все товары
-          </Button>
-        </div>
-        
-        <div className="panel mb-4">
-          <h3 className="font-medium text-lg mb-4">Букеты на день рождения</h3>
-          
-          <div className="grid grid-cols-2 gap-3">
-            {birthdayProducts.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                shopId="flower-shop-1" 
-                shopName={shopInfo.name} 
-              />
-            ))}
-          </div>
-          
-          <Button className="w-full mt-4">
-            Смотреть все букеты
-          </Button>
-        </div>
-        
-        <div className="panel mb-4">
-          <h3 className="font-medium text-lg mb-4">Специальные предложения</h3>
-          
-          <div className="grid grid-cols-2 gap-3">
-            {specialOfferProducts.map((product) => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                shopId="flower-shop-1" 
-                shopName={shopInfo.name}
-              />
-            ))}
-          </div>
-          
-          <Button className="w-full mt-4">
-            Смотреть все предложения
-          </Button>
-        </div>
-        
-        <div className="panel">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-medium text-lg">Отзывы клиентов</h3>
-            <Button variant="outline" size="sm" className="gap-1">
-              <MessageCircle size={16} />
-              Все отзывы
-            </Button>
-          </div>
-          
-          <div className="space-y-4">
-            {reviews.map((review) => (
-              <div key={review.id} className="p-4 bg-[#F8F8F8] rounded-lg">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <div className="font-medium">{review.author}</div>
-                    <div className="text-xs text-gray-500">{review.date}</div>
-                  </div>
-                  <div className="flex items-center">
-                    {Array.from({ length: 5 }).map((_, idx) => (
-                      <Star 
-                        key={idx} 
-                        size={14} 
-                        className={idx < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <p className="text-sm text-gray-700 mb-2">{review.text}</p>
-                <div className="flex items-center text-xs text-gray-500">
-                  <button className="flex items-center gap-1 hover:text-gray-700">
-                    <span>{review.helpful} пользователям помог этот отзыв</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-};
-
-export default FlowerShop;
+                shopId="flower-shop
