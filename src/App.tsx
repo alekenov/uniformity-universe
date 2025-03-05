@@ -11,6 +11,7 @@ import AddressSelection from "./pages/AddressSelection";
 import FlowerShop from "./pages/FlowerShop";
 import ProductDetail from "./pages/ProductDetail";
 import { CartProvider } from "./contexts/CartContext";
+import CartPanel from "./components/CartPanel";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <CartPanel />
         </BrowserRouter>
       </CartProvider>
     </TooltipProvider>

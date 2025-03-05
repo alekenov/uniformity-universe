@@ -20,12 +20,15 @@ interface CartContextType {
   clearCart: () => void;
   getCartCount: () => number;
   getCartTotal: () => number;
+  isCartPanelOpen: boolean;
+  setCartPanelOpen: (isOpen: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartProduct[]>([]);
+  const [isCartPanelOpen, setIsCartPanelOpen] = useState(false);
   const { toast } = useToast();
 
   const addToCart = (product: CartProduct) => {
@@ -54,6 +57,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return [...prev, product];
       }
     });
+    
+    // Open cart panel when adding items
+    setIsCartPanelOpen(true);
   };
 
   const removeFromCart = (productId: string) => {
@@ -94,6 +100,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
+  const setCartPanelOpen = (isOpen: boolean) => {
+    setIsCartPanelOpen(isOpen);
+  };
+
   return (
     <CartContext.Provider 
       value={{ 
@@ -103,7 +113,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         updateQuantity, 
         clearCart,
         getCartCount,
-        getCartTotal
+        getCartTotal,
+        isCartPanelOpen,
+        setCartPanelOpen
       }}
     >
       {children}
