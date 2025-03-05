@@ -44,7 +44,7 @@ const products: Product[] = [
   },
   {
     id: "p3",
-    name: "Планшет TabOne Ultra 10.5", 128ГБ",
+    name: "Планшет TabOne Ultra 10.5\", 128ГБ",
     price: 189990,
     oldPrice: 229990,
     image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80",
