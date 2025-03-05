@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag } from 'lucide-react';
+import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag, UserRound } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import LocationFinder from '@/components/LocationFinder';
 import PromotionalBanners from '@/components/PromotionalBanners';
 import ProductCard from '@/components/ProductCard';
+import CartIcon from '@/components/CartIcon';
 
 // Sample products data
 const featuredProducts = [
@@ -235,18 +236,13 @@ const HomePage: React.FC = () => {
           <div className="flex items-center gap-4">
             <Button 
               variant="ghost" 
-              className="text-sm"
-              onClick={() => navigate('/flower-shop')}
+              size="icon"
+              onClick={() => navigate('/profile')}
+              className="text-gray-600 hover:text-primary"
             >
-              Каталог
+              <UserRound size={20} />
             </Button>
-            <Button 
-              variant="ghost" 
-              className="text-sm"
-              onClick={() => navigate('/cart')}
-            >
-              Корзина
-            </Button>
+            <CartIcon />
           </div>
         </div>
       </header>
