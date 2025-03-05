@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Home, ChevronRight, MapPin, Clock } from 'lucide-react';
+import { Home, ChevronRight, MapPin, Clock, Store, Navigation, Building } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { useNavigate } from 'react-router-dom';
 import { DeliveryType } from '@/components/DeliveryOptions';
+import { Button } from "@/components/ui/button";
 
 interface AddressInfo {
   street: string;
@@ -114,87 +115,127 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
   
   return (
     <div className="panel">
-      <h2 className="text-xl font-medium mb-4">Куда</h2>
+      <h2 className="text-xl font-medium mb-4">Куда доставить</h2>
       
-      {deliveryType === 'other' && (
-        <div className="mb-4">
-          <div className="flex items-center space-x-2 mb-4">
-            <Checkbox 
-              id="verifyAddress" 
-              checked={verifyAddress}
-              onCheckedChange={(checked) => setVerifyAddress(checked === true)}
-            />
-            <label
-              htmlFor="verifyAddress"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Уточнить адрес у получателя
-            </label>
-          </div>
-          
-          {verifyAddress && (
-            <div className="p-4 bg-[#F9F9F9] rounded-lg border border-[#F0F0F0] mb-4">
-              <p className="text-sm text-gray-600">Адрес будет уточнен у получателя. Курьер свяжется с получателем для согласования деталей доставки.</p>
-            </div>
+      {/* City Selection */}
+      <div className="mb-4 flex items-center gap-2">
+        <Building size={18} className="text-gray-500" />
+        <div className="text-sm font-medium">Город:</div>
+        <div className="text-sm">{address.city || 'Москва'}</div>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-xs text-primary ml-auto h-6 px-2"
+          onClick={() => console.log('Change city')}
+        >
+          Изменить
+        </Button>
+      </div>
+
+      {/* Address Input Block */}
+      <div 
+        className="flex items-start p-3 mb-4 bg-[#F8F8F8] rounded-lg cursor-pointer hover:bg-[#F0F0F0]" 
+        onClick={handleAddressClick}
+      >
+        <div className="flex-shrink-0 w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
+          <MapPin size={16} className="text-gray-600" />
+        </div>
+        <div className="flex-grow">
+          {address.street ? (
+            <>
+              <div className="font-medium">{address.street}</div>
+              <div className="text-sm text-gray-500">{address.apartment ? `кв./офис ${address.apartment}` : 'Указать детали'}</div>
+            </>
+          ) : (
+            <div className="text-gray-600">Введите адрес доставки</div>
           )}
+        </div>
+        <ChevronRight size={20} className="text-gray-400 flex-shrink-0 ml-2" />
+      </div>
+      
+      {/* Verify address checkbox */}
+      <div className="mb-4">
+        <div className="flex items-center space-x-2">
+          <Checkbox 
+            id="verifyAddress" 
+            checked={verifyAddress}
+            onCheckedChange={(checked) => setVerifyAddress(checked === true)}
+          />
+          <label
+            htmlFor="verifyAddress"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Уточнить адрес у получателя
+          </label>
+        </div>
+        
+        {verifyAddress && (
+          <div className="mt-3 p-3 bg-[#F9F9F9] rounded-lg border border-[#F0F0F0]">
+            <p className="text-sm text-gray-600">Адрес будет уточнен у получателя. Курьер свяжется с получателем для согласования деталей доставки.</p>
+          </div>
+        )}
+      </div>
+      
+      {/* Nearby stores button */}
+      <Button 
+        variant="outline" 
+        className="w-full mb-4 flex items-center justify-between py-2 px-3 h-auto text-sm border border-[#E5E5E5] bg-white hover:bg-[#F8F8F8]"
+        onClick={() => console.log('Show nearby stores')}
+      >
+        <div className="flex items-center">
+          <Store size={16} className="text-gray-600 mr-2" />
+          <span>Магазины рядом с получателем</span>
+        </div>
+        <Navigation size={16} className="text-gray-400" />
+      </Button>
+      
+      {/* Address details (only visible when address is set and no verification needed) */}
+      {address.street && !verifyAddress && (
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-4">
+          <div>
+            <label className="block text-sm text-gray-500 mb-1">Подъезд</label>
+            <input
+              type="text"
+              value={address.entrance || ''}
+              onChange={(e) => onChange('entrance', e.target.value)}
+              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+              placeholder="№"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-500 mb-1">Домофон</label>
+            <input
+              type="text"
+              value={address.intercom || ''}
+              onChange={(e) => onChange('intercom', e.target.value)}
+              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+              placeholder="Код"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-500 mb-1">Кв./офис</label>
+            <input
+              type="text"
+              value={address.apartment || ''}
+              onChange={(e) => onChange('apartment', e.target.value)}
+              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+              placeholder="№"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-gray-500 mb-1">Этаж</label>
+            <input
+              type="text"
+              value={address.floor || ''}
+              onChange={(e) => onChange('floor', e.target.value)}
+              className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
+              placeholder="№"
+            />
+          </div>
         </div>
       )}
       
-      {(!verifyAddress || deliveryType !== 'other') && (
-        <>
-          <div className="flex items-start border-b border-[#F0F0F0] pb-4 mb-4 cursor-pointer" onClick={handleAddressClick}>
-            <div className="flex-shrink-0 w-8 h-8 bg-[#F8F8F8] rounded-full flex items-center justify-center mr-3">
-              <Home size={16} className="text-gray-600" />
-            </div>
-            <div className="flex-grow">
-              <div className="font-medium">{address.street}</div>
-              <div className="text-sm text-gray-500">{address.city}</div>
-            </div>
-            <ChevronRight size={20} className="text-gray-400 flex-shrink-0 ml-2" />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Подъезд</label>
-              <input
-                type="text"
-                value={address.entrance || ''}
-                onChange={(e) => onChange('entrance', e.target.value)}
-                className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Домофон</label>
-              <input
-                type="text"
-                value={address.intercom || ''}
-                onChange={(e) => onChange('intercom', e.target.value)}
-                className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Кв./офис</label>
-              <input
-                type="text"
-                value={address.apartment || ''}
-                onChange={(e) => onChange('apartment', e.target.value)}
-                className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-500 mb-1">Этаж</label>
-              <input
-                type="text"
-                value={address.floor || ''}
-                onChange={(e) => onChange('floor', e.target.value)}
-                className="w-full bg-[#F8F8F8] border-0 rounded-md py-2 px-3"
-              />
-            </div>
-          </div>
-        </>
-      )}
-      
-      <button className="mt-4 w-full flex items-center justify-between bg-[#F8F8F8] text-sm py-3 px-4 rounded-md">
+      <button className="w-full flex items-center justify-between bg-[#F8F8F8] text-sm py-3 px-4 rounded-md">
         <span className="text-gray-600">Комментарий к заказу</span>
         <ChevronRight size={18} className="text-gray-400" />
       </button>
