@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle, SlidersHorizontal } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -486,6 +485,7 @@ const FlowerShop: React.FC = () => {
       </header>
       
       <main className="container max-w-3xl mx-auto px-4 py-4 pb-20">
+        {/* Shop info panel */}
         <div className="panel mb-4 p-0 overflow-hidden">
           <div className="p-3 flex items-center gap-3">
             <div className="w-12 h-12 rounded-full bg-[#E5DEFF] flex items-center justify-center flex-shrink-0">
@@ -506,6 +506,7 @@ const FlowerShop: React.FC = () => {
           </div>
         </div>
         
+        {/* Delivery panel */}
         <div className="panel mb-4">
           <div className="flex mb-4 bg-[#F8F8F8] rounded-lg p-1">
             <button
@@ -576,6 +577,7 @@ const FlowerShop: React.FC = () => {
           )}
         </div>
         
+        {/* Search and filters panel */}
         <div className="panel mb-4">
           <div className="relative mb-4">
             <input
@@ -602,23 +604,68 @@ const FlowerShop: React.FC = () => {
           </div>
         </div>
         
+        {/* Featured products - single column */}
         <div className="mb-6">
-          <div className="space-y-4">
-            {/* Featured products */}
+          <div className="space-y-6">
             <h3 className="font-medium mb-3">Популярные букеты</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {featuredProducts.map((product) => (
-                <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  shopId="flower-shop-1" 
-                  shopName={shopInfo.name} 
-                />
-              ))}
-            </div>
+            {featuredProducts.map((product) => (
+              <div 
+                key={product.id} 
+                className="relative rounded-2xl overflow-hidden shadow-md bg-white border border-[#F0F0F0] cursor-pointer"
+                onClick={() => navigate(`/product/${product.id}`)}
+              >
+                <div className="aspect-square relative overflow-hidden">
+                  <img 
+                    src={product.images[0]} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover transition-transform hover:scale-105 duration-300"
+                  />
+                  
+                  {/* Image navigation dots for featured products */}
+                  {product.images.length > 1 && (
+                    <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+                      {product.images.map((_, idx) => (
+                        <button 
+                          key={idx} 
+                          className={`w-2 h-2 rounded-full ${idx === 0 ? 'bg-white' : 'bg-white/40'}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            // Future implementation for carousel
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="p-4">
+                  <h3 className="font-medium text-base mb-1">{product.name}</h3>
+                  
+                  {product.rating && (
+                    <div className="flex items-center gap-1 mb-2">
+                      <Star size={14} className="text-yellow-400 fill-yellow-400" />
+                      <span className="text-sm">{product.rating} <span className="text-gray-500">({product.reviewCount})</span></span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between items-center">
+                    <div className="font-medium">{product.price} ₸</div>
+                    <button 
+                      className="w-9 h-9 bg-[#F8F8F8] rounded-full flex items-center justify-center hover:bg-[#F0F0F0] transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToCart(product);
+                      }}
+                    >
+                      <ShoppingBag size={18} className="text-gray-600" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
         
+        {/* All flower products - 2 columns */}
         <div className="mb-6">
           <h3 className="font-medium mb-3">Все букеты</h3>
           <div className="grid grid-cols-2 gap-3">
@@ -633,6 +680,7 @@ const FlowerShop: React.FC = () => {
           </div>
         </div>
         
+        {/* Birthday products - 2 columns */}
         <div className="mb-6">
           <h3 className="font-medium mb-3">Для дня рождения</h3>
           <div className="grid grid-cols-2 gap-3">
@@ -647,6 +695,7 @@ const FlowerShop: React.FC = () => {
           </div>
         </div>
         
+        {/* Special offers - 2 columns */}
         <div className="mb-6">
           <h3 className="font-medium mb-3">Специальные предложения</h3>
           <div className="grid grid-cols-2 gap-3">
