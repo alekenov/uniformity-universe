@@ -61,7 +61,6 @@ const LocationFinder: React.FC<LocationFinderProps> = ({ onLocationFound }) => {
   return (
     <Button 
       variant="outline" 
-      size="sm"
       className="gap-2"
       onClick={handleGetLocation}
       disabled={isLocating}
@@ -71,7 +70,7 @@ const LocationFinder: React.FC<LocationFinderProps> = ({ onLocationFound }) => {
       ) : (
         <MapPin className="h-4 w-4" />
       )}
-      Найти ближайшие магазины
+      Найти по геолокации
     </Button>
   );
 };

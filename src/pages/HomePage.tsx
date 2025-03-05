@@ -104,6 +104,15 @@ const HomePage: React.FC = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const handleShopClick = (shopId: number) => {
+    // No longer need to toggle reviews
+    navigate(`/flower-shop?id=${shopId}`);
+  };
+
+  const handleShopDetails = (shopId: number) => {
+    navigate(`/flower-shop?id=${shopId}`);
+  };
+
   const handleAddressSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -119,15 +128,6 @@ const HomePage: React.FC = () => {
     // Store the address and navigate to flower shop
     localStorage.setItem('deliveryAddress', address);
     navigate('/flower-shop');
-  };
-
-  const handleShopClick = (shopId: number) => {
-    // No longer need to toggle reviews
-    navigate(`/flower-shop?id=${shopId}`);
-  };
-
-  const handleShopDetails = (shopId: number) => {
-    navigate(`/flower-shop?id=${shopId}`);
   };
 
   const handleLocationFound = (lat: number, lng: number) => {
@@ -193,27 +193,28 @@ const HomePage: React.FC = () => {
         <div className="max-w-xl mx-auto mb-16">
           <div className="panel p-6 bg-white rounded-lg shadow-sm">
             <h2 className="text-xl font-medium mb-4">Куда доставить цветы?</h2>
-            <form onSubmit={handleAddressSubmit}>
-              <div className="relative mb-4">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  <MapPin size={20} />
-                </div>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Введите адрес доставки"
-                  className="w-full bg-[#F8F8F8] border-0 rounded-md py-3 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 focus:outline-none"
-                />
+            <div className="relative mb-4">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <MapPin size={20} />
               </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button type="submit" className="flex-1 py-6 text-base font-medium rounded-md flex items-center justify-center">
-                  Найти ближайшие магазины
-                  <ArrowRight className="ml-2" size={18} />
-                </Button>
-                <LocationFinder onLocationFound={handleLocationFound} />
-              </div>
-            </form>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Введите адрес доставки"
+                className="w-full bg-[#F8F8F8] border-0 rounded-md py-3 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button 
+                onClick={handleAddressSubmit} 
+                className="flex-1 py-6 text-base font-medium rounded-md flex items-center justify-center"
+              >
+                Перейти к каталогу
+                <ArrowRight className="ml-2" size={18} />
+              </Button>
+              <LocationFinder onLocationFound={handleLocationFound} />
+            </div>
           </div>
         </div>
 
