@@ -577,19 +577,8 @@ const FlowerShop: React.FC = () => {
           )}
         </div>
         
-        {/* Search and filters panel */}
+        {/* Filters panel (search input removed) */}
         <div className="panel mb-4">
-          <div className="relative mb-4">
-            <input
-              type="text"
-              placeholder="Поиск букетов и композиций..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#F8F8F8] rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/20"
-            />
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          </div>
-          
           <div className="flex gap-2 overflow-x-auto pb-2">
             <TagFilter />
             <SortOptions />
