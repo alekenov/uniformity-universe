@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Flower, MapPin, Clock, Truck, ShoppingBag, Star, Filter, ArrowUpDown, Search, MessageCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -630,4 +631,100 @@ const FlowerShop: React.FC = () => {
               <ProductCard 
                 key={product.id} 
                 product={product}
-                shopId="flower-shop
+                shopId="flower-shop-1"
+                shopName={shopInfo.name}
+              />
+            ))}
+          </div>
+          
+          <Button className="w-full mt-4">
+            Смотреть все товары
+          </Button>
+        </div>
+        
+        <div className="panel mb-4">
+          <h3 className="font-medium text-lg mb-4">Букеты на день рождения</h3>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {birthdayProducts.map((product) => (
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                shopId="flower-shop-1" 
+                shopName={shopInfo.name} 
+              />
+            ))}
+          </div>
+          
+          <Button className="w-full mt-4">
+            Смотреть все букеты
+          </Button>
+        </div>
+        
+        <div className="panel mb-4">
+          <h3 className="font-medium text-lg mb-4">Специальные предложения</h3>
+          
+          <div className="grid grid-cols-2 gap-3">
+            {specialOfferProducts.map((product) => (
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                shopId="flower-shop-1" 
+                shopName={shopInfo.name} 
+              />
+            ))}
+          </div>
+          
+          <Button className="w-full mt-4">
+            Смотреть все акции
+          </Button>
+        </div>
+        
+        <div className="panel mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-medium text-lg">Отзывы</h3>
+            <Button variant="outline" size="sm" className="gap-1">
+              <MessageCircle size={16} />
+              Написать отзыв
+            </Button>
+          </div>
+          
+          <div className="space-y-4">
+            {reviews.map((review) => (
+              <div key={review.id} className="bg-[#F8F8F8] rounded-lg p-4">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <div className="font-medium">{review.author}</div>
+                    <div className="text-xs text-gray-500">{review.date}</div>
+                  </div>
+                  <div className="flex items-center">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star 
+                        key={i} 
+                        size={14} 
+                        className={i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-sm mb-2">{review.text}</p>
+                <div className="flex items-center text-xs text-gray-500">
+                  <button className="flex items-center gap-1 hover:text-gray-700">
+                    <span>Полезно</span>
+                    <span>({review.helpful})</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <Button variant="outline" className="w-full mt-4">
+            Смотреть все отзывы
+          </Button>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default FlowerShop;
