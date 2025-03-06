@@ -4,17 +4,22 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ChevronLeft, Clock, Package, Truck, Home, Calendar, Edit, X, 
   MapPin, MessageSquare, ShoppingBag, ThumbsUp, User, Phone,
-  Image, Check, MessageCircle, Save, ChevronRight, MoreHorizontal
+  Image, Check, MessageCircle, Save, ChevronRight, MoreHorizontal,
+  ThumbsDown, Info
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { Textarea } from '@/components/ui/textarea';
+
+// Define the OrderStatus type to fix the type error
+type OrderStatus = 'processing' | 'confirmed' | 'delivering' | 'delivered' | 'cancelled';
 
 // Sample data for demonstration
 const sampleOrder = {
   id: '12345',
-  status: 'processing' as OrderStatus, // Added type assertion here
+  status: 'processing' as OrderStatus,
   statusHistory: [
     { status: 'processing' as OrderStatus, timestamp: new Date(2023, 5, 15, 14, 30), note: 'Заказ получен и обрабатывается' },
   ],
@@ -31,6 +36,8 @@ const sampleOrder = {
   ],
   bouquetPhoto: '/placeholder.svg', // Фото собранного букета
   customerApproved: false, // Клиент подтвердил
+  customerRejected: false, // Клиент отклонил
+  rejectionReason: '', // Причина отклонения
   florist: {
     name: 'Елена Цветкова',
     phone: '+7 (777) 123-45-67',
@@ -49,6 +56,10 @@ const sampleOrder = {
     apartment: '5',
     intercom: '35B'
   },
+  estimatedDeliveryTime: '15:00 - 16:00',
+  pickupLocation: 'ул. Цветочная, д. 8, ТЦ "Сад"',
+  pickupHours: '10:00 - 20:00',
+  isDelivery: true, // true для доставки, false для самовывоза
   deliveryDate: new Date(2023, 5, 16, 15, 0),
   cardMessage: 'С днем рождения! Желаю счастья и здоровья!',
   paymentMethod: 'card',
@@ -57,9 +68,6 @@ const sampleOrder = {
     phone: '+7 (999) 123-45-67'
   }
 };
-
-// Define the OrderStatus type to fix the type error
-type OrderStatus = 'processing' | 'confirmed' | 'delivering' | 'delivered' | 'cancelled';
 
 const OrderStatus: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -77,6 +85,8 @@ const OrderStatus: React.FC = () => {
   const [isContactingFlorist, setIsContactingFlorist] = useState(false);
   const [isContactingCourier, setIsContactingCourier] = useState(false);
   const [showStatusHistory, setShowStatusHistory] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [showRejectionForm, setShowRejectionForm] = useState(false);
   
   // Temporary states for edits
   const [tempAddress, setTempAddress] = useState(order.deliveryAddress);
@@ -96,6 +106,23 @@ const OrderStatus: React.FC = () => {
     toast({
       title: "Букет одобрен",
       description: "Спасибо за подтверждение! Ваш заказ готовится к доставке."
+    });
+  };
+
+  const rejectOrder = () => {
+    setShowRejectionForm(true);
+  };
+
+  const submitRejection = () => {
+    setOrder(prev => ({
+      ...prev,
+      customerRejected: true,
+      rejectionReason: rejectionReason
+    }));
+    setShowRejectionForm(false);
+    toast({
+      title: "Букет отклонен",
+      description: "Ваш отзыв передан флористу для корректировки букета."
     });
   };
   
@@ -279,6 +306,11 @@ const OrderStatus: React.FC = () => {
                   <Check size={20} />
                 </div>
               )}
+              {order.customerRejected && (
+                <div className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full">
+                  <X size={20} />
+                </div>
+              )}
             </div>
           ) : (
             <div className="w-full h-64 bg-gray-50 rounded-lg flex flex-col items-center justify-center">
@@ -288,15 +320,83 @@ const OrderStatus: React.FC = () => {
           )}
         </div>
         
-        {!order.customerApproved && order.bouquetPhoto && order.status !== 'cancelled' && (
-          <Button 
-            variant="default" 
-            className="w-full mb-4"
-            onClick={approveOrder}
-          >
-            <ThumbsUp className="mr-2" size={18} />
-            Подтвердить букет
-          </Button>
+        {/* Status-specific content */}
+        {order.status === 'processing' && !order.customerApproved && !order.customerRejected && order.bouquetPhoto && (
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Button 
+                variant="default" 
+                className="flex-1"
+                onClick={approveOrder}
+              >
+                <ThumbsUp className="mr-2" size={18} />
+                Нравится букет
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={rejectOrder}
+              >
+                <ThumbsDown className="mr-2" size={18} />
+                Не нравится
+              </Button>
+            </div>
+            
+            {showRejectionForm && (
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-sm font-medium mb-2">Что именно вам не нравится?</h3>
+                <Textarea
+                  placeholder="Напишите, что бы вы хотели изменить в букете..."
+                  value={rejectionReason}
+                  onChange={(e) => setRejectionReason(e.target.value)}
+                  className="mb-3"
+                />
+                <div className="flex gap-2">
+                  <Button 
+                    size="sm" 
+                    onClick={submitRejection} 
+                    disabled={!rejectionReason.trim()}
+                  >
+                    Отправить
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => setShowRejectionForm(false)}
+                  >
+                    Отмена
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {order.status === 'confirmed' && (
+          <div className="space-y-4">
+            <div className="bg-yellow-50 p-4 rounded-lg">
+              {order.isDelivery ? (
+                <div className="flex items-start">
+                  <Clock className="text-yellow-600 mr-2 flex-shrink-0 mt-0.5" size={18} />
+                  <div>
+                    <p className="font-medium text-yellow-800">Ожидаемое время доставки:</p>
+                    <p className="text-yellow-700">{order.estimatedDeliveryTime}, {format(order.deliveryDate, 'dd MMMM', { locale: ru })}</p>
+                    <p className="text-sm text-yellow-600 mt-1">Курьер свяжется с вами за 15-30 минут до прибытия</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-start">
+                  <MapPin className="text-yellow-600 mr-2 flex-shrink-0 mt-0.5" size={18} />
+                  <div>
+                    <p className="font-medium text-yellow-800">Пункт самовывоза:</p>
+                    <p className="text-yellow-700">{order.pickupLocation}</p>
+                    <p className="text-sm text-yellow-600 mt-1">Часы работы: {order.pickupHours}</p>
+                    <p className="text-sm text-yellow-600">Возьмите с собой номер заказа и документ, удостоверяющий личность</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         )}
         
         {order.customerApproved && (
@@ -307,10 +407,25 @@ const OrderStatus: React.FC = () => {
             </div>
           </div>
         )}
+
+        {order.customerRejected && (
+          <div className="bg-red-50 p-4 rounded-lg mb-4">
+            <div className="flex items-start">
+              <Info className="text-red-500 mr-2 mt-0.5" size={18} />
+              <div>
+                <span className="text-red-700 font-medium">Вы отклонили букет</span>
+                {order.rejectionReason && (
+                  <p className="text-red-600 text-sm mt-1">{order.rejectionReason}</p>
+                )}
+                <p className="text-red-600 text-sm mt-1">Флорист свяжется с вами для уточнения деталей</p>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Florist & Courier Info */}
-        {(order.status === 'confirmed' || order.status === 'delivering' || order.customerApproved) && (
-          <div className="space-y-4">
+        {(order.status === 'confirmed' || order.status === 'delivering' || order.customerApproved || order.customerRejected) && (
+          <div className="space-y-4 mt-4">
             {/* Florist */}
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div className="flex items-center">
