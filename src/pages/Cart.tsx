@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Trash2, ShoppingBag, ChevronRight, MessageSquare, X } from 'lucide-react';
+import { ArrowLeft, Trash2, ShoppingBag, ChevronRight, MessageSquare, X, PenLine } from 'lucide-react';
 import CartItem from '@/components/CartItem';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
@@ -293,10 +293,10 @@ const Cart: React.FC = () => {
                     </label>
                     <button 
                       onClick={handleRemoveCardMessage}
-                      className="text-xs text-red-500 hover:underline flex items-center"
+                      className="text-red-500 hover:text-red-700 p-1.5 rounded-full hover:bg-red-50 transition-colors"
+                      aria-label="Удалить открытку"
                     >
-                      <X size={14} className="mr-1" />
-                      Удалить
+                      <X size={16} />
                     </button>
                   </div>
                   <textarea
@@ -319,16 +319,17 @@ const Cart: React.FC = () => {
                     <div className="flex items-center">
                       <button 
                         onClick={() => setShowCardMessageInput(true)}
-                        className="text-xs text-[#4BA3E3] hover:underline mr-3"
+                        className="text-[#4BA3E3] hover:text-[#3A92D2] p-1.5 rounded-full hover:bg-blue-50 transition-colors mr-1"
+                        aria-label="Редактировать открытку"
                       >
-                        Редактировать
+                        <PenLine size={16} />
                       </button>
                       <button 
                         onClick={handleRemoveCardMessage}
-                        className="text-xs text-red-500 hover:underline flex items-center"
+                        className="text-red-500 hover:text-red-700 p-1.5 rounded-full hover:bg-red-50 transition-colors"
+                        aria-label="Удалить открытку"
                       >
-                        <X size={14} className="mr-1" />
-                        Удалить
+                        <X size={16} />
                       </button>
                     </div>
                   </div>
