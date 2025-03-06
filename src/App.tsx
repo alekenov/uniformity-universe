@@ -11,6 +11,7 @@ import AddressSelection from "./pages/AddressSelection";
 import FlowerShop from "./pages/FlowerShop";
 import ProductDetail from "./pages/ProductDetail";
 import HomePage from "./pages/HomePage";
+import OrderStatus from "./pages/OrderStatus";
 import { CartProvider } from "./contexts/CartContext";
 import CartPanel from "./components/CartPanel";
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/address-selection" element={<AddressSelection />} />
             <Route path="/flower-shop" element={<FlowerShop />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
+            <Route path="/order/:orderId" element={<OrderStatus />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
