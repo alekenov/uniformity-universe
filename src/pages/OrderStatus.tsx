@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ChevronLeft, Clock, Package, Truck, Home, Calendar, Edit, X, 
   MapPin, MessageSquare, ShoppingBag, ThumbsUp, User, Phone,
-  Image, Check, MessageCircle, Save
+  Image, Check, MessageCircle, Save, ChevronRight, MoreHorizontal
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +15,9 @@ import { ru } from 'date-fns/locale';
 const sampleOrder = {
   id: '12345',
   status: 'processing' as OrderStatus, // Added type assertion here
+  statusHistory: [
+    { status: 'processing' as OrderStatus, timestamp: new Date(2023, 5, 15, 14, 30), note: 'Заказ получен и обрабатывается' },
+  ],
   createdAt: new Date(2023, 5, 15, 14, 30),
   total: 12500,
   items: [
@@ -73,6 +76,7 @@ const OrderStatus: React.FC = () => {
   const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
   const [isContactingFlorist, setIsContactingFlorist] = useState(false);
   const [isContactingCourier, setIsContactingCourier] = useState(false);
+  const [showStatusHistory, setShowStatusHistory] = useState(false);
   
   // Temporary states for edits
   const [tempAddress, setTempAddress] = useState(order.deliveryAddress);
@@ -144,10 +148,7 @@ const OrderStatus: React.FC = () => {
   };
   
   const cancelOrder = () => {
-    setOrder(prev => ({
-      ...prev,
-      status: 'cancelled' as OrderStatus
-    }));
+    updateOrderStatus('cancelled');
     setIsConfirmingCancel(false);
     toast({
       title: "Заказ отменен",
@@ -165,6 +166,75 @@ const OrderStatus: React.FC = () => {
       setIsContactingFlorist(false);
     } else {
       setIsContactingCourier(false);
+    }
+  };
+  
+  // Update order status with history
+  const updateOrderStatus = (newStatus: OrderStatus, note: string = '') => {
+    const statusNote = note || getDefaultStatusNote(newStatus);
+    const statusUpdate = {
+      status: newStatus,
+      timestamp: new Date(),
+      note: statusNote
+    };
+    
+    setOrder(prev => ({
+      ...prev,
+      status: newStatus,
+      statusHistory: [...prev.statusHistory, statusUpdate]
+    }));
+    
+    toast({
+      title: "Статус обновлен",
+      description: `Заказ теперь в статусе: ${getStatusLabel(newStatus)}`
+    });
+  };
+  
+  // Get the next status in the flow
+  const getNextStatus = (currentStatus: OrderStatus): OrderStatus => {
+    switch(currentStatus) {
+      case 'processing': return 'confirmed';
+      case 'confirmed': return 'delivering';
+      case 'delivering': return 'delivered';
+      case 'delivered': return 'delivered'; // No next status after delivered
+      case 'cancelled': return 'cancelled'; // No next status after cancelled
+      default: return 'processing';
+    }
+  };
+  
+  // Get a default note for the status
+  const getDefaultStatusNote = (status: OrderStatus): string => {
+    switch(status) {
+      case 'processing': return 'Заказ получен и обрабатывается';
+      case 'confirmed': return 'Заказ подтвержден и собран';
+      case 'delivering': return 'Заказ передан курьеру';
+      case 'delivered': return 'Заказ успешно доставлен получателю';
+      case 'cancelled': return 'Заказ отменен';
+      default: return '';
+    }
+  };
+  
+  // Get a human-readable label for the status
+  const getStatusLabel = (status: OrderStatus): string => {
+    switch(status) {
+      case 'processing': return 'Обрабатывается';
+      case 'confirmed': return 'Подтвержден';
+      case 'delivering': return 'В пути';
+      case 'delivered': return 'Доставлен';
+      case 'cancelled': return 'Отменен';
+      default: return 'Неизвестный статус';
+    }
+  };
+  
+  // Get a color for the status
+  const getStatusColor = (status: OrderStatus): string => {
+    switch(status) {
+      case 'processing': return 'bg-blue-500';
+      case 'confirmed': return 'bg-yellow-500';
+      case 'delivering': return 'bg-orange-500';
+      case 'delivered': return 'bg-green-500';
+      case 'cancelled': return 'bg-red-500';
+      default: return 'bg-gray-500';
     }
   };
   
@@ -366,7 +436,7 @@ const OrderStatus: React.FC = () => {
         )}
       </div>
       
-      {/* Order Status */}
+      {/* Order Status - IMPROVED SECTION */}
       {order.status === 'cancelled' ? (
         <div className="bg-red-50 p-4 rounded-lg mb-6">
           <h2 className="text-lg font-medium text-red-700">Заказ отменен</h2>
@@ -376,15 +446,24 @@ const OrderStatus: React.FC = () => {
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between mb-4">
+          <div className="flex justify-between mb-4 items-center">
             <h2 className="text-lg font-medium">Статус доставки</h2>
-            <span className="text-sm text-gray-500">
-              {format(order.createdAt, 'dd MMMM yyyy', { locale: ru })}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-500">
+                {format(order.createdAt, 'dd MMMM yyyy', { locale: ru })}
+              </span>
+              <button 
+                onClick={() => setShowStatusHistory(!showStatusHistory)}
+                className="p-1.5 rounded-full hover:bg-gray-100 text-gray-500"
+                aria-label={showStatusHistory ? "Скрыть историю" : "Показать историю"}
+              >
+                {showStatusHistory ? <X size={18} /> : <MoreHorizontal size={18} />}
+              </button>
+            </div>
           </div>
           
           {/* Progress Stepper */}
-          <div className="relative mb-2">
+          <div className="relative mb-4">
             <div className="absolute top-5 left-0 right-0 h-1 bg-gray-200 z-0"></div>
             <div className="flex justify-between relative z-10">
               <div className="flex flex-col items-center">
@@ -418,12 +497,54 @@ const OrderStatus: React.FC = () => {
           </div>
           
           {/* Status Message */}
-          <p className="text-sm text-gray-600 text-center mt-4">
+          <p className="text-sm text-gray-600 text-center mt-4 mb-4">
             {statusStep === 0 && "Ваш заказ обрабатывается. Мы свяжемся с вами в ближайшее время."}
             {statusStep === 1 && "Ваш заказ подтвержден. Мы готовим его к отправке."}
             {statusStep === 2 && "Ваш заказ в пути. Ожидайте доставку."}
             {statusStep === 3 && "Ваш заказ доставлен. Спасибо за покупку!"}
           </p>
+          
+          {/* Test Button for Changing Status (ДЛЯ ТЕСТА) */}
+          {order.status !== 'delivered' && order.status !== 'cancelled' && (
+            <Button 
+              onClick={() => updateOrderStatus(getNextStatus(order.status))}
+              className="w-full mb-4"
+            >
+              <ChevronRight size={18} className="mr-2" />
+              Перейти к следующему статусу (тест)
+            </Button>
+          )}
+          
+          {/* Status History Timeline */}
+          {showStatusHistory && order.statusHistory.length > 0 && (
+            <div className="mt-6 pt-4 border-t border-gray-100">
+              <h3 className="text-sm font-medium mb-4">История статусов</h3>
+              <div className="space-y-4">
+                {order.statusHistory.map((item, index) => (
+                  <div key={index} className="relative pl-8">
+                    {/* Connecting line */}
+                    {index < order.statusHistory.length - 1 && (
+                      <div className="absolute top-6 bottom-0 left-3.5 w-0.5 bg-gray-200"></div>
+                    )}
+                    {/* Status dot */}
+                    <div className={`absolute top-0.5 left-0 w-7 h-7 rounded-full flex items-center justify-center ${getStatusColor(item.status)} text-white`}>
+                      {item.status === 'processing' && <Clock size={14} />}
+                      {item.status === 'confirmed' && <Package size={14} />}
+                      {item.status === 'delivering' && <Truck size={14} />}
+                      {item.status === 'delivered' && <Home size={14} />}
+                      {item.status === 'cancelled' && <X size={14} />}
+                    </div>
+                    {/* Status info */}
+                    <div>
+                      <p className="text-sm font-medium">{getStatusLabel(item.status)}</p>
+                      <p className="text-xs text-gray-500">{format(item.timestamp, 'dd MMM yyyy, HH:mm', { locale: ru })}</p>
+                      {item.note && <p className="text-xs text-gray-600 mt-1">{item.note}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
       
