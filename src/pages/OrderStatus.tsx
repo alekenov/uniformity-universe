@@ -14,7 +14,7 @@ import { ru } from 'date-fns/locale';
 // Sample data for demonstration
 const sampleOrder = {
   id: '12345',
-  status: 'processing', // processing, confirmed, delivering, delivered, cancelled
+  status: 'processing' as OrderStatus, // Added type assertion here
   createdAt: new Date(2023, 5, 15, 14, 30),
   total: 12500,
   items: [
@@ -43,6 +43,7 @@ const sampleOrder = {
   }
 };
 
+// Define the OrderStatus type to fix the type error
 type OrderStatus = 'processing' | 'confirmed' | 'delivering' | 'delivered' | 'cancelled';
 
 const OrderStatus: React.FC = () => {
@@ -119,7 +120,7 @@ const OrderStatus: React.FC = () => {
   const cancelOrder = () => {
     setOrder(prev => ({
       ...prev,
-      status: 'cancelled'
+      status: 'cancelled' as OrderStatus // Added type assertion here
     }));
     setConfirmingCancel(false);
     toast({
@@ -131,11 +132,11 @@ const OrderStatus: React.FC = () => {
   // Status step calculation
   const getStatusStep = (status: OrderStatus) => {
     switch(status) {
-      case 'processing': return 0;
-      case 'confirmed': return 1;
-      case 'delivering': return 2;
-      case 'delivered': return 3;
-      case 'cancelled': return -1;
+      case "processing": return 0;
+      case "confirmed": return 1;
+      case "delivering": return 2;
+      case "delivered": return 3;
+      case "cancelled": return -1;
       default: return 0;
     }
   };
