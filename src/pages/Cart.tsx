@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Trash2, ShoppingBag, ChevronRight, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Trash2, ShoppingBag, ChevronRight, MessageSquare, X } from 'lucide-react';
 import CartItem from '@/components/CartItem';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
@@ -209,6 +209,15 @@ const Cart: React.FC = () => {
     }
   };
   
+  const handleRemoveCardMessage = () => {
+    setCardMessage('');
+    setShowCardMessageInput(false);
+    toast({
+      title: "Открытка удалена",
+      description: "Текст открытки был удален",
+    });
+  };
+  
   // Calculate order summary for active store
   const subtotal = activeStore.total;
   const deliveryFee = 0; // Free delivery
@@ -278,9 +287,18 @@ const Cart: React.FC = () => {
               
               {showCardMessageInput ? (
                 <div className="p-4 border-t border-[#F0F0F0]">
-                  <label htmlFor="cardMessage" className="block text-sm font-medium mb-2">
-                    Текст открытки
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label htmlFor="cardMessage" className="block text-sm font-medium">
+                      Текст открытки
+                    </label>
+                    <button 
+                      onClick={handleRemoveCardMessage}
+                      className="text-xs text-red-500 hover:underline flex items-center"
+                    >
+                      <X size={14} className="mr-1" />
+                      Удалить
+                    </button>
+                  </div>
                   <textarea
                     id="cardMessage"
                     value={cardMessage}
@@ -298,24 +316,45 @@ const Cart: React.FC = () => {
                 <div className="p-4 border-t border-[#F0F0F0]">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-sm font-medium">Текст открытки</h3>
-                    <button 
-                      onClick={() => setShowCardMessageInput(true)}
-                      className="text-xs text-[#4BA3E3] hover:underline"
-                    >
-                      Редактировать
-                    </button>
+                    <div className="flex items-center">
+                      <button 
+                        onClick={() => setShowCardMessageInput(true)}
+                        className="text-xs text-[#4BA3E3] hover:underline mr-3"
+                      >
+                        Редактировать
+                      </button>
+                      <button 
+                        onClick={handleRemoveCardMessage}
+                        className="text-xs text-red-500 hover:underline flex items-center"
+                      >
+                        <X size={14} className="mr-1" />
+                        Удалить
+                      </button>
+                    </div>
                   </div>
                   <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{cardMessage}</p>
                 </div>
               )}
               
-              <button 
-                onClick={handleAddCardMessage}
-                className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline border-t border-[#F0F0F0] flex items-center justify-center"
-              >
-                <MessageSquare size={18} className="mr-2" />
-                {showCardMessageInput ? "Сохранить открытку" : cardMessage.trim() ? "Изменить открытку" : "Добавить открытку"}
-              </button>
+              {!cardMessage.trim() && !showCardMessageInput && (
+                <button 
+                  onClick={handleAddCardMessage}
+                  className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline border-t border-[#F0F0F0] flex items-center justify-center"
+                >
+                  <MessageSquare size={18} className="mr-2" />
+                  Добавить открытку
+                </button>
+              )}
+              
+              {showCardMessageInput && (
+                <button 
+                  onClick={handleAddCardMessage}
+                  className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline border-t border-[#F0F0F0] flex items-center justify-center"
+                >
+                  <MessageSquare size={18} className="mr-2" />
+                  Сохранить открытку
+                </button>
+              )}
             </div>
             
             {/* Suggestions section - moved up */}
