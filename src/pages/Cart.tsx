@@ -294,14 +294,27 @@ const Cart: React.FC = () => {
                     {cardMessage.length}/200 символов
                   </div>
                 </div>
-              ) : null}
+              ) : cardMessage.trim() && (
+                <div className="p-4 border-t border-[#F0F0F0]">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-medium">Текст открытки</h3>
+                    <button 
+                      onClick={() => setShowCardMessageInput(true)}
+                      className="text-xs text-[#4BA3E3] hover:underline"
+                    >
+                      Редактировать
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{cardMessage}</p>
+                </div>
+              )}
               
               <button 
                 onClick={handleAddCardMessage}
                 className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline border-t border-[#F0F0F0] flex items-center justify-center"
               >
                 <MessageSquare size={18} className="mr-2" />
-                {showCardMessageInput ? "Сохранить открытку" : "Добавить открытку"}
+                {showCardMessageInput ? "Сохранить открытку" : cardMessage.trim() ? "Изменить открытку" : "Добавить открытку"}
               </button>
             </div>
             
