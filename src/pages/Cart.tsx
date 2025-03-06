@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Trash2, ShoppingBag, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Trash2, ShoppingBag, ChevronRight, MessageSquare } from 'lucide-react';
 import CartItem from '@/components/CartItem';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
@@ -122,6 +122,8 @@ const Cart: React.FC = () => {
   const navigate = useNavigate();
   const [stores, setStores] = useState(initialStores);
   const [activeStoreId, setActiveStoreId] = useState(initialStores[0].id);
+  const [showCardMessageInput, setShowCardMessageInput] = useState(false);
+  const [cardMessage, setCardMessage] = useState('');
   
   const activeStore = stores.find(store => store.id === activeStoreId) || stores[0];
   
@@ -192,6 +194,21 @@ const Cart: React.FC = () => {
     });
   };
   
+  const handleAddCardMessage = () => {
+    if (showCardMessageInput) {
+      // Save the card message
+      if (cardMessage.trim()) {
+        toast({
+          title: "Открытка добавлена",
+          description: "Текст открытки сохранен",
+        });
+      }
+      setShowCardMessageInput(false);
+    } else {
+      setShowCardMessageInput(true);
+    }
+  };
+  
   // Calculate order summary for active store
   const subtotal = activeStore.total;
   const deliveryFee = 0; // Free delivery
@@ -259,8 +276,32 @@ const Cart: React.FC = () => {
                 ))}
               </div>
               
-              <button className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline border-t border-[#F0F0F0]">
-                Перейти в магазин
+              {showCardMessageInput ? (
+                <div className="p-4 border-t border-[#F0F0F0]">
+                  <label htmlFor="cardMessage" className="block text-sm font-medium mb-2">
+                    Текст открытки
+                  </label>
+                  <textarea
+                    id="cardMessage"
+                    value={cardMessage}
+                    onChange={(e) => setCardMessage(e.target.value)}
+                    placeholder="Введите текст для вашей открытки..."
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4BA3E3]"
+                    rows={3}
+                    maxLength={200}
+                  />
+                  <div className="text-xs text-gray-500 mt-1 text-right">
+                    {cardMessage.length}/200 символов
+                  </div>
+                </div>
+              ) : null}
+              
+              <button 
+                onClick={handleAddCardMessage}
+                className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline border-t border-[#F0F0F0] flex items-center justify-center"
+              >
+                <MessageSquare size={18} className="mr-2" />
+                {showCardMessageInput ? "Сохранить открытку" : "Добавить открытку"}
               </button>
             </div>
             
