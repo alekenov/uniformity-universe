@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
@@ -424,7 +423,7 @@ const OrderStatus: React.FC = () => {
         )}
         
         {/* Florist & Courier Info */}
-        {(order.status === 'confirmed' || order.status === 'delivering' || order.customerApproved || order.customerRejected) && (
+        {(order.status === 'confirmed' || order.status === 'delivering' || order.status === 'delivered' || order.customerApproved || order.customerRejected) && (
           <div className="space-y-4 mt-4">
             {/* Florist */}
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
