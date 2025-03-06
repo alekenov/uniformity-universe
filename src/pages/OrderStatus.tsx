@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ChevronLeft, Clock, Package, Truck, Home, Calendar, Edit, X, 
-  MapPin, MessageSquare, ShoppingBag
+  MapPin, MessageSquare, ShoppingBag, ThumbsUp, User, Phone,
+  Image, Check, MessageCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -26,6 +27,18 @@ const sampleOrder = {
       image: '/public/placeholder.svg'
     }
   ],
+  bouquetPhoto: '/placeholder.svg', // Фото собранного букета
+  customerApproved: false, // Клиент подтвердил
+  florist: {
+    name: 'Елена Цветкова',
+    phone: '+7 (777) 123-45-67',
+    photo: '/placeholder.svg'
+  },
+  courier: {
+    name: 'Александр Доставкин',
+    phone: '+7 (777) 987-65-43',
+    photo: '/placeholder.svg'
+  },
   deliveryAddress: {
     street: 'ул. Пушкина, д. 10, кв. 5',
     city: 'Москва',
@@ -59,14 +72,28 @@ const OrderStatus: React.FC = () => {
   const [editingDate, setEditingDate] = useState(false);
   const [editingMessage, setEditingMessage] = useState(false);
   const [confirmingCancel, setConfirmingCancel] = useState(false);
+  const [contactingFlorist, setContactingFlorist] = useState(false);
+  const [contactingCourier, setContactingCourier] = useState(false);
   
   // Temporary states for edits
   const [tempAddress, setTempAddress] = useState(order.deliveryAddress);
   const [tempDate, setTempDate] = useState(order.deliveryDate);
   const [tempMessage, setTempMessage] = useState(order.cardMessage);
+  const [messageText, setMessageText] = useState('');
   
   const goBack = () => {
     navigate(-1);
+  };
+  
+  const approveOrder = () => {
+    setOrder(prev => ({
+      ...prev,
+      customerApproved: true
+    }));
+    toast({
+      title: "Букет одобрен",
+      description: "Спасибо за подтверждение! Ваш заказ готовится к доставке."
+    });
   };
   
   const saveAddress = () => {
@@ -129,6 +156,19 @@ const OrderStatus: React.FC = () => {
     });
   };
   
+  const sendMessage = (recipient: 'florist' | 'courier') => {
+    toast({
+      title: `Сообщение отправлено`,
+      description: `Ваше сообщение отправлено ${recipient === 'florist' ? 'флористу' : 'курьеру'}`
+    });
+    setMessageText('');
+    if (recipient === 'florist') {
+      setContactingFlorist(false);
+    } else {
+      setContactingCourier(false);
+    }
+  };
+  
   // Status step calculation
   const getStatusStep = (status: OrderStatus) => {
     switch(status) {
@@ -151,6 +191,122 @@ const OrderStatus: React.FC = () => {
           <ChevronLeft size={24} />
         </button>
         <h1 className="text-xl font-medium ml-2">Статус заказа #{order.id}</h1>
+      </div>
+      
+      {/* Bouquet Preview & Approval */}
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 className="text-lg font-medium mb-4">Ваш букет</h2>
+        
+        <div className="mb-4">
+          {order.bouquetPhoto ? (
+            <div className="relative rounded-lg overflow-hidden">
+              <img 
+                src={order.bouquetPhoto} 
+                alt="Ваш букет" 
+                className="w-full h-64 object-cover"
+              />
+              {order.customerApproved && (
+                <div className="absolute top-3 right-3 bg-green-500 text-white p-2 rounded-full">
+                  <Check size={20} />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="w-full h-64 bg-gray-50 rounded-lg flex flex-col items-center justify-center">
+              <Image size={48} className="text-gray-300 mb-3" />
+              <span className="text-gray-400">Фото букета будет доступно после сборки</span>
+            </div>
+          )}
+        </div>
+        
+        {!order.customerApproved && order.bouquetPhoto && order.status !== 'cancelled' && (
+          <Button 
+            variant="default" 
+            className="w-full mb-4"
+            onClick={approveOrder}
+          >
+            <ThumbsUp className="mr-2" size={18} />
+            Подтвердить букет
+          </Button>
+        )}
+        
+        {order.customerApproved && (
+          <div className="bg-green-50 p-4 rounded-lg mb-4">
+            <div className="flex items-center">
+              <ThumbsUp className="text-green-500 mr-2" size={18} />
+              <span className="text-green-700 font-medium">Вы подтвердили букет</span>
+            </div>
+          </div>
+        )}
+        
+        {/* Florist & Courier Info */}
+        {(order.status === 'confirmed' || order.status === 'delivering' || order.customerApproved) && (
+          <div className="space-y-4">
+            {/* Florist */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
+                  {order.florist.photo ? (
+                    <img src={order.florist.photo} alt="Флорист" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-full h-full p-2 text-gray-400" />
+                  )}
+                </div>
+                <div>
+                  <p className="font-medium text-sm">Флорист: {order.florist.name}</p>
+                  <p className="text-xs text-gray-500">{order.florist.phone}</p>
+                </div>
+              </div>
+              <div className="flex">
+                <button 
+                  className="p-2 text-[#4BA3E3] hover:bg-blue-50 rounded-full mr-1"
+                  onClick={() => setContactingFlorist(true)}
+                >
+                  <MessageCircle size={20} />
+                </button>
+                <a 
+                  href={`tel:${order.florist.phone}`} 
+                  className="p-2 text-[#4BA3E3] hover:bg-blue-50 rounded-full"
+                >
+                  <Phone size={20} />
+                </a>
+              </div>
+            </div>
+            
+            {/* Courier (only show when delivering) */}
+            {(order.status === 'delivering' || order.status === 'delivered') && (
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
+                    {order.courier.photo ? (
+                      <img src={order.courier.photo} alt="Курьер" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-full h-full p-2 text-gray-400" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">Курьер: {order.courier.name}</p>
+                    <p className="text-xs text-gray-500">{order.courier.phone}</p>
+                  </div>
+                </div>
+                <div className="flex">
+                  <button 
+                    className="p-2 text-[#4BA3E3] hover:bg-blue-50 rounded-full mr-1"
+                    onClick={() => setContactingCourier(true)}
+                  >
+                    <MessageCircle size={20} />
+                  </button>
+                  <a 
+                    href={`tel:${order.courier.phone}`} 
+                    className="p-2 text-[#4BA3E3] hover:bg-blue-50 rounded-full"
+                  >
+                    <Phone size={20} />
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       
       {/* Order Status */}
@@ -233,15 +389,6 @@ const OrderStatus: React.FC = () => {
             </div>
           </div>
         ))}
-        
-        {/* Preview Image */}
-        <div className="mb-6 pb-6 border-b border-gray-100">
-          <h3 className="font-medium mb-3">Предварительный вид букета</h3>
-          <div className="w-full h-52 bg-gray-50 rounded-lg flex items-center justify-center">
-            <ShoppingBag size={48} className="text-gray-300" />
-            <span className="text-gray-400 ml-3">Изображение будет доступно ближе к доставке</span>
-          </div>
-        </div>
         
         {/* Delivery Details with Edit */}
         <div className="mb-6 pb-6 border-b border-gray-100">
@@ -545,6 +692,82 @@ const OrderStatus: React.FC = () => {
             </Button>
             <Button variant="outline" onClick={() => setConfirmingCancel(false)}>
               Нет, вернуться
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+      
+      {/* Message to Florist Sheet */}
+      <Sheet open={contactingFlorist} onOpenChange={setContactingFlorist}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Сообщение флористу</SheetTitle>
+          </SheetHeader>
+          <div className="py-4">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
+                {order.florist.photo ? (
+                  <img src={order.florist.photo} alt="Флорист" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-full h-full p-2 text-gray-400" />
+                )}
+              </div>
+              <div>
+                <p className="font-medium text-sm">{order.florist.name}</p>
+                <p className="text-xs text-gray-500">{order.florist.phone}</p>
+              </div>
+            </div>
+            <textarea 
+              className="w-full h-40 mt-1 border border-gray-300 rounded-md p-2"
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              placeholder="Введите сообщение флористу..."
+            />
+          </div>
+          <div className="flex flex-col gap-3 mt-4">
+            <Button onClick={() => sendMessage('florist')} disabled={!messageText.trim()}>
+              Отправить
+            </Button>
+            <Button variant="outline" onClick={() => setContactingFlorist(false)}>
+              Отмена
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+      
+      {/* Message to Courier Sheet */}
+      <Sheet open={contactingCourier} onOpenChange={setContactingCourier}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Сообщение курьеру</SheetTitle>
+          </SheetHeader>
+          <div className="py-4">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
+                {order.courier.photo ? (
+                  <img src={order.courier.photo} alt="Курьер" className="w-full h-full object-cover" />
+                ) : (
+                  <User className="w-full h-full p-2 text-gray-400" />
+                )}
+              </div>
+              <div>
+                <p className="font-medium text-sm">{order.courier.name}</p>
+                <p className="text-xs text-gray-500">{order.courier.phone}</p>
+              </div>
+            </div>
+            <textarea 
+              className="w-full h-40 mt-1 border border-gray-300 rounded-md p-2"
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              placeholder="Введите сообщение курьеру..."
+            />
+          </div>
+          <div className="flex flex-col gap-3 mt-4">
+            <Button onClick={() => sendMessage('courier')} disabled={!messageText.trim()}>
+              Отправить
+            </Button>
+            <Button variant="outline" onClick={() => setContactingCourier(false)}>
+              Отмена
             </Button>
           </div>
         </SheetContent>
