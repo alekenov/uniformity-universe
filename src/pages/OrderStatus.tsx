@@ -4,10 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { 
   ChevronLeft, Clock, Package, Truck, Home, Calendar, Edit, X, 
   MapPin, MessageSquare, ShoppingBag, ThumbsUp, User, Phone,
-  Image, Check, MessageCircle
+  Image, Check, MessageCircle, Save
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -67,13 +66,13 @@ const OrderStatus: React.FC = () => {
   // State for the actual order - would be fetched based on orderId in a real app
   const [order, setOrder] = useState(sampleOrder);
   
-  // State for edit sheets
-  const [editingAddress, setEditingAddress] = useState(false);
-  const [editingDate, setEditingDate] = useState(false);
-  const [editingMessage, setEditingMessage] = useState(false);
-  const [confirmingCancel, setConfirmingCancel] = useState(false);
-  const [contactingFlorist, setContactingFlorist] = useState(false);
-  const [contactingCourier, setContactingCourier] = useState(false);
+  // State for inline editing
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [isEditingDate, setIsEditingDate] = useState(false);
+  const [isEditingMessage, setIsEditingMessage] = useState(false);
+  const [isConfirmingCancel, setIsConfirmingCancel] = useState(false);
+  const [isContactingFlorist, setIsContactingFlorist] = useState(false);
+  const [isContactingCourier, setIsContactingCourier] = useState(false);
   
   // Temporary states for edits
   const [tempAddress, setTempAddress] = useState(order.deliveryAddress);
@@ -101,7 +100,7 @@ const OrderStatus: React.FC = () => {
       ...prev,
       deliveryAddress: tempAddress
     }));
-    setEditingAddress(false);
+    setIsEditingAddress(false);
     toast({
       title: "Адрес обновлен",
       description: "Адрес доставки успешно изменен"
@@ -113,7 +112,7 @@ const OrderStatus: React.FC = () => {
       ...prev,
       deliveryDate: tempDate
     }));
-    setEditingDate(false);
+    setIsEditingDate(false);
     toast({
       title: "Дата обновлена",
       description: "Дата доставки успешно изменена"
@@ -125,7 +124,7 @@ const OrderStatus: React.FC = () => {
       ...prev,
       cardMessage: tempMessage
     }));
-    setEditingMessage(false);
+    setIsEditingMessage(false);
     toast({
       title: "Сообщение обновлено",
       description: "Текст открытки успешно изменен"
@@ -137,7 +136,7 @@ const OrderStatus: React.FC = () => {
       ...prev,
       cardMessage: ''
     }));
-    setEditingMessage(false);
+    setIsEditingMessage(false);
     toast({
       title: "Открытка удалена",
       description: "Текст открытки успешно удален"
@@ -147,9 +146,9 @@ const OrderStatus: React.FC = () => {
   const cancelOrder = () => {
     setOrder(prev => ({
       ...prev,
-      status: 'cancelled' as OrderStatus // Added type assertion here
+      status: 'cancelled' as OrderStatus
     }));
-    setConfirmingCancel(false);
+    setIsConfirmingCancel(false);
     toast({
       title: "Заказ отменен",
       description: "Ваш заказ был успешно отменен"
@@ -163,9 +162,9 @@ const OrderStatus: React.FC = () => {
     });
     setMessageText('');
     if (recipient === 'florist') {
-      setContactingFlorist(false);
+      setIsContactingFlorist(false);
     } else {
-      setContactingCourier(false);
+      setIsContactingCourier(false);
     }
   };
   
@@ -193,7 +192,7 @@ const OrderStatus: React.FC = () => {
         <h1 className="text-xl font-medium ml-2">Статус заказа #{order.id}</h1>
       </div>
       
-      {/* Bouquet Preview & Approval */}
+      {/* Bouquet Preview & Approval - This is now the primary focus */}
       <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
         <h2 className="text-lg font-medium mb-4">Ваш букет</h2>
         
@@ -260,7 +259,7 @@ const OrderStatus: React.FC = () => {
               <div className="flex">
                 <button 
                   className="p-2 text-[#4BA3E3] hover:bg-blue-50 rounded-full mr-1"
-                  onClick={() => setContactingFlorist(true)}
+                  onClick={() => setIsContactingFlorist(true)}
                 >
                   <MessageCircle size={20} />
                 </button>
@@ -272,6 +271,35 @@ const OrderStatus: React.FC = () => {
                 </a>
               </div>
             </div>
+            
+            {/* Florist Message Form (Inline) */}
+            {isContactingFlorist && (
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h3 className="font-medium mb-2">Сообщение флористу</h3>
+                <textarea 
+                  className="w-full h-32 border border-gray-300 rounded-md p-2 mb-3"
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
+                  placeholder="Введите сообщение флористу..."
+                />
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => sendMessage('florist')} 
+                    disabled={!messageText.trim()}
+                    size="sm"
+                  >
+                    Отправить
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setIsContactingFlorist(false)}
+                    size="sm"
+                  >
+                    Отмена
+                  </Button>
+                </div>
+              </div>
+            )}
             
             {/* Courier (only show when delivering) */}
             {(order.status === 'delivering' || order.status === 'delivered') && (
@@ -292,7 +320,7 @@ const OrderStatus: React.FC = () => {
                 <div className="flex">
                   <button 
                     className="p-2 text-[#4BA3E3] hover:bg-blue-50 rounded-full mr-1"
-                    onClick={() => setContactingCourier(true)}
+                    onClick={() => setIsContactingCourier(true)}
                   >
                     <MessageCircle size={20} />
                   </button>
@@ -302,6 +330,35 @@ const OrderStatus: React.FC = () => {
                   >
                     <Phone size={20} />
                   </a>
+                </div>
+              </div>
+            )}
+            
+            {/* Courier Message Form (Inline) */}
+            {isContactingCourier && (
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h3 className="font-medium mb-2">Сообщение курьеру</h3>
+                <textarea 
+                  className="w-full h-32 border border-gray-300 rounded-md p-2 mb-3"
+                  value={messageText}
+                  onChange={(e) => setMessageText(e.target.value)}
+                  placeholder="Введите сообщение курьеру..."
+                />
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => sendMessage('courier')} 
+                    disabled={!messageText.trim()}
+                    size="sm"
+                  >
+                    Отправить
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setIsContactingCourier(false)}
+                    size="sm"
+                  >
+                    Отмена
+                  </Button>
                 </div>
               </div>
             )}
@@ -390,15 +447,15 @@ const OrderStatus: React.FC = () => {
           </div>
         ))}
         
-        {/* Delivery Details with Edit */}
+        {/* Delivery Address with Inline Edit */}
         <div className="mb-6 pb-6 border-b border-gray-100">
           <div className="flex justify-between mb-3">
             <h3 className="font-medium">Адрес доставки</h3>
-            {order.status !== 'cancelled' && (
+            {order.status !== 'cancelled' && !isEditingAddress && (
               <button 
                 onClick={() => {
                   setTempAddress(order.deliveryAddress);
-                  setEditingAddress(true);
+                  setIsEditingAddress(true);
                 }}
                 className="text-[#4BA3E3] hover:text-[#3A92D2] p-1.5 rounded-full hover:bg-blue-50 transition-colors"
                 aria-label="Изменить адрес"
@@ -407,30 +464,109 @@ const OrderStatus: React.FC = () => {
               </button>
             )}
           </div>
-          <div className="flex items-start">
-            <MapPin size={18} className="text-gray-400 mr-2 mt-0.5" />
-            <div>
-              <p className="text-sm">{order.deliveryAddress.street}</p>
-              <p className="text-sm text-gray-500">
-                {order.deliveryAddress.city}, 
-                Подъезд: {order.deliveryAddress.entrance}, 
-                Этаж: {order.deliveryAddress.floor}, 
-                Кв: {order.deliveryAddress.apartment}, 
-                Домофон: {order.deliveryAddress.intercom}
-              </p>
+          
+          {!isEditingAddress ? (
+            <div className="flex items-start">
+              <MapPin size={18} className="text-gray-400 mr-2 mt-0.5" />
+              <div>
+                <p className="text-sm">{order.deliveryAddress.street}</p>
+                <p className="text-sm text-gray-500">
+                  {order.deliveryAddress.city}, 
+                  Подъезд: {order.deliveryAddress.entrance}, 
+                  Этаж: {order.deliveryAddress.floor}, 
+                  Кв: {order.deliveryAddress.apartment}, 
+                  Домофон: {order.deliveryAddress.intercom}
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="grid gap-3">
+                <div>
+                  <label className="text-sm font-medium">Улица, дом</label>
+                  <input 
+                    type="text" 
+                    className="w-full mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                    value={tempAddress.street}
+                    onChange={(e) => setTempAddress({...tempAddress, street: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Город</label>
+                  <input 
+                    type="text" 
+                    className="w-full mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                    value={tempAddress.city}
+                    onChange={(e) => setTempAddress({...tempAddress, city: e.target.value})}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-medium">Подъезд</label>
+                    <input 
+                      type="text" 
+                      className="w-full mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                      value={tempAddress.entrance}
+                      onChange={(e) => setTempAddress({...tempAddress, entrance: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Этаж</label>
+                    <input 
+                      type="text" 
+                      className="w-full mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                      value={tempAddress.floor}
+                      onChange={(e) => setTempAddress({...tempAddress, floor: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-medium">Квартира/Офис</label>
+                    <input 
+                      type="text" 
+                      className="w-full mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                      value={tempAddress.apartment}
+                      onChange={(e) => setTempAddress({...tempAddress, apartment: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium">Домофон</label>
+                    <input 
+                      type="text" 
+                      className="w-full mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                      value={tempAddress.intercom}
+                      onChange={(e) => setTempAddress({...tempAddress, intercom: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-1">
+                  <Button size="sm" onClick={saveAddress} className="gap-1">
+                    <Save size={14} />
+                    Сохранить
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => setIsEditingAddress(false)}
+                  >
+                    Отмена
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         
-        {/* Delivery Date with Edit */}
+        {/* Delivery Date with Inline Edit */}
         <div className="mb-6 pb-6 border-b border-gray-100">
           <div className="flex justify-between mb-3">
             <h3 className="font-medium">Дата и время доставки</h3>
-            {order.status !== 'cancelled' && (
+            {order.status !== 'cancelled' && !isEditingDate && (
               <button 
                 onClick={() => {
                   setTempDate(order.deliveryDate);
-                  setEditingDate(true);
+                  setIsEditingDate(true);
                 }}
                 className="text-[#4BA3E3] hover:text-[#3A92D2] p-1.5 rounded-full hover:bg-blue-50 transition-colors"
                 aria-label="Изменить дату"
@@ -439,24 +575,74 @@ const OrderStatus: React.FC = () => {
               </button>
             )}
           </div>
-          <div className="flex items-start">
-            <Calendar size={18} className="text-gray-400 mr-2 mt-0.5" />
-            <p className="text-sm">
-              {format(order.deliveryDate, 'dd MMMM yyyy, HH:mm', { locale: ru })}
-            </p>
-          </div>
+          
+          {!isEditingDate ? (
+            <div className="flex items-start">
+              <Calendar size={18} className="text-gray-400 mr-2 mt-0.5" />
+              <p className="text-sm">
+                {format(order.deliveryDate, 'dd MMMM yyyy, HH:mm', { locale: ru })}
+              </p>
+            </div>
+          ) : (
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="grid gap-3">
+                <div>
+                  <label className="text-sm font-medium">Дата</label>
+                  <input 
+                    type="date" 
+                    className="w-full mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                    value={format(tempDate, 'yyyy-MM-dd')}
+                    onChange={(e) => {
+                      const newDate = new Date(e.target.value);
+                      newDate.setHours(tempDate.getHours());
+                      newDate.setMinutes(tempDate.getMinutes());
+                      setTempDate(newDate);
+                    }}
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium">Время</label>
+                  <input 
+                    type="time" 
+                    className="w-full mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                    value={format(tempDate, 'HH:mm')}
+                    onChange={(e) => {
+                      const [hours, minutes] = e.target.value.split(':');
+                      const newDate = new Date(tempDate);
+                      newDate.setHours(parseInt(hours));
+                      newDate.setMinutes(parseInt(minutes));
+                      setTempDate(newDate);
+                    }}
+                  />
+                </div>
+                <div className="flex gap-2 mt-1">
+                  <Button size="sm" onClick={saveDate} className="gap-1">
+                    <Save size={14} />
+                    Сохранить
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    onClick={() => setIsEditingDate(false)}
+                  >
+                    Отмена
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         
-        {/* Card Message with Edit */}
+        {/* Card Message with Inline Edit */}
         <div className="mb-6 pb-6 border-b border-gray-100">
           <div className="flex justify-between mb-3">
             <h3 className="font-medium">Текст открытки</h3>
-            {order.status !== 'cancelled' && order.cardMessage && (
+            {order.status !== 'cancelled' && order.cardMessage && !isEditingMessage && (
               <div className="flex">
                 <button 
                   onClick={() => {
                     setTempMessage(order.cardMessage);
-                    setEditingMessage(true);
+                    setIsEditingMessage(true);
                   }}
                   className="text-[#4BA3E3] hover:text-[#3A92D2] p-1.5 rounded-full hover:bg-blue-50 transition-colors mr-1"
                   aria-label="Редактировать открытку"
@@ -473,26 +659,55 @@ const OrderStatus: React.FC = () => {
               </div>
             )}
           </div>
-          {order.cardMessage ? (
-            <div className="flex items-start">
-              <MessageSquare size={18} className="text-gray-400 mr-2 mt-0.5" />
-              <p className="text-sm">{order.cardMessage}</p>
-            </div>
+          
+          {!isEditingMessage ? (
+            order.cardMessage ? (
+              <div className="flex items-start">
+                <MessageSquare size={18} className="text-gray-400 mr-2 mt-0.5" />
+                <p className="text-sm">{order.cardMessage}</p>
+              </div>
+            ) : (
+              <div className="flex items-center text-gray-400">
+                <MessageSquare size={18} className="mr-2" />
+                <p className="text-sm">Без открытки</p>
+                {order.status !== 'cancelled' && (
+                  <button 
+                    onClick={() => {
+                      setTempMessage('');
+                      setIsEditingMessage(true);
+                    }}
+                    className="text-[#4BA3E3] ml-2 text-sm hover:underline"
+                  >
+                    Добавить
+                  </button>
+                )}
+              </div>
+            )
           ) : (
-            <div className="flex items-center text-gray-400">
-              <MessageSquare size={18} className="mr-2" />
-              <p className="text-sm">Без открытки</p>
-              {order.status !== 'cancelled' && (
-                <button 
-                  onClick={() => {
-                    setTempMessage('');
-                    setEditingMessage(true);
-                  }}
-                  className="text-[#4BA3E3] ml-2 text-sm hover:underline"
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <label className="text-sm font-medium">Текст открытки</label>
+              <textarea 
+                className="w-full h-32 mt-1 border border-gray-300 rounded-md p-2 text-sm"
+                value={tempMessage}
+                onChange={(e) => setTempMessage(e.target.value)}
+                placeholder="Введите текст открытки..."
+              />
+              <p className="text-xs text-gray-500 mt-1 mb-3">
+                Максимум 200 символов
+              </p>
+              <div className="flex gap-2">
+                <Button size="sm" onClick={saveMessage} className="gap-1">
+                  <Save size={14} />
+                  Сохранить
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={() => setIsEditingMessage(false)}
                 >
-                  Добавить
-                </button>
-              )}
+                  Отмена
+                </Button>
+              </div>
             </div>
           )}
         </div>
@@ -520,258 +735,44 @@ const OrderStatus: React.FC = () => {
         </div>
       </div>
       
+      {/* Cancellation Confirmation (Inline) */}
+      {isConfirmingCancel && (
+        <div className="bg-red-50 rounded-lg shadow-sm p-6 mb-6">
+          <h3 className="font-medium mb-3 text-red-800">Подтверждение отмены заказа</h3>
+          <p className="text-sm text-red-700 mb-4">
+            Вы уверены, что хотите отменить заказ? Это действие невозможно отменить.
+          </p>
+          <div className="flex gap-3">
+            <Button 
+              variant="destructive" 
+              onClick={cancelOrder}
+              size="sm"
+            >
+              Да, отменить заказ
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setIsConfirmingCancel(false)}
+              size="sm"
+            >
+              Нет, вернуться
+            </Button>
+          </div>
+        </div>
+      )}
+      
       {/* Actions */}
-      {order.status !== 'cancelled' && order.status !== 'delivered' && (
+      {order.status !== 'cancelled' && order.status !== 'delivered' && !isConfirmingCancel && (
         <div className="bg-white rounded-lg shadow-sm p-6">
           <Button 
             variant="destructive" 
             className="w-full" 
-            onClick={() => setConfirmingCancel(true)}
+            onClick={() => setIsConfirmingCancel(true)}
           >
             Отменить заказ
           </Button>
         </div>
       )}
-      
-      {/* Edit Address Sheet */}
-      <Sheet open={editingAddress} onOpenChange={setEditingAddress}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Изменить адрес доставки</SheetTitle>
-          </SheetHeader>
-          <div className="grid gap-4 py-4">
-            <div>
-              <label className="text-sm font-medium">Улица, дом</label>
-              <input 
-                type="text" 
-                className="w-full mt-1 border border-gray-300 rounded-md p-2"
-                value={tempAddress.street}
-                onChange={(e) => setTempAddress({...tempAddress, street: e.target.value})}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Город</label>
-              <input 
-                type="text" 
-                className="w-full mt-1 border border-gray-300 rounded-md p-2"
-                value={tempAddress.city}
-                onChange={(e) => setTempAddress({...tempAddress, city: e.target.value})}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Подъезд</label>
-                <input 
-                  type="text" 
-                  className="w-full mt-1 border border-gray-300 rounded-md p-2"
-                  value={tempAddress.entrance}
-                  onChange={(e) => setTempAddress({...tempAddress, entrance: e.target.value})}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Этаж</label>
-                <input 
-                  type="text" 
-                  className="w-full mt-1 border border-gray-300 rounded-md p-2"
-                  value={tempAddress.floor}
-                  onChange={(e) => setTempAddress({...tempAddress, floor: e.target.value})}
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Квартира/Офис</label>
-                <input 
-                  type="text" 
-                  className="w-full mt-1 border border-gray-300 rounded-md p-2"
-                  value={tempAddress.apartment}
-                  onChange={(e) => setTempAddress({...tempAddress, apartment: e.target.value})}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Домофон</label>
-                <input 
-                  type="text" 
-                  className="w-full mt-1 border border-gray-300 rounded-md p-2"
-                  value={tempAddress.intercom}
-                  onChange={(e) => setTempAddress({...tempAddress, intercom: e.target.value})}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-3 mt-4">
-            <Button onClick={saveAddress}>Сохранить</Button>
-            <Button variant="outline" onClick={() => setEditingAddress(false)}>Отмена</Button>
-          </div>
-        </SheetContent>
-      </Sheet>
-      
-      {/* Edit Date Sheet */}
-      <Sheet open={editingDate} onOpenChange={setEditingDate}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Изменить дату доставки</SheetTitle>
-          </SheetHeader>
-          <div className="py-4">
-            <div className="mb-4">
-              <label className="text-sm font-medium">Дата</label>
-              <input 
-                type="date" 
-                className="w-full mt-1 border border-gray-300 rounded-md p-2"
-                value={format(tempDate, 'yyyy-MM-dd')}
-                onChange={(e) => {
-                  const newDate = new Date(e.target.value);
-                  newDate.setHours(tempDate.getHours());
-                  newDate.setMinutes(tempDate.getMinutes());
-                  setTempDate(newDate);
-                }}
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Время</label>
-              <input 
-                type="time" 
-                className="w-full mt-1 border border-gray-300 rounded-md p-2"
-                value={format(tempDate, 'HH:mm')}
-                onChange={(e) => {
-                  const [hours, minutes] = e.target.value.split(':');
-                  const newDate = new Date(tempDate);
-                  newDate.setHours(parseInt(hours));
-                  newDate.setMinutes(parseInt(minutes));
-                  setTempDate(newDate);
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-3 mt-4">
-            <Button onClick={saveDate}>Сохранить</Button>
-            <Button variant="outline" onClick={() => setEditingDate(false)}>Отмена</Button>
-          </div>
-        </SheetContent>
-      </Sheet>
-      
-      {/* Edit Message Sheet */}
-      <Sheet open={editingMessage} onOpenChange={setEditingMessage}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Изменить текст открытки</SheetTitle>
-          </SheetHeader>
-          <div className="py-4">
-            <label className="text-sm font-medium">Текст открытки</label>
-            <textarea 
-              className="w-full h-40 mt-1 border border-gray-300 rounded-md p-2"
-              value={tempMessage}
-              onChange={(e) => setTempMessage(e.target.value)}
-              placeholder="Введите текст открытки..."
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Максимум 200 символов
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 mt-4">
-            <Button onClick={saveMessage}>Сохранить</Button>
-            <Button variant="outline" onClick={() => setEditingMessage(false)}>Отмена</Button>
-          </div>
-        </SheetContent>
-      </Sheet>
-      
-      {/* Cancel Confirmation Sheet */}
-      <Sheet open={confirmingCancel} onOpenChange={setConfirmingCancel}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Отменить заказ</SheetTitle>
-          </SheetHeader>
-          <div className="py-6">
-            <p className="text-gray-600">
-              Вы уверены, что хотите отменить заказ? Это действие невозможно отменить.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 mt-4">
-            <Button variant="destructive" onClick={cancelOrder}>
-              Да, отменить заказ
-            </Button>
-            <Button variant="outline" onClick={() => setConfirmingCancel(false)}>
-              Нет, вернуться
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
-      
-      {/* Message to Florist Sheet */}
-      <Sheet open={contactingFlorist} onOpenChange={setContactingFlorist}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Сообщение флористу</SheetTitle>
-          </SheetHeader>
-          <div className="py-4">
-            <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
-                {order.florist.photo ? (
-                  <img src={order.florist.photo} alt="Флорист" className="w-full h-full object-cover" />
-                ) : (
-                  <User className="w-full h-full p-2 text-gray-400" />
-                )}
-              </div>
-              <div>
-                <p className="font-medium text-sm">{order.florist.name}</p>
-                <p className="text-xs text-gray-500">{order.florist.phone}</p>
-              </div>
-            </div>
-            <textarea 
-              className="w-full h-40 mt-1 border border-gray-300 rounded-md p-2"
-              value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
-              placeholder="Введите сообщение флористу..."
-            />
-          </div>
-          <div className="flex flex-col gap-3 mt-4">
-            <Button onClick={() => sendMessage('florist')} disabled={!messageText.trim()}>
-              Отправить
-            </Button>
-            <Button variant="outline" onClick={() => setContactingFlorist(false)}>
-              Отмена
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
-      
-      {/* Message to Courier Sheet */}
-      <Sheet open={contactingCourier} onOpenChange={setContactingCourier}>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Сообщение курьеру</SheetTitle>
-          </SheetHeader>
-          <div className="py-4">
-            <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-gray-200 rounded-full overflow-hidden mr-3">
-                {order.courier.photo ? (
-                  <img src={order.courier.photo} alt="Курьер" className="w-full h-full object-cover" />
-                ) : (
-                  <User className="w-full h-full p-2 text-gray-400" />
-                )}
-              </div>
-              <div>
-                <p className="font-medium text-sm">{order.courier.name}</p>
-                <p className="text-xs text-gray-500">{order.courier.phone}</p>
-              </div>
-            </div>
-            <textarea 
-              className="w-full h-40 mt-1 border border-gray-300 rounded-md p-2"
-              value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
-              placeholder="Введите сообщение курьеру..."
-            />
-          </div>
-          <div className="flex flex-col gap-3 mt-4">
-            <Button onClick={() => sendMessage('courier')} disabled={!messageText.trim()}>
-              Отправить
-            </Button>
-            <Button variant="outline" onClick={() => setContactingCourier(false)}>
-              Отмена
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
     </div>
   );
 };
