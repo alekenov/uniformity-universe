@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DeliveryType } from '@/components/DeliveryOptions';
 import { PickupLocationList, StoreLocation } from './pickup/PickupLocationList';
 import { AddressInput, AddressInfo } from './address/AddressInput';
 import { AddressDetails } from './address/AddressDetails';
+import { Button } from './ui/button';
+import { Checkbox } from './ui/checkbox';
 
 interface AddressPanelProps {
   address: AddressInfo;
@@ -44,10 +46,15 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
 }) => {
   const [verifyAddress, setVerifyAddress] = useState(false);
   const [selectedStore, setSelectedStore] = useState(storeLocations[0].id);
+  const [cityOnly, setCityOnly] = useState(false);
   const navigate = useNavigate();
   
   const handleAddressClick = () => {
     navigate('/address-selection');
+  };
+
+  const handleCityChange = () => {
+    console.log('Change city');
   };
 
   if (deliveryType === 'pickup') {
@@ -73,18 +80,55 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Куда доставить</h2>
       
-      <AddressInput
-        address={address}
-        onChange={onChange}
-        verifyAddress={verifyAddress}
-        onVerifyAddressChange={setVerifyAddress}
-        onAddressClick={handleAddressClick}
-        onCityChange={() => console.log('Change city')}
-        onShowNearbyStores={() => console.log('Show nearby stores')}
-      />
+      {/* City Selection */}
+      <div className="mb-4 px-3 py-3 bg-[#F8F8F8] rounded-lg">
+        <div className="flex items-center gap-2 mb-3">
+          <MapPin size={18} className="text-gray-500" />
+          <div className="text-sm font-medium">Город:</div>
+          <div className="text-sm">{address.city || 'Москва'}</div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-xs text-primary ml-auto h-6 px-2"
+            onClick={handleCityChange}
+          >
+            Изменить
+          </Button>
+        </div>
+
+        <div className="flex items-center space-x-2 mb-2">
+          <Checkbox 
+            id="cityOnly" 
+            checked={cityOnly}
+            onCheckedChange={(checked) => setCityOnly(checked === true)}
+          />
+          <label
+            htmlFor="cityOnly"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Знаю только город
+          </label>
+        </div>
+
+        {cityOnly ? (
+          <p className="text-sm text-gray-600 mt-2">
+            Адрес будет уточнен у получателя. Курьер свяжется для согласования деталей доставки.
+          </p>
+        ) : (
+          <AddressInput
+            address={address}
+            onChange={onChange}
+            verifyAddress={verifyAddress}
+            onVerifyAddressChange={setVerifyAddress}
+            onAddressClick={handleAddressClick}
+            onCityChange={handleCityChange}
+            onShowNearbyStores={() => console.log('Show nearby stores')}
+          />
+        )}
+      </div>
       
-      {/* Address details (only visible when address is set and no verification needed) */}
-      {address.street && !verifyAddress && (
+      {/* Address details (only visible when address is set, no verification needed, and not city-only mode) */}
+      {address.street && !verifyAddress && !cityOnly && (
         <AddressDetails 
           address={address}
           onChange={onChange}

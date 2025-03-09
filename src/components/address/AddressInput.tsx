@@ -34,27 +34,12 @@ export const AddressInput: React.FC<AddressInputProps> = ({
 }) => {
   return (
     <div>
-      {/* City Selection */}
-      <div className="mb-4 flex items-center gap-2">
-        <Building size={18} className="text-gray-500" />
-        <div className="text-sm font-medium">Город:</div>
-        <div className="text-sm">{address.city || 'Москва'}</div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-xs text-primary ml-auto h-6 px-2"
-          onClick={onCityChange}
-        >
-          Изменить
-        </Button>
-      </div>
-
       {/* Address Input Block */}
       <div 
-        className="flex items-start p-3 mb-4 bg-[#F8F8F8] rounded-lg cursor-pointer hover:bg-[#F0F0F0]" 
+        className="flex items-start bg-white p-3 mb-4 rounded-lg cursor-pointer hover:bg-[#F0F0F0]" 
         onClick={onAddressClick}
       >
-        <div className="flex-shrink-0 w-8 h-8 bg-white rounded-full flex items-center justify-center mr-3">
+        <div className="flex-shrink-0 w-8 h-8 bg-[#F0F0F0] rounded-full flex items-center justify-center mr-3">
           <MapPin size={16} className="text-gray-600" />
         </div>
         <div className="flex-grow">
@@ -87,7 +72,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
         </div>
         
         {verifyAddress && (
-          <div className="mt-3 p-3 bg-[#F9F9F9] rounded-lg border border-[#F0F0F0]">
+          <div className="mt-3 p-3 bg-white rounded-lg border border-[#F0F0F0]">
             <p className="text-sm text-gray-600">Адрес будет уточнен у получателя. Курьер свяжется с получателем для согласования деталей доставки.</p>
           </div>
         )}
