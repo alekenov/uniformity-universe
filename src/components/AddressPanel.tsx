@@ -47,6 +47,7 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
   const [verifyAddress, setVerifyAddress] = useState(false);
   const [selectedStore, setSelectedStore] = useState(storeLocations[0].id);
   const [cityOnly, setCityOnly] = useState(false);
+  const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   const navigate = useNavigate();
   
   const handleAddressClick = () => {
@@ -55,6 +56,10 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
 
   const handleCityChange = () => {
     console.log('Change city');
+  };
+
+  const handleShowNearbyStores = () => {
+    console.log('Show nearby stores');
   };
 
   if (deliveryType === 'pickup') {
@@ -122,13 +127,15 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
             onVerifyAddressChange={setVerifyAddress}
             onAddressClick={handleAddressClick}
             onCityChange={handleCityChange}
-            onShowNearbyStores={() => console.log('Show nearby stores')}
+            onShowNearbyStores={handleShowNearbyStores}
+            deliveryMethod={deliveryMethod}
+            onDeliveryMethodChange={setDeliveryMethod}
           />
         )}
       </div>
       
       {/* Address details (only visible when address is set, no verification needed, and not city-only mode) */}
-      {address.street && !verifyAddress && !cityOnly && (
+      {address.street && !verifyAddress && !cityOnly && deliveryMethod === 'delivery' && (
         <AddressDetails 
           address={address}
           onChange={onChange}
