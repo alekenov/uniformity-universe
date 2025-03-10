@@ -223,6 +223,10 @@ const Cart: React.FC = () => {
   const deliveryFee = 0; // Free delivery
   const serviceFee = 990;
   const total = subtotal + deliveryFee + serviceFee;
+
+  const handleCheckout = () => {
+    navigate('/checkout');
+  };
   
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
@@ -400,12 +404,12 @@ const Cart: React.FC = () => {
             
             <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
               <div className="container max-w-3xl mx-auto">
-                <Link 
-                  to="/"
+                <button 
+                  onClick={handleCheckout}
                   className="bg-[#FF6633] text-white font-medium py-3 px-6 rounded-xl w-full flex items-center justify-center"
                 >
                   Оформить заказ
-                </Link>
+                </button>
               </div>
             </div>
           </>
