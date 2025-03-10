@@ -1,12 +1,18 @@
 
 import React, { useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Clock } from 'lucide-react';
 
 interface DeliveryTimeSlotsProps {
   selectedDay: string; // 'today' | 'tomorrow' or a custom date
+  onTimeSlotSelect?: (timeSlot: string) => void;
 }
 
-const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({ selectedDay }) => {
+const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({ 
+  selectedDay,
+  onTimeSlotSelect 
+}) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("asap");
 
@@ -18,8 +24,19 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({ selectedDay }) =>
     { id: "21-23", label: "21-23 час" }
   ];
 
+  const handleTimeSelect = (slot: string) => {
+    setSelectedTimeSlot(slot);
+    if (onTimeSlotSelect) {
+      onTimeSlotSelect(slot);
+    }
+  };
+
   return (
-    <div className="relative">
+    <div className="relative mt-4">
+      <div className="flex items-center mb-2">
+        <Clock size={18} className="text-gray-500 mr-2" />
+        <h3 className="text-sm font-medium">Выберите время доставки</h3>
+      </div>
       <div 
         ref={scrollContainerRef}
         className="flex overflow-x-auto pb-2 gap-3 scroll-smooth scrollbar-hide"
@@ -34,7 +51,7 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({ selectedDay }) =>
                 ? "bg-primary text-white" 
                 : "bg-[#F8F8F8] hover:bg-[#F0F0F0] text-gray-700"
             )}
-            onClick={() => setSelectedTimeSlot(slot.id)}
+            onClick={() => handleTimeSelect(slot.id)}
           >
             {slot.label}
           </div>

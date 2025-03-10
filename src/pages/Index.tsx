@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Trash2 } from 'lucide-react';
+import { ArrowLeft, Trash2, MapPin, Navigation, Truck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CartItem from '@/components/CartItem';
 import DeliveryOptions, { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
@@ -8,6 +8,8 @@ import AddressPanel from '@/components/AddressPanel';
 import PaymentOptions from '@/components/PaymentOptions';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import DeliveryTimeSlots from '@/components/delivery/DeliveryTimeSlots';
 
 // Sample product data - flower bouquets
 const initialProducts = [
@@ -38,12 +40,21 @@ const paymentCards = [
   { id: 'card3', last4: '8001', type: 'visa' as const },
 ];
 
+// Sample pickup locations
+const pickupLocations = [
+  { id: 'loc1', name: 'ТРЦ Алмалы', address: 'ул. Абылай хана, 31', distance: '1.2 км' },
+  { id: 'loc2', name: 'ТРЦ Достык Плаза', address: 'ул. Достык, 12', distance: '2.5 км' },
+  { id: 'loc3', name: 'ТРЦ Мега Алма-Ата', address: 'ул. Розыбакиева, 247', distance: '4.8 км' },
+];
+
 const Index: React.FC = () => {
   const { toast } = useToast();
   const [products, setProducts] = useState(initialProducts);
-  const [deliveryType, setDeliveryType] = useState<DeliveryType>('self');
+  const [deliveryType, setDeliveryType] = useState<DeliveryType>('delivery');
   const [deliveryTime, setDeliveryTime] = useState<DeliveryTime>('today');
   const [paymentMethod, setPaymentMethod] = useState('card1');
+  const [selectedPickupLocation, setSelectedPickupLocation] = useState('loc1');
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('asap');
   
   const [address, setAddress] = useState({
     street: 'улица Достоевского, 3с2',
@@ -116,24 +127,115 @@ const Index: React.FC = () => {
       <main className="container max-w-3xl mx-auto px-4 py-6 pb-24">
         {products.length > 0 ? (
           <>
-            <DeliveryOptions
-              selectedType={deliveryType}
-              selectedTime={deliveryTime}
-              onTypeChange={setDeliveryType}
-              onTimeChange={setDeliveryTime}
-            />
-            
-            <AddressPanel
-              address={address}
-              onChange={handleAddressChange}
-              onEdit={() => {
-                toast({
-                  title: "Редактирование адреса",
-                  description: "Здесь будет форма редактирования адреса",
-                });
-              }}
-              deliveryType={deliveryType}
-            />
+            {/* Delivery Type Selection */}
+            <div className="bg-white rounded-xl p-4 mb-4 shadow-sm">
+              <h2 className="text-lg font-medium mb-4">Способ получения</h2>
+              
+              <RadioGroup
+                value={deliveryType}
+                onValueChange={(value) => setDeliveryType(value as DeliveryType)}
+                className="flex flex-col gap-3"
+              >
+                {/* Delivery Option */}
+                <div className={`border rounded-lg p-3 ${deliveryType === 'delivery' ? 'border-primary' : 'border-gray-200'}`}>
+                  <div className="flex items-start">
+                    <RadioGroupItem value="delivery" id="delivery" className="mt-1" />
+                    <div className="ml-3">
+                      <label htmlFor="delivery" className="flex items-center font-medium text-base cursor-pointer">
+                        <Truck size={18} className="mr-2 text-primary" />
+                        Доставка
+                      </label>
+                      
+                      {deliveryType === 'delivery' && (
+                        <div className="mt-2">
+                          <div className="flex items-center text-sm text-gray-700 mb-1">
+                            <MapPin size={16} className="mr-1 text-gray-500" />
+                            <span>Казахстан, Алматы</span>
+                          </div>
+                          <p className="text-sm text-gray-500">{address.street}</p>
+                          
+                          <button
+                            onClick={() => {
+                              toast({
+                                title: "Редактирование адреса",
+                                description: "Здесь будет форма редактирования адреса",
+                              });
+                            }}
+                            className="text-sm text-primary mt-2 hover:underline"
+                          >
+                            Изменить адрес
+                          </button>
+                          
+                          <DeliveryTimeSlots 
+                            selectedDay={deliveryTime} 
+                            onTimeSlotSelect={setSelectedTimeSlot}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Pickup Option */}
+                <div className={`border rounded-lg p-3 ${deliveryType === 'pickup' ? 'border-primary' : 'border-gray-200'}`}>
+                  <div className="flex items-start">
+                    <RadioGroupItem value="pickup" id="pickup" className="mt-1" />
+                    <div className="ml-3 flex-1">
+                      <label htmlFor="pickup" className="flex items-center font-medium text-base cursor-pointer">
+                        <Navigation size={18} className="mr-2 text-primary" />
+                        Самовывоз
+                      </label>
+                      
+                      {deliveryType === 'pickup' && (
+                        <div className="mt-2">
+                          <div className="flex items-center text-sm text-gray-700 mb-3">
+                            <MapPin size={16} className="mr-1 text-gray-500" />
+                            <span>Казахстан, Алматы</span>
+                          </div>
+                          
+                          {pickupLocations.map(location => (
+                            <div 
+                              key={location.id}
+                              className={`border rounded-md p-3 mb-2 cursor-pointer transition-all ${
+                                selectedPickupLocation === location.id ? 'border-primary bg-blue-50' : 'border-gray-200'
+                              }`}
+                              onClick={() => setSelectedPickupLocation(location.id)}
+                            >
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <p className="font-medium text-sm">{location.name}</p>
+                                  <p className="text-sm text-gray-500 mt-0.5">{location.address}</p>
+                                </div>
+                                <span className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-600">
+                                  {location.distance}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                          
+                          <button
+                            className="text-sm text-primary mt-1 hover:underline"
+                            onClick={() => {
+                              toast({
+                                title: "Карта пунктов выдачи",
+                                description: "Здесь будет карта с пунктами выдачи",
+                              });
+                            }}
+                          >
+                            Показать на карте
+                          </button>
+                          
+                          <DeliveryTimeSlots 
+                            selectedDay={deliveryTime} 
+                            onTimeSlotSelect={setSelectedTimeSlot}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
             
             <PaymentOptions
               cards={paymentCards}
