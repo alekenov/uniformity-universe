@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ChevronRight, MapPin, Navigation } from 'lucide-react';
+import { ChevronRight, Navigation } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DeliveryType } from '@/components/DeliveryOptions';
 import { PickupLocationList, StoreLocation } from './pickup/PickupLocationList';
@@ -9,6 +9,7 @@ import { AddressDetails } from './address/AddressDetails';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
+import RegionCitySelector from './address/RegionCitySelector';
 
 interface AddressPanelProps {
   address: AddressInfo;
@@ -70,24 +71,11 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
       <h2 className="text-xl font-medium mb-4">Куда доставить</h2>
       
       {/* Region and City Display */}
-      <div className="mb-4 flex items-center justify-between bg-[#F8F8F8] px-3 py-2 rounded-lg">
-        <div className="flex items-center">
-          <MapPin size={18} className="text-gray-500 mr-2" />
-          <div className="text-sm">
-            <span className="font-medium">{selectedRegion}</span>
-            <span className="mx-2">•</span>
-            <span>{selectedCity}</span>
-          </div>
-        </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-xs text-primary h-6 px-2"
-          onClick={handleCityChange}
-        >
-          Изменить
-        </Button>
-      </div>
+      <RegionCitySelector 
+        selectedRegion={selectedRegion}
+        selectedCity={selectedCity}
+        onCityChange={handleCityChange}
+      />
       
       {/* Delivery Method Tabs */}
       <Tabs defaultValue="delivery" className="w-full mb-4" onValueChange={(value) => setDeliveryMethod(value as 'delivery' | 'pickup')}>

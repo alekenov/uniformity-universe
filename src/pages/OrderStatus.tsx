@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -20,7 +21,7 @@ const OrderStatusPage: React.FC = () => {
       <p>Order ID: {orderId}</p>
       <p>Status: {status}</p>
 
-      {status === ("cancelled" as const) && (
+      {status === "cancelled" && (
         <p>Your order has been cancelled.</p>
       )}
 
