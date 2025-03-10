@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { MapPin, Clock, Truck, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import DeliveryTimeSlots from '@/components/delivery/DeliveryTimeSlots';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -193,8 +192,6 @@ const DeliveryPickupSelector: React.FC<DeliveryPickupSelectorProps> = ({
             Завтра
           </Button>
         </div>
-        
-        <DeliveryTimeSlots selectedDay={selectedDay} compact />
       </div>
 
       {/* Submit Button */}
