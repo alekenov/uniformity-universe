@@ -81,11 +81,11 @@ export const AddressInput: React.FC<AddressInputProps> = ({
       {deliveryMethod === 'delivery' && (
         <>
           <div 
-            className="flex items-start bg-white p-3 mb-4 rounded-lg cursor-pointer hover:bg-[#F0F0F0]" 
+            className="flex items-start bg-white shadow-sm border border-gray-100 p-3 mb-4 rounded-lg cursor-pointer hover:bg-[#F8F8F8] transition-colors"
             onClick={onAddressClick}
           >
-            <div className="flex-shrink-0 w-8 h-8 bg-[#F0F0F0] rounded-full flex items-center justify-center mr-3">
-              <MapPin size={16} className="text-gray-600" />
+            <div className="flex-shrink-0 w-10 h-10 bg-[#F8F8F8] rounded-full flex items-center justify-center mr-3">
+              <MapPin size={18} className="text-gray-600" />
             </div>
             <div className="flex-grow">
               {address.street ? (
@@ -102,7 +102,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
           
           {/* Verify address checkbox */}
           <div className="mb-4">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 p-3 bg-[#F8F8F8] rounded-lg">
               <Checkbox 
                 id="verifyAddress" 
                 checked={verifyAddress}
@@ -127,17 +127,19 @@ export const AddressInput: React.FC<AddressInputProps> = ({
       
       {/* Pickup store selection - Only show for pickup method */}
       {deliveryMethod === 'pickup' && (
-        <div className="bg-white p-3 mb-4 rounded-lg border border-[#F0F0F0]">
+        <div className="bg-white p-4 mb-4 rounded-lg border border-[#F0F0F0] shadow-sm">
           <div className="flex items-center mb-3">
-            <div className="flex-shrink-0 w-8 h-8 bg-[#F0F0F0] rounded-full flex items-center justify-center mr-3">
-              <Store size={16} className="text-gray-600" />
+            <div className="flex-shrink-0 w-10 h-10 bg-[#F8F8F8] rounded-full flex items-center justify-center mr-3">
+              <Store size={18} className="text-gray-600" />
             </div>
-            <div className="font-medium">Выберите пункт самовывоза</div>
+            <div className="flex-grow">
+              <div className="font-medium">Выберите пункт самовывоза</div>
+              <p className="text-sm text-gray-600 mt-1">Вы можете забрать заказ самостоятельно в одном из наших магазинов</p>
+            </div>
           </div>
-          <p className="text-sm text-gray-600 mb-3">Вы можете забрать заказ самостоятельно в одном из наших магазинов</p>
           <Button 
             variant="outline" 
-            className="w-full text-sm"
+            className="w-full text-sm mt-2"
             onClick={onShowNearbyStores}
           >
             Выбрать магазин

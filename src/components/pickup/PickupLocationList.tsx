@@ -21,14 +21,14 @@ export const PickupLocationList: React.FC<PickupLocationListProps> = ({
   onSelectStore 
 }) => {
   return (
-    <div>
+    <div className="space-y-3">
       {locations.map((store) => (
         <div 
           key={store.id} 
-          className={`flex items-start p-3 mb-2 rounded-lg cursor-pointer transition-all ${
+          className={`flex items-start p-3 rounded-lg cursor-pointer transition-all ${
             selectedStore === store.id 
-              ? 'bg-primary/5 border border-primary/20' 
-              : 'bg-[#F8F8F8] hover:bg-[#F0F0F0]'
+              ? 'bg-white shadow-md border border-primary/40' 
+              : 'bg-[#F8F8F8] hover:bg-[#F0F0F0] border border-transparent'
           }`}
           onClick={() => onSelectStore(store.id)}
         >
