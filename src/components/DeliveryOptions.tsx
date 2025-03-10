@@ -4,7 +4,7 @@ import DeliveryTypeSelector from './delivery/DeliveryTypeSelector';
 import DeliveryTimeSelector from './delivery/DeliveryTimeSelector';
 import DeliveryTimeSlots from './delivery/DeliveryTimeSlots';
 
-export type DeliveryType = 'other' | 'self' | 'pickup';
+export type DeliveryType = 'other' | 'self' | 'pickup' | 'delivery';
 export type DeliveryTime = 'today' | 'tomorrow';
 
 interface DeliveryOptionsProps {
