@@ -15,14 +15,9 @@ const DeliveryPickupSelector: React.FC<DeliveryPickupSelectorProps> = ({
   onLocationFound
 }) => {
   const [selectedMethod, setSelectedMethod] = useState<'delivery' | 'pickup'>('delivery');
-  const [selectedDay, setSelectedDay] = useState<'today' | 'tomorrow'>('today');
   const [address, setAddress] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  const handleDaySelect = (day: 'today' | 'tomorrow') => {
-    setSelectedDay(day);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +34,6 @@ const DeliveryPickupSelector: React.FC<DeliveryPickupSelectorProps> = ({
     // Store the address and delivery preferences
     localStorage.setItem('deliveryAddress', address);
     localStorage.setItem('deliveryMethod', selectedMethod);
-    localStorage.setItem('deliveryDay', selectedDay);
     
     // Navigate to flower shop
     navigate('/flower-shop');
@@ -159,39 +153,6 @@ const DeliveryPickupSelector: React.FC<DeliveryPickupSelectorProps> = ({
             Выбрать магазин на карте
           </Button>
         )}
-      </div>
-
-      {/* Time Selector */}
-      <div className="mb-6">
-        <div className="flex items-center mb-3">
-          <Clock size={18} className="text-gray-400 mr-2" />
-          <span className="text-sm font-medium">Когда доставить?</span>
-        </div>
-        
-        <div className="flex gap-3 mb-4">
-          <Button
-            variant={selectedDay === 'today' ? 'default' : 'outline'}
-            size="sm"
-            className={cn(
-              "flex-1",
-              selectedDay === 'today' ? "bg-primary" : "bg-[#F8F8F8] border-0 text-gray-700"
-            )}
-            onClick={() => handleDaySelect('today')}
-          >
-            Сегодня
-          </Button>
-          <Button
-            variant={selectedDay === 'tomorrow' ? 'default' : 'outline'}
-            size="sm"
-            className={cn(
-              "flex-1",
-              selectedDay === 'tomorrow' ? "bg-primary" : "bg-[#F8F8F8] border-0 text-gray-700"
-            )}
-            onClick={() => handleDaySelect('tomorrow')}
-          >
-            Завтра
-          </Button>
-        </div>
       </div>
 
       {/* Submit Button */}
