@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag, UserRound, Mail, Phone, Instagram, Facebook, ChevronDown, ChevronUp, Flame, Heart, Gift, Tag, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +8,7 @@ import PromotionalBanners from '@/components/PromotionalBanners';
 import ProductCard from '@/components/ProductCard';
 import CartIcon from '@/components/CartIcon';
 import { cn } from '@/lib/utils';
+import DeliveryPickupSelector from '@/components/homepage/DeliveryPickupSelector';
 
 // Sample products data
 const featuredProducts = [
@@ -362,7 +362,7 @@ const HomePage: React.FC = () => {
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-12 max-w-5xl">
         {/* Title Section */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Свежие цветы с доставкой
           </h1>
@@ -371,33 +371,9 @@ const HomePage: React.FC = () => {
           </p>
         </div>
 
-        {/* Address Input Section */}
+        {/* New Delivery/Pickup Selector */}
         <div className="max-w-xl mx-auto mb-16">
-          <div className="panel p-6 bg-white rounded-lg shadow-sm">
-            <h2 className="text-xl font-medium mb-4">Куда доставить цветы?</h2>
-            <div className="relative mb-4">
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                <MapPin size={20} />
-              </div>
-              <input
-                type="text"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Введите адрес доставки"
-                className="w-full bg-[#F8F8F8] border-0 rounded-md py-3 pl-10 pr-4 focus:ring-2 focus:ring-primary/20 focus:outline-none"
-              />
-            </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <Button 
-                onClick={handleAddressSubmit} 
-                className="flex-1 py-6 text-base font-medium rounded-md flex items-center justify-center"
-              >
-                Перейти к каталогу
-                <ArrowRight className="ml-2" size={18} />
-              </Button>
-              <LocationFinder onLocationFound={handleLocationFound} />
-            </div>
-          </div>
+          <DeliveryPickupSelector onLocationFound={handleLocationFound} />
         </div>
 
         {/* Promotional Banners Section */}
@@ -434,7 +410,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
         
-        {/* Quick Filters Section - New Section */}
+        {/* Quick Filters Section */}
         <div className="mb-10">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold">Быстрые фильтры</h2>
@@ -462,7 +438,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Trending Now Section - New Section */}
+        {/* Trending Now Section */}
         <div className="mb-16">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-2">
