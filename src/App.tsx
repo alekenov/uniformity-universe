@@ -14,6 +14,7 @@ import HomePage from "./pages/HomePage";
 import OrderStatus from "./pages/OrderStatus";
 import { CartProvider } from "./contexts/CartContext";
 import CartPanel from "./components/CartPanel";
+import UserProfile from "./pages/UserProfile";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/flower-shop" element={<FlowerShop />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
             <Route path="/order/:orderId" element={<OrderStatus />} />
+            <Route path="/profile" element={<UserProfile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
