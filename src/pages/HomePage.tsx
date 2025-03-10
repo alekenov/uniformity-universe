@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag, UserRound, Mail, Phone, Instagram, Facebook, ChevronDown, ChevronUp } from 'lucide-react';
+import { MapPin, ArrowRight, Clock, Star, ArrowUpDown, Filter, Truck, ShoppingBag, UserRound, Mail, Phone, Instagram, Facebook, ChevronDown, ChevronUp, Flame, Heart, Gift, Tag, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -7,6 +8,7 @@ import LocationFinder from '@/components/LocationFinder';
 import PromotionalBanners from '@/components/PromotionalBanners';
 import ProductCard from '@/components/ProductCard';
 import CartIcon from '@/components/CartIcon';
+import { cn } from '@/lib/utils';
 
 // Sample products data
 const featuredProducts = [
@@ -46,38 +48,102 @@ const featuredProducts = [
   }
 ];
 
-// Flower categories data
+// Trending products data
+const trendingProducts = [
+  {
+    id: 't1',
+    name: 'Букет "Весенняя симфония" из тюльпанов',
+    price: 2790,
+    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
+    shopId: '1',
+    shopName: 'Цветочный Рай',
+    trendingLabel: 'Бестселлер'
+  },
+  {
+    id: 't2',
+    name: 'Букет "Страстный" из красных роз',
+    price: 4990,
+    oldPrice: 5990,
+    image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig',
+    shopId: '2',
+    shopName: 'Букет Столицы',
+    trendingLabel: 'Хит продаж'
+  },
+  {
+    id: 't3',
+    name: 'Композиция "Оазис" в стеклянной вазе',
+    price: 3890,
+    image: 'https://avatars.mds.yandex.net/get-eda/3093654/8aff52cdf0f4057ccaf44adb5c95e917/orig',
+    shopId: '3',
+    shopName: 'Флорист и Я',
+    trendingLabel: 'Новинка'
+  },
+  {
+    id: 't4',
+    name: 'Букет "Коралловый риф" из роз и альстромерий',
+    price: 3490,
+    oldPrice: 3990,
+    image: 'https://avatars.mds.yandex.net/get-eda/3705709/cfcc71439a902ffd979d5c5fd0bc04e9/orig',
+    shopId: '4',
+    shopName: 'Твой Букет',
+    trendingLabel: 'Топ рейтинга'
+  }
+];
+
+// Improved Flower categories data with icons and descriptions
 const flowerCategories = [
   {
     id: 'roses',
     name: 'Розы',
-    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig'
+    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
+    icon: Heart,
+    description: 'Классика и элегантность'
   },
   {
     id: 'bouquets',
     name: 'Букеты',
-    image: 'https://avatars.mds.yandex.net/get-eda/3093654/8aff52cdf0f4057ccaf44adb5c95e917/orig'
+    image: 'https://avatars.mds.yandex.net/get-eda/3093654/8aff52cdf0f4057ccaf44adb5c95e917/orig',
+    icon: Gift,
+    description: 'Для любого случая'
   },
   {
     id: 'compositions',
     name: 'Композиции',
-    image: 'https://avatars.mds.yandex.net/get-eda/3705709/cfcc71439a902ffd979d5c5fd0bc04e9/orig'
+    image: 'https://avatars.mds.yandex.net/get-eda/3705709/cfcc71439a902ffd979d5c5fd0bc04e9/orig',
+    icon: Sparkles,
+    description: 'Уникальные решения'
   },
   {
     id: 'gifts',
     name: 'Подарки',
-    image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig'
+    image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig',
+    icon: Tag,
+    description: 'К любому празднику'
   },
   {
     id: 'plants',
     name: 'Растения',
-    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig'
+    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
+    icon: Sparkles,
+    description: 'Для дома и офиса'
   },
   {
     id: 'wedding',
     name: 'Свадебные',
-    image: 'https://avatars.mds.yandex.net/get-eda/3093654/8aff52cdf0f4057ccaf44adb5c95e917/orig'
+    image: 'https://avatars.mds.yandex.net/get-eda/3093654/8aff52cdf0f4057ccaf44adb5c95e917/orig',
+    icon: Heart,
+    description: 'Для особого дня'
   }
+];
+
+// Quick filter options
+const quickFilters = [
+  { id: 'birthday', name: 'На день рождения', icon: Gift },
+  { id: 'anniversary', name: 'На юбилей', icon: Sparkles },
+  { id: 'love', name: 'Признание в любви', icon: Heart },
+  { id: 'congratulations', name: 'Поздравления', icon: Tag },
+  { id: 'under3000', name: 'До 3000₽', icon: Tag },
+  { id: 'same-day', name: 'Доставка сегодня', icon: Truck }
 ];
 
 // Sample flower shops data
@@ -175,7 +241,8 @@ const shopsWithCoordinates = flowerShops.map(shop => ({
 const HomePage: React.FC = () => {
   const [address, setAddress] = useState('');
   const [shops, setShops] = useState(shopsWithCoordinates);
-  const [selectedShop, setSelectedShop] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -223,6 +290,20 @@ const HomePage: React.FC = () => {
     
     // Auto-scroll to shops section
     document.getElementById('shops-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleCategoryClick = (categoryId: string) => {
+    setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
+    // Navigate to flower shop with category filter
+    navigate(`/flower-shop?category=${categoryId}`);
+  };
+
+  const toggleFilter = (filterId: string) => {
+    setActiveFilters(prev => 
+      prev.includes(filterId) 
+        ? prev.filter(id => id !== filterId) 
+        : [...prev, filterId]
+    );
   };
 
   // FAQ state
@@ -322,51 +403,102 @@ const HomePage: React.FC = () => {
         {/* Promotional Banners Section */}
         <PromotionalBanners />
 
-        {/* Categories Section */}
-        <div className="mb-4 mt-6">
-          <div className="overflow-x-auto pb-2">
-            <div className="flex gap-3">
-              {flowerCategories.map((category) => (
-                <div key={category.id} className="flex flex-col items-center cursor-pointer">
-                  <div className="w-16 h-16 rounded-full overflow-hidden mb-1.5">
-                    <img 
-                      src={category.image} 
-                      alt={category.name}
-                      className="w-full h-full object-cover"
-                    />
+        {/* Enhanced Categories Section */}
+        <div className="mb-10 mt-6">
+          <h2 className="text-2xl font-bold mb-6">Категории</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {flowerCategories.map((category) => (
+              <div 
+                key={category.id} 
+                className={cn(
+                  "flex flex-col bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer",
+                  selectedCategory === category.id && "ring-2 ring-primary"
+                )}
+                onClick={() => handleCategoryClick(category.id)}
+              >
+                <div className="aspect-video relative">
+                  <img 
+                    src={category.image} 
+                    alt={category.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-3">
+                    <div>
+                      <h3 className="text-white font-medium text-lg">{category.name}</h3>
+                      <p className="text-white/80 text-xs">{category.description}</p>
+                    </div>
                   </div>
-                  <span className="text-xs font-medium text-center">{category.name}</span>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
         
-        {/* Filters Section - More compact version */}
-        <div className="mb-6">
-          <div className="overflow-x-auto -mx-4 px-4">
-            <div className="flex gap-2 py-1">
-              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
-                <Filter size={14} className="text-[#8E9196]" />
-                <span>Фильтры</span>
-              </button>
-              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
-                <ArrowUpDown size={14} className="text-[#8E9196]" />
-                <span>Сортировка</span>
-              </button>
-              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
-                <Clock size={14} className="text-[#8E9196]" />
-                <span>До 45 мин</span>
-              </button>
-              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
-                <Truck size={14} className="text-[#8E9196]" />
-                <span>Доставка 0₸</span>
-              </button>
-              <button className="flex items-center gap-1 bg-[#F6F6F7] text-[#403E43] px-3 py-1.5 rounded-full text-xs whitespace-nowrap">
-                <Star size={14} className="text-[#8E9196]" />
-                <span>Рейтинг 4+</span>
-              </button>
+        {/* Quick Filters Section - New Section */}
+        <div className="mb-10">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Быстрые фильтры</h2>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {quickFilters.map((filter) => {
+              const IconComponent = filter.icon;
+              const isActive = activeFilters.includes(filter.id);
+              
+              return (
+                <Button
+                  key={filter.id}
+                  variant={isActive ? "default" : "outline"}
+                  className={cn(
+                    "rounded-full text-sm transition-colors py-2 h-auto",
+                    isActive ? "bg-primary text-white" : "text-gray-700"
+                  )}
+                  onClick={() => toggleFilter(filter.id)}
+                >
+                  <IconComponent size={16} className="mr-1.5" />
+                  {filter.name}
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Trending Now Section - New Section */}
+        <div className="mb-16">
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-bold">Trending Now</h2>
+              <Flame className="text-red-500" size={24} />
             </div>
+            <Button 
+              variant="ghost" 
+              className="text-sm"
+              onClick={() => navigate('/flower-shop')}
+            >
+              Смотреть все
+              <ArrowRight className="ml-1" size={16} />
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {trendingProducts.map((product) => (
+              <div key={product.id} className="relative">
+                <div className="absolute top-2 left-2 z-10">
+                  <div className="flex items-center gap-1 bg-gradient-to-r from-amber-500 to-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                    <Flame size={12} className="animate-pulse" />
+                    {product.trendingLabel}
+                  </div>
+                </div>
+                <ProductCard 
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  oldPrice={product.oldPrice}
+                  image={product.image}
+                  shopId={product.shopId}
+                  shopName={product.shopName}
+                />
+              </div>
+            ))}
           </div>
         </div>
 
