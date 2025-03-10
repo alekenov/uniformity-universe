@@ -47,7 +47,7 @@ const Index: React.FC = () => {
   
   const [address, setAddress] = useState({
     street: 'улица Достоевского, 3с2',
-    city: 'Москва',
+    city: 'Алматы',
     entrance: '',
     apartment: '12',
     floor: '',
