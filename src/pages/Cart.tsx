@@ -1,31 +1,15 @@
+
 import React, { useState } from 'react';
-import { ArrowLeft, Trash2, ShoppingBag, MessageSquare, X, PenLine } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import CartItem from '@/components/CartItem';
 import OrderSummary from '@/components/OrderSummary';
-import { useToast } from '@/hooks/use-toast';
-import { Link, useNavigate } from 'react-router-dom';
-import FlowerShopLink from '@/components/FlowerShopLink';
-
-// Define store types
-interface Store {
-  id: string;
-  name: string;
-  status: string;
-  total: number;
-  products: Product[];
-}
-
-interface Product {
-  id: string;
-  name: string;
-  description?: string;
-  price: number;
-  oldPrice?: number;
-  quantity: number;
-  unit?: string;
-  image?: string;
-  weight?: string;
-}
+import CartHeader from '@/components/cart/CartHeader';
+import StoreTabs from '@/components/cart/StoreTabs';
+import CardMessage from '@/components/cart/CardMessage';
+import EmptyCart from '@/components/cart/EmptyCart';
+import SuggestionProducts from '@/components/cart/SuggestionProducts';
+import { Store, Product } from '@/types/cart';
 
 // Sample store data
 const initialStores: Store[] = [
@@ -192,29 +176,6 @@ const Cart: React.FC = () => {
     });
   };
   
-  const handleAddCardMessage = () => {
-    if (showCardMessageInput) {
-      if (cardMessage.trim()) {
-        toast({
-          title: "Открытка добавлена",
-          description: "Текст открытки сохранен",
-        });
-      }
-      setShowCardMessageInput(false);
-    } else {
-      setShowCardMessageInput(true);
-    }
-  };
-  
-  const handleRemoveCardMessage = () => {
-    setCardMessage('');
-    setShowCardMessageInput(false);
-    toast({
-      title: "Открытка удалена",
-      description: "Текст открытки был удален",
-    });
-  };
-  
   // Calculate order summary for active store
   const subtotal = activeStore.total;
   const deliveryFee = 0; // Free delivery
@@ -228,48 +189,16 @@ const Cart: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <header className="bg-white sticky top-0 z-10 shadow-sm">
-        <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center">
-          <button 
-            className="p-2 -ml-2 mr-2"
-            onClick={() => navigate('/flower-shop')}
-          >
-            <ArrowLeft size={20} className="icon" />
-          </button>
-          <h1 className="text-2xl font-medium">Корзина</h1>
-          {activeStore.products.length > 0 && (
-            <button 
-              className="ml-auto flex items-center text-gray-500 hover:text-red-500"
-              onClick={clearActiveCart}
-            >
-              <Trash2 size={18} className="icon-sm mr-1" />
-              <span className="text-sm">Очистить</span>
-            </button>
-          )}
-        </div>
+        <CartHeader 
+          hasItems={activeStore.products.length > 0} 
+          onClearCart={clearActiveCart} 
+        />
         
-        {/* Store tabs */}
-        <div className="px-4 overflow-x-auto pb-2 -mb-2">
-          <div className="flex space-x-2">
-            {stores.map(store => (
-              <button
-                key={store.id}
-                onClick={() => setActiveStoreId(store.id)}
-                className={`flex-shrink-0 py-2 px-4 rounded-full border text-sm whitespace-nowrap ${
-                  activeStoreId === store.id 
-                    ? 'border-[#8B5CF6] bg-[#F5F3FF]' 
-                    : 'border-[#E0E0E0] bg-white'
-                } active-scale`}
-              >
-                <div className="font-medium">{store.name}</div>
-                <div className="flex items-center text-gray-500 text-xs">
-                  {store.products.length > 0 ? `${store.total} ₸` : null}
-                  {store.products.length > 0 && store.status ? ' · ' : null}
-                  {store.status}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+        <StoreTabs 
+          stores={stores} 
+          activeStoreId={activeStoreId} 
+          onStoreChange={setActiveStoreId} 
+        />
       </header>
       
       <main className="container max-w-3xl mx-auto px-4 py-6 pb-24">
@@ -286,107 +215,18 @@ const Cart: React.FC = () => {
                 ))}
               </div>
               
-              {showCardMessageInput ? (
-                <div className="p-4 border-t border-[#F0F0F0]">
-                  <div className="flex items-center justify-between mb-2">
-                    <label htmlFor="cardMessage" className="block text-sm font-medium">
-                      Текст открытки
-                    </label>
-                    <button 
-                      onClick={handleRemoveCardMessage}
-                      className="text-destructive hover:text-destructive/90 p-1.5 rounded-full hover:bg-destructive/10 transition-colors"
-                      aria-label="Удалить открытку"
-                    >
-                      <X size={16} className="icon-sm" />
-                    </button>
-                  </div>
-                  <textarea
-                    id="cardMessage"
-                    value={cardMessage}
-                    onChange={(e) => setCardMessage(e.target.value)}
-                    placeholder="Введите текст для вашей открытки..."
-                    className="w-full p-3 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:ring-offset-2"
-                    rows={3}
-                    maxLength={200}
-                  />
-                  <div className="form-hint text-right">
-                    {cardMessage.length}/200 символов
-                  </div>
-                </div>
-              ) : cardMessage.trim() && (
-                <div className="p-4 border-t border-[#F0F0F0]">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-medium">Текст открытки</h3>
-                    <div className="flex items-center">
-                      <button 
-                        onClick={() => setShowCardMessageInput(true)}
-                        className="text-[#8B5CF6] hover:text-[#7C3AED] p-1.5 rounded-full hover:bg-[#F5F3FF] transition-colors mr-1"
-                        aria-label="Редактировать открытку"
-                      >
-                        <PenLine size={16} className="icon-sm" />
-                      </button>
-                      <button 
-                        onClick={handleRemoveCardMessage}
-                        className="text-destructive hover:text-destructive/90 p-1.5 rounded-full hover:bg-destructive/10 transition-colors"
-                        aria-label="Удалить открытку"
-                      >
-                        <X size={16} className="icon-sm" />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md">{cardMessage}</p>
-                </div>
-              )}
-              
-              {!cardMessage.trim() && !showCardMessageInput && (
-                <button 
-                  onClick={handleAddCardMessage}
-                  className="w-full text-center py-3 text-[#8B5CF6] font-medium hover:bg-[#F5F3FF] border-t border-[#F0F0F0] flex items-center justify-center transition-colors active-scale"
-                >
-                  <MessageSquare size={18} className="icon mr-2" />
-                  Добавить открытку
-                </button>
-              )}
-              
-              {showCardMessageInput && (
-                <button 
-                  onClick={handleAddCardMessage}
-                  className="w-full text-center py-3 text-[#8B5CF6] font-medium hover:bg-[#F5F3FF] border-t border-[#F0F0F0] flex items-center justify-center transition-colors active-scale"
-                >
-                  <MessageSquare size={18} className="icon mr-2" />
-                  Сохранить открытку
-                </button>
-              )}
+              <CardMessage
+                cardMessage={cardMessage}
+                setCardMessage={setCardMessage}
+                showCardMessageInput={showCardMessageInput}
+                setShowCardMessageInput={setShowCardMessageInput}
+              />
             </div>
             
-            {/* Suggestions section - moved up */}
-            <div className="mb-4">
-              <h2 className="text-lg font-medium mb-3">Что-то ещё?</h2>
-              <div className="grid grid-cols-3 gap-3">
-                {suggestionProducts.map(product => (
-                  <div key={product.id} className="panel p-0 overflow-hidden hover-shadow">
-                    <div className="aspect-square bg-[#f9f9f9] flex items-center justify-center">
-                      <img 
-                        src={product.image} 
-                        alt={product.name} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="p-2">
-                      <div className="font-medium text-sm">{product.price} ₸</div>
-                      <div className="text-xs line-clamp-1">{product.name}</div>
-                      <div className="text-xs text-gray-500 mb-1">{product.weight}</div>
-                      <button 
-                        onClick={() => addSuggestionToCart(product)}
-                        className="w-full flex items-center justify-center py-1.5 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 text-xs active-scale"
-                      >
-                        <span className="text-lg">+</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <SuggestionProducts 
+              products={suggestionProducts}
+              addToCart={addSuggestionToCart}
+            />
             
             <OrderSummary
               subtotal={subtotal}
@@ -396,7 +236,7 @@ const Cart: React.FC = () => {
               onSubmit={handleCheckout}
             />
             
-            <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0]">
+            <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0] md:hidden">
               <div className="container max-w-3xl mx-auto">
                 <button 
                   onClick={handleCheckout}
@@ -408,16 +248,7 @@ const Cart: React.FC = () => {
             </div>
           </>
         ) : (
-          <div className="panel text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#F0F0F0] flex items-center justify-center">
-              <ShoppingBag size={24} className="text-gray-400" />
-            </div>
-            <h2 className="text-xl font-medium mb-2">Ва��а корзина пуста</h2>
-            <p className="text-gray-500 mb-6">Добавьте товары для оформления заказа</p>
-            <button className="checkout-button bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale">
-              Перейти в каталог
-            </button>
-          </div>
+          <EmptyCart />
         )}
       </main>
     </div>

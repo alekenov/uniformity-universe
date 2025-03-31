@@ -46,21 +46,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         </div>
       </div>
       
-      {/* Mobile version - compact summary with fixed position at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-[#F0F0F0] p-4 shadow-lg z-10 md:hidden">
-        <div className="flex justify-between items-center mb-3">
-          <span className="text-sm text-gray-700">Итого:</span>
-          <span className="font-bold text-lg">{total} ₸</span>
-        </div>
-        <Button 
-          onClick={onSubmit} 
-          className="w-full py-3 bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale"
-        >
-          Оформить заказ
-        </Button>
-      </div>
-      
-      {/* Desktop version */}
+      {/* Desktop version only - mobile version is rendered separately in the Cart component */}
       <div className="hidden md:block">
         <Button 
           onClick={onSubmit} 
@@ -69,9 +55,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           Оформить заказ
         </Button>
       </div>
-      
-      {/* Add padding to ensure content isn't hidden behind the fixed summary on mobile */}
-      <div className="pb-24 md:pb-0"></div>
     </div>
   );
 };
