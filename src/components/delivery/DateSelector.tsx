@@ -1,12 +1,12 @@
 
-import React from 'react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import React, { useState } from 'react';
+import { Clock, Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Calendar } from '@/components/ui/calendar';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { DeliveryTime } from '@/components/DeliveryOptions';
-import { cn } from '@/lib/utils';
 
 interface DateSelectorProps {
   selectedTime: DeliveryTime;
@@ -22,40 +22,44 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   setSelectedDate,
 }) => {
   return (
-    <div>
-      <div className="text-sm text-gray-500 mb-3">Дата доставки</div>
-      <div className="grid grid-cols-3 gap-3">
+    <div className="flex items-center mb-4">
+      <Clock size={20} className="text-gray-400 mr-2" />
+      <div className="flex bg-[#F8F8F8] rounded-full p-1">
         <button
           className={cn(
-            "delivery-option py-3 transition-all duration-200 border-2 hover:shadow-sm rounded-lg overflow-hidden",
-            selectedTime === 'today' 
-              ? "border-primary bg-secondary shadow-sm" 
-              : "border-gray-100 hover:border-gray-200"
+            "px-4 py-1 text-sm rounded-full transition-all duration-200",
+            selectedTime === 'today'
+              ? "bg-white shadow-sm font-medium" 
+              : "text-gray-600 hover:bg-white/50"
           )}
           onClick={() => onTimeChange('today')}
         >
-          <span className="text-sm font-medium">Сегодня</span>
+          Сегодня
         </button>
-        
         <button
           className={cn(
-            "delivery-option py-3 transition-all duration-200 border-2 hover:shadow-sm rounded-lg overflow-hidden",
-            selectedTime === 'tomorrow' 
-              ? "border-primary bg-secondary shadow-sm" 
-              : "border-gray-100 hover:border-gray-200"
+            "px-4 py-1 text-sm rounded-full transition-all duration-200",
+            selectedTime === 'tomorrow'
+              ? "bg-white shadow-sm font-medium"
+              : "text-gray-600 hover:bg-white/50"
           )}
           onClick={() => onTimeChange('tomorrow')}
         >
-          <span className="text-sm font-medium">Завтра</span>
+          Завтра
         </button>
-        
         <Popover>
           <PopoverTrigger asChild>
             <button
-              className="delivery-option py-3 transition-all duration-200 border-2 border-gray-100 hover:border-gray-200 hover:shadow-sm rounded-lg overflow-hidden flex items-center justify-center gap-2"
+              className={cn(
+                "px-4 py-1 text-sm rounded-full transition-all duration-200",
+                selectedDate && !['today', 'tomorrow'].includes(selectedTime) 
+                  ? "bg-white shadow-sm font-medium" 
+                  : "text-gray-600 hover:bg-white/50"
+              )}
             >
-              <CalendarIcon size={16} />
-              <span className="text-sm font-medium">Выбрать</span>
+              {selectedDate && !['today', 'tomorrow'].includes(selectedTime) ? 
+                format(selectedDate, 'dd MMM', { locale: ru }) : 
+                'Выбрать дату'}
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="center">
@@ -64,6 +68,28 @@ const DateSelector: React.FC<DateSelectorProps> = ({
               selected={selectedDate}
               onSelect={(date) => {
                 setSelectedDate(date);
+                if (date) {
+                  const today = new Date();
+                  const tomorrow = new Date(today);
+                  tomorrow.setDate(tomorrow.getDate() + 1);
+                  
+                  const isToday = date.getDate() === today.getDate() && 
+                                  date.getMonth() === today.getMonth() && 
+                                  date.getFullYear() === today.getFullYear();
+                  
+                  const isTomorrow = date.getDate() === tomorrow.getDate() && 
+                                    date.getMonth() === tomorrow.getMonth() && 
+                                    date.getFullYear() === tomorrow.getFullYear();
+                  
+                  if (isToday) {
+                    onTimeChange('today');
+                  } else if (isTomorrow) {
+                    onTimeChange('tomorrow');
+                  } else {
+                    // For custom dates that are not today or tomorrow
+                    onTimeChange('today'); // Default to today's time slots
+                  }
+                }
               }}
               disabled={{ before: new Date() }}
               initialFocus
