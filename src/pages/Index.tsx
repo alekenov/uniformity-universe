@@ -1,14 +1,14 @@
+
 import React, { useState } from 'react';
-import { ArrowLeft, Trash2, PackageCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import CartItem from '@/components/CartItem';
-import DeliveryOptions, { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
-import PaymentOptions from '@/components/PaymentOptions';
-import OrderSummary from '@/components/OrderSummary';
-import { useToast } from '@/hooks/use-toast';
+import { PackageCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import CardMessage from '@/components/cart/CardMessage';
+import DeliveryOptions, { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
+import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
+import CheckoutHeader from '@/components/checkout/CheckoutHeader';
+import OrderItemsSection from '@/components/checkout/OrderItemsSection';
+import EmptyCheckout from '@/components/checkout/EmptyCheckout';
+import CheckoutSidebar from '@/components/checkout/CheckoutSidebar';
 
 const initialProducts = [
   {
@@ -81,6 +81,10 @@ const Index: React.FC = () => {
     });
   };
   
+  const clearCart = () => {
+    setProducts([]);
+  };
+  
   const subtotal = products.reduce((sum, product) => sum + (product.price * product.quantity), 0);
   const deliveryFee = 0;
   const serviceFee = 990;
@@ -88,29 +92,10 @@ const Index: React.FC = () => {
   
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
-      <header className="bg-white sticky top-0 z-10 shadow-sm">
-        <div className="container max-w-6xl mx-auto px-4 py-4 flex items-center">
-          <Link to="/cart" className="p-2 -ml-2 mr-2">
-            <ArrowLeft size={20} />
-          </Link>
-          <h1 className="text-2xl font-medium">Оформление заказа</h1>
-          {products.length > 0 && (
-            <button 
-              className="ml-auto flex items-center text-gray-500 hover:text-red-500"
-              onClick={() => {
-                setProducts([]);
-                toast({
-                  title: "Корзина очищена",
-                  description: "Все товары были удалены из корзины",
-                });
-              }}
-            >
-              <Trash2 size={18} className="mr-1" />
-              <span className="text-sm">Очистить</span>
-            </button>
-          )}
-        </div>
-      </header>
+      <CheckoutHeader 
+        hasProducts={products.length > 0} 
+        clearCart={clearCart} 
+      />
       
       <main className="container max-w-6xl mx-auto px-4 py-6 pb-24">
         {products.length > 0 ? (
@@ -119,26 +104,14 @@ const Index: React.FC = () => {
             <div className="w-full md:w-2/3">
               {/* Блок "Ваш заказ" только для десктопной версии */}
               {!isMobile && (
-                <div className="panel mb-6">
-                  <h2 className="text-xl font-medium mb-4">Ваш заказ</h2>
-                  <div className="divide-y divide-[#F0F0F0]">
-                    {products.map((product) => (
-                      <CartItem
-                        key={product.id}
-                        {...product}
-                        onQuantityChange={handleQuantityChange}
-                      />
-                    ))}
-                  </div>
-                  
-                  {/* Добавляем компонент CardMessage для открытки */}
-                  <CardMessage
-                    cardMessage={cardMessage}
-                    setCardMessage={setCardMessage}
-                    showCardMessageInput={showCardMessageInput}
-                    setShowCardMessageInput={setShowCardMessageInput}
-                  />
-                </div>
+                <OrderItemsSection
+                  products={products}
+                  onQuantityChange={handleQuantityChange}
+                  cardMessage={cardMessage}
+                  setCardMessage={setCardMessage}
+                  showCardMessageInput={showCardMessageInput}
+                  setShowCardMessageInput={setShowCardMessageInput}
+                />
               )}
               
               <DeliveryOptions
@@ -150,46 +123,19 @@ const Index: React.FC = () => {
             </div>
             
             {/* Правая колонка с оплатой и итогами */}
-            <div className="w-full md:w-1/3 mt-6 md:mt-0">
-              <div className="md:sticky md:top-24">
-                <PaymentOptions
-                  cards={paymentCards}
-                  selectedCard={paymentMethod}
-                  onCardSelect={setPaymentMethod}
-                  onAddPromocode={() => {
-                    toast({
-                      title: "Промокод",
-                      description: "Здесь будет форма добавления промокода",
-                    });
-                  }}
-                />
-                
-                <OrderSummary
-                  subtotal={subtotal}
-                  deliveryFee={deliveryFee}
-                  serviceFee={serviceFee}
-                  total={total}
-                  onSubmit={handleSubmit}
-                  buttonText="Оформить заказ"
-                />
-              </div>
-            </div>
+            <CheckoutSidebar
+              paymentCards={paymentCards}
+              selectedCard={paymentMethod}
+              onCardSelect={setPaymentMethod}
+              subtotal={subtotal}
+              deliveryFee={deliveryFee}
+              serviceFee={serviceFee}
+              total={total}
+              onSubmit={handleSubmit}
+            />
           </div>
         ) : (
-          <div className="panel text-center py-12">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#F0F0F0] flex items-center justify-center">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96086 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 6H21" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M16 10C16 11.0609 15.5786 12.0783 14.8284 12.8284C14.0783 13.5786 13.0609 14 12 14C10.9391 14 9.92172 13.5786 9.17157 12.8284C8.42143 12.0783 8 11.0609 8 10" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </div>
-            <h2 className="text-xl font-medium mb-2">Ваша корзина пуста</h2>
-            <p className="text-gray-500 mb-6">Добавьте товары для оформления заказа</p>
-            <button className="bg-primary text-white font-medium py-3 px-6 rounded-xl hover:bg-primary/90 transition-colors">
-              Перейти в каталог
-            </button>
-          </div>
+          <EmptyCheckout />
         )}
       </main>
       
