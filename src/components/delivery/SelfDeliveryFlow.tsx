@@ -46,7 +46,7 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
       name: 'Cvety.kz',
       address: 'ул. Сатпаева 4',
       openTime: '09:00',
-      closingTime: '12:00',
+      closingTime: '12:00', // Этот магазин открыт только до 12:00
       isReady: true,
     },
   ];
@@ -61,6 +61,17 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
       setSelectedTimeSlot("12-15");
     }
   }, [selectedTime, selectedDate]);
+
+  // Модифицированная функция проверки открытости магазина для демонстрации
+  const checkStoreOpen = (location: PickupLocation, hour: string) => {
+    // Для loc1 (первый магазин) - всегда открыт
+    if (location.id === 'loc1') {
+      return true;
+    }
+    
+    // Для loc2 (второй магазин) - проверяем стандартной функцией
+    return isStoreOpen(location, hour);
+  };
 
   return (
     <div className="space-y-6">
@@ -169,7 +180,7 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
               selectedLocation={selectedLocation}
               selectedHour={selectedTimeSlot}
               onLocationSelect={setSelectedLocation}
-              isStoreOpen={(location, hour) => isStoreOpen(location, hour)}
+              isStoreOpen={(location, hour) => checkStoreOpen(location, hour)}
             />
           </div>
         </>
