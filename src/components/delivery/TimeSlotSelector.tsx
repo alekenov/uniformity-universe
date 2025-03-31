@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { MapPin } from 'lucide-react';
 import { DeliveryTime } from '@/components/DeliveryOptions';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -10,13 +9,25 @@ interface TimeSlotSelectorProps {
   selectedTime: DeliveryTime;
   askRecipientForTime: boolean;
   setAskRecipientForTime: (value: boolean) => void;
+  deliveryType?: 'other' | 'self' | 'pickup';
 }
 
 const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
   selectedTime,
   askRecipientForTime,
   setAskRecipientForTime,
+  deliveryType = 'other'
 }) => {
+  // Only show time slots
+  if (deliveryType === 'self') {
+    return (
+      <div className="space-y-4">
+        <DeliveryTimeSlots selectedDay={selectedTime} compact={true} />
+      </div>
+    );
+  }
+
+  // For "other" delivery type (gifting), show both time slots and the checkbox
   return (
     <div className="space-y-4">
       {!askRecipientForTime && (

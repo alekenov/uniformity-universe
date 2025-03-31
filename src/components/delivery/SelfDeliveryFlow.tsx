@@ -4,13 +4,14 @@ import { DeliveryTime } from '@/components/DeliveryOptions';
 import { Separator } from '@/components/ui/separator';
 import DateSelector from './DateSelector';
 import TimeSlotSelector from './TimeSlotSelector';
-import { MapPin, Navigation, Store } from 'lucide-react';
+import { MapPin, Navigation, Store, Clock } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Checkbox } from '../ui/checkbox';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { cn } from '@/lib/utils';
+import DeliveryAddress from './DeliveryAddress';
 
 interface SelfDeliveryFlowProps {
   selectedTime: DeliveryTime;
@@ -21,7 +22,9 @@ interface PickupLocation {
   id: string;
   name: string;
   address: string;
-  status: string;
+  readyTime: string;
+  isReady?: boolean;
+  closingTime?: string;
 }
 
 const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
@@ -39,19 +42,21 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [askRecipientForTime, setAskRecipientForTime] = useState(false);
 
-  // Example pickup locations
+  // Updated pickup locations with more detailed information
   const pickupLocations: PickupLocation[] = [
     {
       id: 'loc1',
       name: 'Cvety.kz',
       address: 'ул. Абая 10',
-      status: 'открыто до 20:00',
+      readyTime: '12:10',
+      closingTime: '20:00',
     },
     {
       id: 'loc2',
       name: 'Cvety.kz',
       address: 'ул. Сатпаева 4',
-      status: 'осталось 3 букета',
+      readyTime: 'сразу',
+      isReady: true,
     },
   ];
 
@@ -68,11 +73,14 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
           setSelectedDate={setSelectedDate}
         />
         
-        <TimeSlotSelector
-          selectedTime={selectedTime}
-          askRecipientForTime={askRecipientForTime}
-          setAskRecipientForTime={setAskRecipientForTime}
-        />
+        {deliveryMethod === 'delivery' && (
+          <TimeSlotSelector
+            selectedTime={selectedTime}
+            askRecipientForTime={askRecipientForTime}
+            setAskRecipientForTime={setAskRecipientForTime}
+            deliveryType="self"
+          />
+        )}
       </div>
       
       <Separator className="bg-gray-100" />
@@ -112,94 +120,20 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
       
       {/* Delivery Address or Pickup Location */}
       {deliveryMethod === 'delivery' ? (
-        <div className="space-y-4">
-          <div className="flex items-center text-sm text-gray-500 mb-1">
-            <MapPin size={16} className="mr-2" />
-            Адрес доставки
-          </div>
-          
-          <div className="flex items-center space-x-2 mb-2">
-            <Checkbox 
-              id="askAddressDetails"
-              checked={askAddressDetails}
-              onCheckedChange={(checked) => {
-                setAskAddressDetails(checked === true);
-                if (checked === true) {
-                  setAddress('');
-                  setApartment('');
-                  setFloor('');
-                  setComment('');
-                }
-              }}
-            />
-            <label
-              htmlFor="askAddressDetails"
-              className="text-sm leading-none"
-            >
-              Уточнить адрес по телефону
-            </label>
-          </div>
-
-          {!askAddressDetails && (
-            <div className="space-y-4">
-              <div>
-                <Input 
-                  value={address} 
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Улица и номер дома" 
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <Input 
-                  value={apartment} 
-                  onChange={(e) => setApartment(e.target.value)}
-                  placeholder="Квартира/офис" 
-                />
-                <Input 
-                  value={floor} 
-                  onChange={(e) => setFloor(e.target.value)}
-                  placeholder="Этаж" 
-                />
-              </div>
-              
-              {!showCourierComment ? (
-                <Button 
-                  variant="ghost" 
-                  onClick={toggleCourierComment}
-                  className="text-sm text-gray-500 p-0 h-auto hover:bg-transparent hover:text-gray-700"
-                  type="button"
-                >
-                  + Добавить комментарий для курьера
-                </Button>
-              ) : (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="courierComment" className="text-sm font-normal text-gray-500">
-                      Комментарий курьеру
-                    </Label>
-                    <Button 
-                      variant="ghost" 
-                      onClick={toggleCourierComment}
-                      className="text-xs text-gray-400 p-0 h-auto hover:bg-transparent hover:text-gray-700"
-                      type="button"
-                    >
-                      Скрыть
-                    </Button>
-                  </div>
-                  <Textarea 
-                    id="courierComment" 
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Код от двери, как найти подъезд, другие детали..." 
-                    rows={2}
-                    className="resize-none text-sm"
-                  />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        <DeliveryAddress
+          address={address}
+          setAddress={setAddress}
+          apartment={apartment}
+          setApartment={setApartment}
+          floor={floor}
+          setFloor={setFloor}
+          courierComment={comment}
+          setCourierComment={setComment}
+          askRecipientForAddress={askAddressDetails}
+          setAskRecipientForAddress={setAskAddressDetails}
+          showCourierComment={showCourierComment}
+          toggleCourierComment={toggleCourierComment}
+        />
       ) : (
         <div className="space-y-4">
           <div className="flex items-center text-sm text-gray-500 mb-1">
@@ -224,7 +158,17 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
                   <span className="font-medium text-sm">{location.name}</span>
                 </div>
                 <div className="mt-1 text-sm text-gray-600">{location.address}</div>
-                <div className="mt-1 text-xs text-gray-500">{location.status}</div>
+                <div className="mt-1 text-xs text-gray-500 flex items-center">
+                  <Clock size={12} className="mr-1" />
+                  {location.isReady ? (
+                    <span>Можно забрать сразу</span>
+                  ) : (
+                    <span>Забрать можно с {location.readyTime}</span>
+                  )}
+                  {location.closingTime && (
+                    <span className="ml-2">открыто до {location.closingTime}</span>
+                  )}
+                </div>
               </div>
             ))}
           </div>

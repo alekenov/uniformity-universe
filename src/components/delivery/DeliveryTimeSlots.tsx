@@ -1,28 +1,36 @@
 
 import React, { useRef, useState } from 'react';
-import { MapPin } from 'lucide-react';
+import { MapPin, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface DeliveryTimeSlotsProps {
   selectedDay: string; // 'today' | 'tomorrow' or a custom date
   className?: string;
   compact?: boolean;
+  forPickup?: boolean; // New prop to indicate if this is for pickup locations
 }
 
 const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({ 
   selectedDay,
   className,
-  compact = false 
+  compact = false,
+  forPickup = false
 }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("12-30");
 
   // Time slots to match the requirements
-  const timeSlots = [
-    { id: "12-30", label: "12:30", isNearest: true },
-    { id: "12-15", label: "12–15", isNearest: false },
-    { id: "15-18", label: "15–18", isNearest: false }
-  ];
+  const timeSlots = forPickup 
+    ? [
+        { id: "12-10", label: "12:10", isNearest: true, status: "можно забрать с" },
+        { id: "12-15", label: "12–15", isNearest: false },
+        { id: "15-18", label: "15–18", isNearest: false }
+      ]
+    : [
+        { id: "12-30", label: "12:30", isNearest: true },
+        { id: "12-15", label: "12–15", isNearest: false },
+        { id: "15-18", label: "15–18", isNearest: false }
+      ];
 
   return (
     <div className={cn("relative", className)}>
