@@ -34,12 +34,12 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
   const [askRecipientForAddress, setAskRecipientForAddress] = useState(false);
   const [showCourierComment, setShowCourierComment] = useState(false);
   
-  // Set askRecipientForTime to true by default
+  // Set askRecipientForTime to false by default
   useEffect(() => {
-    if (!askRecipientForTime) {
-      setAskRecipientForTime(true);
+    if (askRecipientForTime) {
+      setAskRecipientForTime(false);
     }
-  }, [askRecipientForTime, setAskRecipientForTime]);
+  }, []);
   
   const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
 
