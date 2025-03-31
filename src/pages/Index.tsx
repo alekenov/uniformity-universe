@@ -41,7 +41,7 @@ const paymentCards = [
 const Index: React.FC = () => {
   const { toast } = useToast();
   const [products, setProducts] = useState(initialProducts);
-  const [deliveryType, setDeliveryType] = useState<DeliveryType>('self');
+  const [deliveryType, setDeliveryType] = useState<DeliveryType>('other');
   const [deliveryTime, setDeliveryTime] = useState<DeliveryTime>('today');
   const [paymentMethod, setPaymentMethod] = useState('card1');
   

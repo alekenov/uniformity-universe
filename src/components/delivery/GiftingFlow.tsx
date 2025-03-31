@@ -7,11 +7,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, Clock } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, User, Phone, MapPin } from 'lucide-react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
 import { Textarea } from '@/components/ui/textarea';
+import { Separator } from '@/components/ui/separator';
 
 interface GiftingFlowProps {
   selectedTime: DeliveryTime;
@@ -38,27 +39,17 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
   const [floor, setFloor] = useState('');
   const [courierComment, setCourierComment] = useState('');
   const [askRecipientForAddress, setAskRecipientForAddress] = useState(false);
-  const [showAddressDetails, setShowAddressDetails] = useState(false);
   const [showCourierComment, setShowCourierComment] = useState(false);
   
-  const toggleAddressDetails = () => setShowAddressDetails(!showAddressDetails);
   const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
-
-  // Определяем день недели и дату для отображения
-  const getTodayTomorrowText = (day: DeliveryTime) => {
-    if (day === 'today') return 'Сегодня';
-    if (day === 'tomorrow') return 'Завтра';
-    return '';
-  };
 
   return (
     <div className="space-y-6">
-      {/* Выбор даты доставки */}
-      <div className="space-y-2">
-        <div className="font-medium text-base mb-2">Дата доставки</div>
-        <div className="flex bg-[#F8F8F8] rounded-full p-1">
+      {/* Дата доставки */}
+      <div>
+        <div className="bg-[#F8F8F8] rounded-full p-1 flex items-center">
           <button
-            className={`px-4 py-2 text-sm rounded-full transition-all duration-200 ${
+            className={`flex-1 px-4 py-2 text-sm rounded-full transition-all duration-200 ${
               selectedTime === 'today'
                 ? "bg-white shadow-sm font-medium" 
                 : "text-gray-600 hover:bg-white/50"
@@ -68,7 +59,7 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
             Сегодня
           </button>
           <button
-            className={`px-4 py-2 text-sm rounded-full transition-all duration-200 ${
+            className={`flex-1 px-4 py-2 text-sm rounded-full transition-all duration-200 ${
               selectedTime === 'tomorrow'
                 ? "bg-white shadow-sm font-medium"
                 : "text-gray-600 hover:bg-white/50"
@@ -80,7 +71,7 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
           <Popover>
             <PopoverTrigger asChild>
               <button
-                className="px-4 py-2 text-sm rounded-full transition-all duration-200 text-gray-600 hover:bg-white/50"
+                className="flex-1 px-4 py-2 text-sm rounded-full transition-all duration-200 text-gray-600 hover:bg-white/50"
               >
                 <CalendarIcon size={16} className="inline-block mr-1" />
                 Выбрать
@@ -92,7 +83,6 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
                 selected={selectedDate}
                 onSelect={(date) => {
                   setSelectedDate(date);
-                  // Здесь можно добавить логику для выбора конкретной даты
                 }}
                 disabled={{ before: new Date() }}
                 initialFocus
@@ -103,16 +93,17 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
           </Popover>
         </div>
       </div>
+      
+      <Separator className="bg-gray-100" />
 
       {/* Время доставки */}
-      <div className="space-y-2">
-        <div className="font-medium text-base mb-2 flex items-center">
-          <Clock size={18} className="mr-2 text-gray-500" />
-          Время доставки ({getTodayTomorrowText(selectedTime)})
+      <div className="space-y-3">
+        <div className="flex items-center text-sm text-gray-500 mb-1">
+          <Clock size={16} className="mr-2" />
+          Время доставки
         </div>
 
-        {/* Переключатель для ручного выбора времени или уточнения у получателя */}
-        <div className="flex items-center space-x-2 mb-3">
+        <div className="flex gap-2 mb-3">
           <Button
             variant={manualTimeSlot ? "default" : "outline"}
             size="sm"
@@ -140,42 +131,51 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
         {/* Показать временные слоты только при ручном выборе */}
         {manualTimeSlot && <DeliveryTimeSlots selectedDay={selectedTime} />}
       </div>
+      
+      <Separator className="bg-gray-100" />
 
       {/* Информация о получателе */}
       <div className="space-y-4">
-        <div className="font-medium text-base">Информация о получателе</div>
+        <div className="flex items-center text-sm text-gray-500 mb-1">
+          <User size={16} className="mr-2" />
+          Информация о получателе
+        </div>
         
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div>
-            <Label htmlFor="recipientName">Имя получателя</Label>
             <Input 
-              id="recipientName" 
               value={recipientName} 
               onChange={(e) => setRecipientName(e.target.value)}
-              placeholder="Имя Фамилия" 
+              placeholder="Имя получателя" 
               className="mt-1"
             />
           </div>
           
           <div>
-            <Label htmlFor="recipientPhone">Телефон получателя</Label>
-            <Input 
-              id="recipientPhone" 
-              value={recipientPhone} 
-              onChange={(e) => setRecipientPhone(e.target.value)}
-              placeholder="+7 (___) ___-__-__" 
-              className="mt-1"
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Мы позвоним или напишем для согласования доставки
+            <div className="relative">
+              <Input 
+                value={recipientPhone} 
+                onChange={(e) => setRecipientPhone(e.target.value)}
+                placeholder="Телефон получателя" 
+                className="mt-1"
+              />
+              <Phone size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            </div>
+            <p className="text-xs text-gray-500 mt-1 flex items-center">
+              <Phone size={12} className="inline mr-1" /> Свяжемся для согласования доставки
             </p>
           </div>
         </div>
       </div>
 
+      <Separator className="bg-gray-100" />
+      
       {/* Адрес доставки */}
-      <div className="space-y-3">
-        <div className="font-medium text-base">Адрес доставки</div>
+      <div className="space-y-4">
+        <div className="flex items-center text-sm text-gray-500 mb-1">
+          <MapPin size={16} className="mr-2" />
+          Адрес доставки
+        </div>
         
         <div className="flex items-center space-x-2 mb-2">
           <Checkbox 
@@ -188,76 +188,72 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
                 setApartment('');
                 setFloor('');
                 setCourierComment('');
-                setShowAddressDetails(false);
                 setShowCourierComment(false);
               }
             }}
           />
           <label
             htmlFor="askRecipientAddress"
-            className="text-sm font-medium leading-none"
+            className="text-sm leading-none"
           >
-            Уточним адрес у получателя по телефону
+            Уточнить адрес у получателя по телефону
           </label>
         </div>
 
         {!askRecipientForAddress && (
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
-              <Label htmlFor="address">Улица и номер дома</Label>
               <Input 
-                id="address" 
                 value={address} 
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="Улица и номер дома" 
-                className="mt-1"
               />
             </div>
             
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <Label htmlFor="apartment">Квартира/офис</Label>
-                <Input 
-                  id="apartment" 
-                  value={apartment} 
-                  onChange={(e) => setApartment(e.target.value)}
-                  placeholder="Квартира/офис" 
-                  className="mt-1"
-                />
-              </div>
-              <div>
-                <Label htmlFor="floor">Этаж</Label>
-                <Input 
-                  id="floor" 
-                  value={floor} 
-                  onChange={(e) => setFloor(e.target.value)}
-                  placeholder="Этаж" 
-                  className="mt-1"
-                />
-              </div>
+              <Input 
+                value={apartment} 
+                onChange={(e) => setApartment(e.target.value)}
+                placeholder="Квартира/офис" 
+              />
+              <Input 
+                value={floor} 
+                onChange={(e) => setFloor(e.target.value)}
+                placeholder="Этаж" 
+              />
             </div>
             
-            <div>
+            {!showCourierComment ? (
               <Button 
-                variant="outline" 
+                variant="ghost" 
                 onClick={toggleCourierComment}
-                className="text-sm w-full justify-start"
+                className="text-sm text-gray-500 p-0 h-auto hover:bg-transparent hover:text-gray-700"
                 type="button"
               >
-                {showCourierComment ? 'Скрыть комментарий курьеру' : 'Добавить комментарий для курьера'}
+                + Добавить комментарий для курьера
               </Button>
-            </div>
-            
-            {showCourierComment && (
+            ) : (
               <div className="space-y-2">
-                <Label htmlFor="courierComment">Комментарий курьеру</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="courierComment" className="text-sm font-normal text-gray-500">
+                    Комментарий курьеру
+                  </Label>
+                  <Button 
+                    variant="ghost" 
+                    onClick={toggleCourierComment}
+                    className="text-xs text-gray-400 p-0 h-auto hover:bg-transparent hover:text-gray-700"
+                    type="button"
+                  >
+                    Скрыть
+                  </Button>
+                </div>
                 <Textarea 
                   id="courierComment" 
                   value={courierComment}
                   onChange={(e) => setCourierComment(e.target.value)}
-                  placeholder="Код от двери, как найти подъезд, другие важные детали для доставки..." 
-                  rows={3}
-                  className="resize-none"
+                  placeholder="Код от двери, как найти подъезд, другие детали..." 
+                  rows={2}
+                  className="resize-none text-sm"
                 />
               </div>
             )}
