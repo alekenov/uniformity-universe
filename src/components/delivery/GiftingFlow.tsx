@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DeliveryTime } from '@/components/DeliveryOptions';
 import { Calendar } from '@/components/ui/calendar';
@@ -43,7 +42,6 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
   
   const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
 
-  // Handle toggling between manual time slot selection and asking recipient
   const handleTimeSelectionMode = (mode: 'manual' | 'ask') => {
     if (mode === 'manual') {
       setManualTimeSlot(true);
@@ -56,7 +54,6 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Дата доставки */}
       <div>
         <div className="bg-[#F8F8F8] rounded-full p-1 flex items-center">
           <button
@@ -107,20 +104,17 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
       
       <Separator className="bg-gray-100" />
 
-      {/* Время доставки - новый дизайн с визуальными кнопками */}
       <div className="space-y-4">
         <div className="flex items-center text-sm text-gray-500 mb-1">
           <Clock size={16} className="mr-2" />
           Время доставки
         </div>
 
-        {/* Visual toggle buttons similar to delivery type */}
         <div className="grid grid-cols-2 gap-3">
           <div 
             className={`delivery-option ${manualTimeSlot ? 'delivery-option-selected' : ''}`}
             onClick={() => handleTimeSelectionMode('manual')}
           >
-            <Clock size={20} className="mb-1" />
             <span className="text-sm font-medium">Выбрать интервал</span>
           </div>
           
@@ -128,12 +122,10 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
             className={`delivery-option ${askRecipientForTime ? 'delivery-option-selected' : ''}`}
             onClick={() => handleTimeSelectionMode('ask')}
           >
-            <MessageSquare size={20} className="mb-1" />
             <span className="text-sm font-medium">Уточнить у получателя</span>
           </div>
         </div>
         
-        {/* Показать временные слоты только при ручном выборе */}
         {manualTimeSlot ? (
           <div className="mt-2">
             <p className="text-xs text-gray-500 mb-2">Выберите удобное время</p>
@@ -151,7 +143,6 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
       
       <Separator className="bg-gray-100" />
 
-      {/* Информация о получателе */}
       <div className="space-y-4">
         <div className="flex items-center text-sm text-gray-500 mb-1">
           <User size={16} className="mr-2" />
@@ -187,7 +178,6 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
 
       <Separator className="bg-gray-100" />
       
-      {/* Адрес доставки */}
       <div className="space-y-4">
         <div className="flex items-center text-sm text-gray-500 mb-1">
           <MapPin size={16} className="mr-2" />
