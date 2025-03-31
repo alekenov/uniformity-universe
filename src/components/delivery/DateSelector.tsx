@@ -51,15 +51,13 @@ const DateSelector: React.FC<DateSelectorProps> = ({
           <PopoverTrigger asChild>
             <button
               className={cn(
-                "px-4 py-1 text-sm rounded-full transition-all duration-200",
+                "w-9 h-9 flex items-center justify-center rounded-full transition-all duration-200",
                 selectedDate && !['today', 'tomorrow'].includes(selectedTime) 
-                  ? "bg-white shadow-sm font-medium" 
+                  ? "bg-white shadow-sm" 
                   : "text-gray-600 hover:bg-white/50"
               )}
             >
-              {selectedDate && !['today', 'tomorrow'].includes(selectedTime) ? 
-                format(selectedDate, 'dd MMM', { locale: ru }) : 
-                'Выбрать дату'}
+              <CalendarIcon size={18} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="center">
