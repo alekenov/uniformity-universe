@@ -18,11 +18,20 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
   setAskRecipientForTime,
   deliveryType = 'other'
 }) => {
-  // Only show time slots
+  // For "self" delivery type, show only time slots without checkbox
   if (deliveryType === 'self') {
     return (
       <div className="space-y-4">
         <DeliveryTimeSlots selectedDay={selectedTime} compact={true} />
+      </div>
+    );
+  }
+
+  // For pickup type, show time slots specific for pickup locations
+  if (deliveryType === 'pickup') {
+    return (
+      <div className="space-y-4">
+        <DeliveryTimeSlots selectedDay={selectedTime} compact={true} forPickup={true} />
       </div>
     );
   }
