@@ -46,15 +46,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         </div>
       </div>
       
-      {/* Desktop version only - mobile version is rendered separately in the Cart component */}
-      <div className="hidden md:block">
-        <Button 
-          onClick={onSubmit} 
-          className="w-full py-3 bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale"
-        >
-          Оформить заказ
-        </Button>
-      </div>
+      <Button 
+        onClick={onSubmit} 
+        className="w-full py-3 bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale"
+      >
+        Оформить заказ
+      </Button>
     </div>
   );
 };
