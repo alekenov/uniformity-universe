@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2, PackageCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -156,20 +155,6 @@ const Index: React.FC = () => {
           </div>
         )}
       </main>
-
-      {products.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0] md:hidden">
-          <div className="container max-w-3xl mx-auto">
-            <Button 
-              onClick={handleSubmit}
-              className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale flex items-center justify-center gap-2"
-            >
-              <span>Оформить заказ</span>
-              <PackageCheck size={18} className="ml-1" />
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
