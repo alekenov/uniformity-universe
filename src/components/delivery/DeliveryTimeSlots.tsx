@@ -31,7 +31,7 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
         ref={scrollContainerRef}
         className={cn(
           "flex overflow-x-auto pb-2 gap-3 scroll-smooth scrollbar-hide",
-          compact ? "px-0" : "px-1" // Reduced padding from px-5 to px-1
+          compact ? "px-0" : "px-1"
         )}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
@@ -39,11 +39,10 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
           <div 
             key={slot.id}
             className={cn(
-              "text-sm py-2 px-4 rounded-full font-medium flex-shrink-0 cursor-pointer transition-all duration-200",
+              "text-sm py-2 px-5 rounded-full font-medium flex-shrink-0 cursor-pointer transition-all duration-200",
               selectedTimeSlot === slot.id 
-                ? "bg-gray-200 text-gray-800" // Less bright selection color
-                : "bg-[#F8F8F8] hover:bg-[#F0F0F0] text-gray-700",
-              compact && "text-xs py-1.5 px-3"
+                ? "bg-gray-200 text-gray-800" 
+                : "bg-[#F8F8F8] hover:bg-[#F0F0F0] text-gray-700"
             )}
             onClick={() => setSelectedTimeSlot(slot.id)}
           >
