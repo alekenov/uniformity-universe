@@ -7,14 +7,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Calendar as CalendarIcon, Clock, User, Phone, MapPin, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface GiftingFlowProps {
   selectedTime: DeliveryTime;
@@ -44,6 +42,17 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
   const [showCourierComment, setShowCourierComment] = useState(false);
   
   const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
+
+  // Handle toggling between manual time slot selection and asking recipient
+  const handleTimeSelectionMode = (mode: 'manual' | 'ask') => {
+    if (mode === 'manual') {
+      setManualTimeSlot(true);
+      setAskRecipientForTime(false);
+    } else {
+      setManualTimeSlot(false);
+      setAskRecipientForTime(true);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -98,39 +107,35 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
       
       <Separator className="bg-gray-100" />
 
-      {/* Время доставки - новый дизайн */}
-      <div className="space-y-3">
-        <div className="flex items-center text-sm text-gray-500 mb-2">
+      {/* Время доставки - новый дизайн с визуальными кнопками */}
+      <div className="space-y-4">
+        <div className="flex items-center text-sm text-gray-500 mb-1">
           <Clock size={16} className="mr-2" />
           Время доставки
         </div>
 
-        <RadioGroup 
-          defaultValue={manualTimeSlot ? "manual" : "ask"}
-          className="grid grid-cols-2 gap-2"
-          onValueChange={(value) => {
-            if (value === "manual") {
-              setManualTimeSlot(true);
-              setAskRecipientForTime(false);
-            } else {
-              setAskRecipientForTime(true);
-              setManualTimeSlot(false);
-            }
-          }}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="manual" id="manual" />
-            <Label htmlFor="manual" className="cursor-pointer">Выбрать интервал</Label>
+        {/* Visual toggle buttons similar to delivery type */}
+        <div className="grid grid-cols-2 gap-3">
+          <div 
+            className={`delivery-option ${manualTimeSlot ? 'delivery-option-selected' : ''}`}
+            onClick={() => handleTimeSelectionMode('manual')}
+          >
+            <Clock size={20} className="mb-1" />
+            <span className="text-sm font-medium">Выбрать интервал</span>
           </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="ask" id="ask" />
-            <Label htmlFor="ask" className="cursor-pointer">Уточнить у получателя</Label>
+          
+          <div 
+            className={`delivery-option ${askRecipientForTime ? 'delivery-option-selected' : ''}`}
+            onClick={() => handleTimeSelectionMode('ask')}
+          >
+            <MessageSquare size={20} className="mb-1" />
+            <span className="text-sm font-medium">Уточнить у получателя</span>
           </div>
-        </RadioGroup>
+        </div>
         
         {/* Показать временные слоты только при ручном выборе */}
         {manualTimeSlot ? (
-          <div className="mt-3">
+          <div className="mt-2">
             <p className="text-xs text-gray-500 mb-2">Выберите удобное время</p>
             <DeliveryTimeSlots selectedDay={selectedTime} />
           </div>
