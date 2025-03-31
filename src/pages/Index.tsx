@@ -8,6 +8,7 @@ import PaymentOptions from '@/components/PaymentOptions';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
+import CardMessage from '@/components/cart/CardMessage';
 
 const initialProducts = [
   {
@@ -42,6 +43,8 @@ const Index: React.FC = () => {
   const [deliveryType, setDeliveryType] = useState<DeliveryType>('other');
   const [deliveryTime, setDeliveryTime] = useState<DeliveryTime>('today');
   const [paymentMethod, setPaymentMethod] = useState('card1');
+  const [cardMessage, setCardMessage] = useState('');
+  const [showCardMessageInput, setShowCardMessageInput] = useState(false);
   
   const [address, setAddress] = useState({
     street: 'улица Достоевского, 3с2',
@@ -113,14 +116,8 @@ const Index: React.FC = () => {
           <div className="flex flex-col md:flex-row md:space-x-6">
             {/* Левая колонка с информацией о доставке */}
             <div className="w-full md:w-2/3">
-              <DeliveryOptions
-                selectedType={deliveryType}
-                selectedTime={deliveryTime}
-                onTypeChange={setDeliveryType}
-                onTimeChange={setDeliveryTime}
-              />
-              
-              <div className="panel mt-6">
+              {/* Moved "Your Order" section above the delivery section */}
+              <div className="panel mb-6">
                 <h2 className="text-xl font-medium mb-4">Ваш заказ</h2>
                 <div className="divide-y divide-[#F0F0F0]">
                   {products.map((product) => (
@@ -131,7 +128,22 @@ const Index: React.FC = () => {
                     />
                   ))}
                 </div>
+                
+                {/* Added Card Message component from cart page */}
+                <CardMessage
+                  cardMessage={cardMessage}
+                  setCardMessage={setCardMessage}
+                  showCardMessageInput={showCardMessageInput}
+                  setShowCardMessageInput={setShowCardMessageInput}
+                />
               </div>
+              
+              <DeliveryOptions
+                selectedType={deliveryType}
+                selectedTime={deliveryTime}
+                onTypeChange={setDeliveryType}
+                onTimeChange={setDeliveryTime}
+              />
             </div>
             
             {/* Правая колонка с оплатой и итогами */}
