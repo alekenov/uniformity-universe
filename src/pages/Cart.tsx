@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Trash2, ShoppingBag, ChevronRight, MessageSquare, X, PenLine } from 'lucide-react';
+import { ArrowLeft, Trash2, ShoppingBag, MessageSquare, X, PenLine } from 'lucide-react';
 import CartItem from '@/components/CartItem';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
@@ -131,7 +131,6 @@ const Cart: React.FC = () => {
     const updatedStores = stores.map(store => {
       if (store.id === activeStoreId) {
         if (quantity === 0) {
-          // Remove the product if quantity is 0
           const updatedProducts = store.products.filter(product => product.id !== productId);
           return { 
             ...store, 
@@ -139,7 +138,6 @@ const Cart: React.FC = () => {
             total: updatedProducts.reduce((sum, product) => sum + (product.price * product.quantity), 0)
           };
         } else {
-          // Update the quantity
           const updatedProducts = store.products.map(product => 
             product.id === productId ? { ...product, quantity } : product
           );
@@ -196,7 +194,6 @@ const Cart: React.FC = () => {
   
   const handleAddCardMessage = () => {
     if (showCardMessageInput) {
-      // Save the card message
       if (cardMessage.trim()) {
         toast({
           title: "Открытка добавлена",
@@ -236,7 +233,7 @@ const Cart: React.FC = () => {
             className="p-2 -ml-2 mr-2"
             onClick={() => navigate('/flower-shop')}
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={20} className="icon" />
           </button>
           <h1 className="text-2xl font-medium">Корзина</h1>
           {activeStore.products.length > 0 && (
@@ -244,7 +241,7 @@ const Cart: React.FC = () => {
               className="ml-auto flex items-center text-gray-500 hover:text-red-500"
               onClick={clearActiveCart}
             >
-              <Trash2 size={18} className="mr-1" />
+              <Trash2 size={18} className="icon-sm mr-1" />
               <span className="text-sm">Очистить</span>
             </button>
           )}
@@ -259,9 +256,9 @@ const Cart: React.FC = () => {
                 onClick={() => setActiveStoreId(store.id)}
                 className={`flex-shrink-0 py-2 px-4 rounded-full border text-sm whitespace-nowrap ${
                   activeStoreId === store.id 
-                    ? 'border-[#222] bg-[#fff]' 
+                    ? 'border-[#8B5CF6] bg-[#F5F3FF]' 
                     : 'border-[#E0E0E0] bg-white'
-                }`}
+                } active-scale`}
               >
                 <div className="font-medium">{store.name}</div>
                 <div className="flex items-center text-gray-500 text-xs">
@@ -278,7 +275,7 @@ const Cart: React.FC = () => {
       <main className="container max-w-3xl mx-auto px-4 py-6 pb-24">
         {activeStore.products.length > 0 ? (
           <>
-            <div className="bg-white rounded-lg shadow-sm mb-4">
+            <div className="panel mb-4">
               <div className="divide-y divide-[#F0F0F0]">
                 {activeStore.products.map((product) => (
                   <CartItem
@@ -297,10 +294,10 @@ const Cart: React.FC = () => {
                     </label>
                     <button 
                       onClick={handleRemoveCardMessage}
-                      className="text-red-500 hover:text-red-700 p-1.5 rounded-full hover:bg-red-50 transition-colors"
+                      className="text-destructive hover:text-destructive/90 p-1.5 rounded-full hover:bg-destructive/10 transition-colors"
                       aria-label="Удалить открытку"
                     >
-                      <X size={16} />
+                      <X size={16} className="icon-sm" />
                     </button>
                   </div>
                   <textarea
@@ -308,11 +305,11 @@ const Cart: React.FC = () => {
                     value={cardMessage}
                     onChange={(e) => setCardMessage(e.target.value)}
                     placeholder="Введите текст для вашей открытки..."
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#4BA3E3]"
+                    className="w-full p-3 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-[#8B5CF6] focus:ring-offset-2"
                     rows={3}
                     maxLength={200}
                   />
-                  <div className="text-xs text-gray-500 mt-1 text-right">
+                  <div className="form-hint text-right">
                     {cardMessage.length}/200 символов
                   </div>
                 </div>
@@ -323,30 +320,30 @@ const Cart: React.FC = () => {
                     <div className="flex items-center">
                       <button 
                         onClick={() => setShowCardMessageInput(true)}
-                        className="text-[#4BA3E3] hover:text-[#3A92D2] p-1.5 rounded-full hover:bg-blue-50 transition-colors mr-1"
+                        className="text-[#8B5CF6] hover:text-[#7C3AED] p-1.5 rounded-full hover:bg-[#F5F3FF] transition-colors mr-1"
                         aria-label="Редактировать открытку"
                       >
-                        <PenLine size={16} />
+                        <PenLine size={16} className="icon-sm" />
                       </button>
                       <button 
                         onClick={handleRemoveCardMessage}
-                        className="text-red-500 hover:text-red-700 p-1.5 rounded-full hover:bg-red-50 transition-colors"
+                        className="text-destructive hover:text-destructive/90 p-1.5 rounded-full hover:bg-destructive/10 transition-colors"
                         aria-label="Удалить открытку"
                       >
-                        <X size={16} />
+                        <X size={16} className="icon-sm" />
                       </button>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg">{cardMessage}</p>
+                  <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md">{cardMessage}</p>
                 </div>
               )}
               
               {!cardMessage.trim() && !showCardMessageInput && (
                 <button 
                   onClick={handleAddCardMessage}
-                  className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline border-t border-[#F0F0F0] flex items-center justify-center"
+                  className="w-full text-center py-3 text-[#8B5CF6] font-medium hover:bg-[#F5F3FF] border-t border-[#F0F0F0] flex items-center justify-center transition-colors active-scale"
                 >
-                  <MessageSquare size={18} className="mr-2" />
+                  <MessageSquare size={18} className="icon mr-2" />
                   Добавить открытку
                 </button>
               )}
@@ -354,9 +351,9 @@ const Cart: React.FC = () => {
               {showCardMessageInput && (
                 <button 
                   onClick={handleAddCardMessage}
-                  className="w-full text-center py-3 text-[#4BA3E3] font-medium hover:underline border-t border-[#F0F0F0] flex items-center justify-center"
+                  className="w-full text-center py-3 text-[#8B5CF6] font-medium hover:bg-[#F5F3FF] border-t border-[#F0F0F0] flex items-center justify-center transition-colors active-scale"
                 >
-                  <MessageSquare size={18} className="mr-2" />
+                  <MessageSquare size={18} className="icon mr-2" />
                   Сохранить открытку
                 </button>
               )}
@@ -367,7 +364,7 @@ const Cart: React.FC = () => {
               <h2 className="text-lg font-medium mb-3">Что-то ещё?</h2>
               <div className="grid grid-cols-3 gap-3">
                 {suggestionProducts.map(product => (
-                  <div key={product.id} className="bg-white rounded-lg overflow-hidden shadow-sm">
+                  <div key={product.id} className="panel p-0 overflow-hidden hover-shadow">
                     <div className="aspect-square bg-[#f9f9f9] flex items-center justify-center">
                       <img 
                         src={product.image} 
@@ -381,7 +378,7 @@ const Cart: React.FC = () => {
                       <div className="text-xs text-gray-500 mb-1">{product.weight}</div>
                       <button 
                         onClick={() => addSuggestionToCart(product)}
-                        className="w-full flex items-center justify-center py-1.5 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 text-xs"
+                        className="w-full flex items-center justify-center py-1.5 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 text-xs active-scale"
                       >
                         <span className="text-lg">+</span>
                       </button>
@@ -396,17 +393,14 @@ const Cart: React.FC = () => {
               deliveryFee={deliveryFee}
               serviceFee={serviceFee}
               total={total}
-              onSubmit={() => {
-                // Navigate to checkout page
-                window.location.href = '/';
-              }}
+              onSubmit={handleCheckout}
             />
             
-            <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+            <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0]">
               <div className="container max-w-3xl mx-auto">
                 <button 
                   onClick={handleCheckout}
-                  className="bg-[#FF6633] text-white font-medium py-3 px-6 rounded-xl w-full flex items-center justify-center"
+                  className="checkout-button bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale"
                 >
                   Оформить заказ
                 </button>
@@ -414,13 +408,13 @@ const Cart: React.FC = () => {
             </div>
           </>
         ) : (
-          <div className="bg-white rounded-lg shadow-sm text-center py-12">
+          <div className="panel text-center py-12">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#F0F0F0] flex items-center justify-center">
               <ShoppingBag size={24} className="text-gray-400" />
             </div>
-            <h2 className="text-xl font-medium mb-2">Ваша корзина пуста</h2>
+            <h2 className="text-xl font-medium mb-2">Ва��а корзина пуста</h2>
             <p className="text-gray-500 mb-6">Добавьте товары для оформления заказа</p>
-            <button className="bg-[#FF6633] text-white font-medium py-3 px-6 rounded-xl hover:bg-[#FF6633]/90 transition-colors">
+            <button className="checkout-button bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale">
               Перейти в каталог
             </button>
           </div>

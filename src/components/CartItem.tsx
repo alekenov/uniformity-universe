@@ -69,11 +69,11 @@ const CartItem: React.FC<CartItemProps> = ({
             onClick={() => onQuantityChange(id, Math.max(0, quantity - 1))}
             className={cn(
               "w-6 h-6 flex items-center justify-center text-gray-500 rounded-full",
-              "hover:bg-gray-200 hover:text-gray-700 transition-colors"
+              "hover:bg-gray-200 hover:text-gray-700 transition-colors active-scale"
             )}
             aria-label="Decrease quantity"
           >
-            <Minus size={12} strokeWidth={2.5} />
+            <Minus size={12} strokeWidth={2.5} className="icon-sm" />
           </button>
           <span className="w-6 text-center font-medium text-xs">
             {unit === "кг" ? `${quantity.toFixed(1)}кг` : quantity}
@@ -82,11 +82,11 @@ const CartItem: React.FC<CartItemProps> = ({
             onClick={() => onQuantityChange(id, quantity + 1)}
             className={cn(
               "w-6 h-6 flex items-center justify-center text-gray-500 rounded-full",
-              "hover:bg-gray-200 hover:text-gray-700 transition-colors"
+              "hover:bg-gray-200 hover:text-gray-700 transition-colors active-scale"
             )}
             aria-label="Increase quantity"
           >
-            <Plus size={12} strokeWidth={2.5} />
+            <Plus size={12} strokeWidth={2.5} className="icon-sm" />
           </button>
         </div>
       </div>
