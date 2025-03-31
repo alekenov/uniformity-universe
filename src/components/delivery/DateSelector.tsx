@@ -22,12 +22,12 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   setSelectedDate,
 }) => {
   return (
-    <div className="flex items-center mb-3">
-      <Clock size={18} className="text-gray-400 mr-2" />
+    <div className="flex items-center mb-2">
+      <Clock size={16} className="text-gray-400 mr-2" />
       <div className="flex bg-[#F8F8F8] rounded-full p-0.5">
         <button
           className={cn(
-            "px-3 py-0.5 text-sm rounded-full transition-all duration-200",
+            "px-2.5 py-0.5 text-xs rounded-full transition-all duration-200",
             selectedTime === 'today'
               ? "bg-white shadow-sm font-medium" 
               : "text-gray-600 hover:bg-white/50"
@@ -38,7 +38,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({
         </button>
         <button
           className={cn(
-            "px-3 py-0.5 text-sm rounded-full transition-all duration-200",
+            "px-2.5 py-0.5 text-xs rounded-full transition-all duration-200",
             selectedTime === 'tomorrow'
               ? "bg-white shadow-sm font-medium"
               : "text-gray-600 hover:bg-white/50"
@@ -51,13 +51,13 @@ const DateSelector: React.FC<DateSelectorProps> = ({
           <PopoverTrigger asChild>
             <button
               className={cn(
-                "w-7 h-7 flex items-center justify-center rounded-full transition-all duration-200",
+                "w-5 h-5 flex items-center justify-center rounded-full transition-all duration-200",
                 selectedDate && !['today', 'tomorrow'].includes(selectedTime) 
                   ? "bg-white shadow-sm" 
                   : "text-gray-600 hover:bg-white/50"
               )}
             >
-              <CalendarIcon size={16} />
+              <CalendarIcon size={14} />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="center">
