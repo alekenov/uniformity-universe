@@ -5,6 +5,7 @@ import { DeliveryTime } from '@/components/DeliveryOptions';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 interface TimeSlotSelectorProps {
   selectedTime: DeliveryTime;
@@ -19,7 +20,8 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-1">
+      <div className="text-sm text-gray-500 mb-3">Время доставки</div>
+      <div className="flex items-center gap-2 mb-3">
         <Checkbox 
           id="ask-recipient"
           checked={askRecipientForTime}
@@ -34,9 +36,7 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
       </div>
 
       {!askRecipientForTime && (
-        <div className="mt-2">
-          <DeliveryTimeSlots selectedDay={selectedTime} />
-        </div>
+        <DeliveryTimeSlots selectedDay={selectedTime} />
       )}
     </div>
   );
