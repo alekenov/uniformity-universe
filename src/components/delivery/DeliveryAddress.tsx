@@ -20,6 +20,7 @@ interface DeliveryAddressProps {
   setAskRecipientForAddress: (value: boolean) => void;
   showCourierComment: boolean;
   toggleCourierComment: () => void;
+  isSelfDelivery?: boolean; // New prop to indicate if this is for self delivery
 }
 
 const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
@@ -35,6 +36,7 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
   setAskRecipientForAddress,
   showCourierComment,
   toggleCourierComment,
+  isSelfDelivery = false, // Default to false
 }) => {
   return (
     <div className="space-y-4">
@@ -43,8 +45,8 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
         Адрес доставки
       </div>
       
-      {/* Only show the checkbox if needed (not in "self" delivery flow) */}
-      {setAskRecipientForAddress !== (() => {}) && (
+      {/* Only show the checkbox if not self delivery */}
+      {!isSelfDelivery && setAskRecipientForAddress !== (() => {}) && (
         <div className="flex items-center space-x-2 mb-2">
           <Checkbox 
             id="askRecipientAddress"

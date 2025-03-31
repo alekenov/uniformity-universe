@@ -50,6 +50,7 @@ const SelfDeliveryAddressSection: React.FC<SelfDeliveryAddressSectionProps> = ({
           setAskRecipientForAddress={() => {}} // No-op function
           showCourierComment={showCourierComment}
           toggleCourierComment={toggleCourierComment}
+          isSelfDelivery={true} // Set to true for self-delivery
         />
       </div>
     </>
