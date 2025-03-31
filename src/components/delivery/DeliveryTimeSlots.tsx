@@ -12,6 +12,13 @@ interface DeliveryTimeSlotsProps {
   onHourSelect?: (hour: string) => void;
 }
 
+// Define consistent types for time slots
+interface TimeSlot {
+  id: string;
+  label: string;
+  isNearest?: boolean;
+}
+
 const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({ 
   selectedDay,
   className,
@@ -24,22 +31,22 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("12-30");
 
   // Time slots for delivery
-  const deliveryTimeSlots = [
+  const deliveryTimeSlots: TimeSlot[] = [
     { id: "12-30", label: "12:30", isNearest: true },
     { id: "12-15", label: "12–15", isNearest: false },
     { id: "15-18", label: "15–18", isNearest: false }
   ];
 
   // Hourly time slots for pickup
-  const pickupHourSlots = [
-    { id: "12:00", label: "12:00" },
-    { id: "13:00", label: "13:00" },
-    { id: "14:00", label: "14:00" },
-    { id: "15:00", label: "15:00" },
-    { id: "16:00", label: "16:00" },
-    { id: "17:00", label: "17:00" },
-    { id: "18:00", label: "18:00" },
-    { id: "19:00", label: "19:00" }
+  const pickupHourSlots: TimeSlot[] = [
+    { id: "12:00", label: "12:00", isNearest: true },
+    { id: "13:00", label: "13:00", isNearest: false },
+    { id: "14:00", label: "14:00", isNearest: false },
+    { id: "15:00", label: "15:00", isNearest: false },
+    { id: "16:00", label: "16:00", isNearest: false },
+    { id: "17:00", label: "17:00", isNearest: false },
+    { id: "18:00", label: "18:00", isNearest: false },
+    { id: "19:00", label: "19:00", isNearest: false }
   ];
 
   // Choose which time slots to show based on the forPickup flag
