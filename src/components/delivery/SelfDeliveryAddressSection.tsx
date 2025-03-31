@@ -35,6 +35,7 @@ const SelfDeliveryAddressSection: React.FC<SelfDeliveryAddressSectionProps> = ({
       <div className="space-y-4">
         <div className="flex items-center gap-2 mb-2">
           <label className="text-sm font-medium">Адрес доставки</label>
+          <div className="form-hint">Доставим по указанному адресу</div>
         </div>
         
         <DeliveryAddress
