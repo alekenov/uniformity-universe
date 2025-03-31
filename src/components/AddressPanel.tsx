@@ -65,6 +65,11 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
     console.log('Show nearby stores');
   };
 
+  // Only show this component if it's the "self" delivery type
+  if (deliveryType !== 'self') {
+    return null;
+  }
+
   return (
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Куда доставить</h2>

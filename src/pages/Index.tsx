@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -123,20 +122,17 @@ const Index: React.FC = () => {
               onTimeChange={setDeliveryTime}
             />
             
-            {/* Only show address panel for 'self' delivery type */}
-            {deliveryType === 'self' && (
-              <AddressPanel
-                address={address}
-                onChange={handleAddressChange}
-                onEdit={() => {
-                  toast({
-                    title: "Редактирование адреса",
-                    description: "Здесь будет форма редактирования адреса",
-                  });
-                }}
-                deliveryType={deliveryType}
-              />
-            )}
+            <AddressPanel
+              address={address}
+              onChange={handleAddressChange}
+              onEdit={() => {
+                toast({
+                  title: "Редактирование адреса",
+                  description: "Здесь будет форма редактирования адреса",
+                });
+              }}
+              deliveryType={deliveryType}
+            />
             
             <PaymentOptions
               cards={paymentCards}
