@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2, PackageCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -135,6 +136,7 @@ const Index: React.FC = () => {
               serviceFee={serviceFee}
               total={total}
               onSubmit={handleSubmit}
+              buttonText="Оформить заказ"
             />
           </>
         ) : (

@@ -9,6 +9,7 @@ interface OrderSummaryProps {
   serviceFee: number;
   total: number;
   onSubmit: () => void;
+  buttonText?: string;
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({
@@ -16,7 +17,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   deliveryFee,
   serviceFee,
   total,
-  onSubmit
+  onSubmit,
+  buttonText = "Оформить заказ"
 }) => {
   return (
     <div className="panel">
@@ -50,7 +52,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         onClick={onSubmit} 
         className="w-full py-3 bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale"
       >
-        Оформить заказ
+        {buttonText}
       </Button>
     </div>
   );

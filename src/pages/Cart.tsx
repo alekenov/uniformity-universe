@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { ShoppingCart } from 'lucide-react';
 import CartItem from '@/components/CartItem';
 import OrderSummary from '@/components/OrderSummary';
 import CartHeader from '@/components/cart/CartHeader';
@@ -10,6 +10,7 @@ import CardMessage from '@/components/cart/CardMessage';
 import EmptyCart from '@/components/cart/EmptyCart';
 import SuggestionProducts from '@/components/cart/SuggestionProducts';
 import { Store, Product } from '@/types/cart';
+import { Button } from '@/components/ui/button';
 
 // Sample store data
 const initialStores: Store[] = [
@@ -234,16 +235,18 @@ const Cart: React.FC = () => {
               serviceFee={serviceFee}
               total={total}
               onSubmit={handleCheckout}
+              buttonText="Перейти к оформлению"
             />
             
             <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0] md:hidden">
               <div className="container max-w-3xl mx-auto">
-                <button 
+                <Button 
                   onClick={handleCheckout}
-                  className="checkout-button bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale"
+                  className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale flex items-center justify-center gap-2"
                 >
-                  Оформить заказ
-                </button>
+                  <span>Перейти к оформлению</span>
+                  <ShoppingCart size={18} className="ml-1" />
+                </Button>
               </div>
             </div>
           </>
