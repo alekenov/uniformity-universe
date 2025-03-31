@@ -19,10 +19,10 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
 
   const timeSlots = [
     { id: "asap", label: "Как можно скорее" },
-    { id: "9-12", label: "9-12 час" },
     { id: "12-15", label: "12-15 час" },
     { id: "15-18", label: "15-18 час" },
-    { id: "18-21", label: "18-21 час" }
+    { id: "18-21", label: "18-21 час" },
+    { id: "21-23", label: "21-23 час" }
   ];
 
   const scrollLeft = () => {
