@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { DeliveryType } from '@/components/DeliveryOptions';
-import { TruckIcon, UserRound, ShoppingBagIcon } from 'lucide-react';
+import { Gift, User } from 'lucide-react';
 
 interface DeliveryOption {
   id: DeliveryType;
@@ -21,21 +21,15 @@ interface DeliveryTypeSelectorProps {
 const deliveryOptions: DeliveryOption[] = [
   {
     id: 'other',
-    title: 'Заказ другому',
+    title: 'Хочу подарить',
     color: '#E5DEFF',
-    icon: <UserRound size={24} />,
+    icon: <Gift size={24} />,
   },
   {
     id: 'self',
-    title: 'Сам получатель',
+    title: 'Заказываю себе',
     color: '#FEF7CD',
-    icon: <TruckIcon size={24} />,
-  },
-  {
-    id: 'pickup',
-    title: 'Самовывоз',
-    color: '#F2FCE2',
-    icon: <ShoppingBagIcon size={24} />,
+    icon: <User size={24} />,
   },
 ];
 
@@ -44,7 +38,7 @@ const DeliveryTypeSelector: React.FC<DeliveryTypeSelectorProps> = ({
   onTypeChange,
 }) => {
   return (
-    <div className="grid grid-cols-3 gap-3 mb-4">
+    <div className="grid grid-cols-2 gap-3 mb-4">
       {deliveryOptions.map((option) => (
         <div
           key={option.id}
