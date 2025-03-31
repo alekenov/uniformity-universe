@@ -19,7 +19,12 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
 }) => {
   return (
     <div className="space-y-4">
-      <div className="text-sm font-medium mb-3">Когда доставить?</div>
+      {!askRecipientForTime && (
+        <div>
+          <DeliveryTimeSlots selectedDay={selectedTime} compact={true} />
+        </div>
+      )}
+
       <div className="flex items-center gap-2 mb-4">
         <Checkbox 
           id="ask-recipient"
@@ -37,12 +42,6 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
           <div className="text-xs text-gray-500 mt-1">Мы сами свяжемся и согласуем доставку</div>
         </label>
       </div>
-
-      {!askRecipientForTime && (
-        <div>
-          <DeliveryTimeSlots selectedDay={selectedTime} compact={true} />
-        </div>
-      )}
     </div>
   );
 };
