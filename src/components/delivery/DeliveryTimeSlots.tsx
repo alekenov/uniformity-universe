@@ -36,7 +36,7 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
           <div 
             key={slot.id}
             className={cn(
-              "text-sm py-3 px-6 rounded-full font-medium cursor-pointer transition-all duration-200",
+              "text-sm py-2.5 px-5 rounded-full font-medium cursor-pointer transition-all duration-200",
               selectedTimeSlot === slot.id 
                 ? "bg-gray-200 text-gray-800" 
                 : "bg-[#F8F8F8] hover:bg-[#F0F0F0] text-gray-700"

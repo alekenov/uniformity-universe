@@ -1,11 +1,10 @@
 
 import React from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, Calendar as CalendarIcon } from 'lucide-react';
 import { DeliveryTime } from '@/components/DeliveryOptions';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 interface TimeSlotSelectorProps {
   selectedTime: DeliveryTime;
@@ -37,38 +36,42 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
 
       {!askRecipientForTime && (
         <div>
-          <div className="flex items-center mb-4">
-            <Clock size={20} className="text-gray-400 mr-2" />
-            <div className="flex bg-[#F8F8F8] rounded-full p-1">
-              <button
-                className={cn(
-                  "px-4 py-1.5 text-sm rounded-full transition-all duration-200",
-                  selectedTime === 'today'
-                    ? "bg-white shadow-sm font-medium" 
-                    : "text-gray-600 hover:bg-white/50"
-                )}
-                onClick={() => {}}
-              >
-                Сегодня
-              </button>
-              <button
-                className={cn(
-                  "px-4 py-1.5 text-sm rounded-full transition-all duration-200",
-                  selectedTime === 'tomorrow'
-                    ? "bg-white shadow-sm font-medium"
-                    : "text-gray-600 hover:bg-white/50"
-                )}
-                onClick={() => {}}
-              >
-                Завтра
-              </button>
-              <button
-                className="px-4 py-1.5 text-sm rounded-full transition-all duration-200 text-gray-600 hover:bg-white/50"
-              >
-                31 мар.
-              </button>
-            </div>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <button
+              className={cn(
+                "py-8 px-4 flex flex-col items-center justify-center rounded-2xl border-2 transition-all duration-200",
+                selectedTime === 'today'
+                  ? "bg-[#F9F9F9] border-black font-medium"
+                  : "border-gray-100"
+              )}
+              onClick={() => {}}
+            >
+              <span className="text-base">Сегодня</span>
+            </button>
+            
+            <button
+              className={cn(
+                "py-8 px-4 flex flex-col items-center justify-center rounded-2xl border-2 transition-all duration-200",
+                selectedTime === 'tomorrow'
+                  ? "bg-[#F9F9F9] border-black font-medium"
+                  : "border-gray-100"
+              )}
+              onClick={() => {}}
+            >
+              <span className="text-base">Завтра</span>
+            </button>
+            
+            <button
+              className={cn(
+                "py-8 px-4 flex flex-col items-center justify-center rounded-2xl border-2 border-gray-100 transition-all duration-200"
+              )}
+            >
+              <CalendarIcon size={24} className="mb-1" />
+              <span className="text-base">Выбрать</span>
+            </button>
           </div>
+          
+          <div className="text-sm text-gray-500 mb-3">Время доставки</div>
           <DeliveryTimeSlots selectedDay={selectedTime} compact={true} />
         </div>
       )}
