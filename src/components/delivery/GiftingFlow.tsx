@@ -11,6 +11,7 @@ import { Calendar as CalendarIcon, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
+import { Textarea } from '@/components/ui/textarea';
 
 interface GiftingFlowProps {
   selectedTime: DeliveryTime;
@@ -34,10 +35,14 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
   const [recipientPhone, setRecipientPhone] = useState('');
   const [address, setAddress] = useState('');
   const [apartment, setApartment] = useState('');
+  const [floor, setFloor] = useState('');
+  const [courierComment, setCourierComment] = useState('');
   const [askRecipientForAddress, setAskRecipientForAddress] = useState(false);
   const [showAddressDetails, setShowAddressDetails] = useState(false);
+  const [showCourierComment, setShowCourierComment] = useState(false);
   
   const toggleAddressDetails = () => setShowAddressDetails(!showAddressDetails);
+  const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
 
   // Определяем день недели и дату для отображения
   const getTodayTomorrowText = (day: DeliveryTime) => {
@@ -181,7 +186,10 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
               if (checked === true) {
                 setAddress('');
                 setApartment('');
+                setFloor('');
+                setCourierComment('');
                 setShowAddressDetails(false);
+                setShowCourierComment(false);
               }
             }}
           />
@@ -206,38 +214,51 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
               />
             </div>
             
-            <div className="flex items-center justify-between">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="apartment">Квартира/офис</Label>
+                <Input 
+                  id="apartment" 
+                  value={apartment} 
+                  onChange={(e) => setApartment(e.target.value)}
+                  placeholder="Квартира/офис" 
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="floor">Этаж</Label>
+                <Input 
+                  id="floor" 
+                  value={floor} 
+                  onChange={(e) => setFloor(e.target.value)}
+                  placeholder="Этаж" 
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            
+            <div>
               <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={toggleAddressDetails}
-                className="text-sm"
+                variant="outline" 
+                onClick={toggleCourierComment}
+                className="text-sm w-full justify-start"
+                type="button"
               >
-                {showAddressDetails ? 'Скрыть детали' : 'Добавить детали доставки'}
+                {showCourierComment ? 'Скрыть комментарий курьеру' : 'Добавить комментарий для курьера'}
               </Button>
             </div>
             
-            {showAddressDetails && (
-              <div className="space-y-3 p-3 bg-gray-50 rounded-md">
-                <div>
-                  <Label htmlFor="apartment">Квартира/офис</Label>
-                  <Input 
-                    id="apartment" 
-                    value={apartment} 
-                    onChange={(e) => setApartment(e.target.value)}
-                    placeholder="Номер квартиры/офиса" 
-                    className="mt-1"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="comment">Комментарий курьеру</Label>
-                  <textarea 
-                    id="comment" 
-                    placeholder="Код от двери, как найти подъезд и т.д." 
-                    className="w-full mt-1 p-2 border rounded-md text-sm"
-                    rows={3}
-                  />
-                </div>
+            {showCourierComment && (
+              <div className="space-y-2">
+                <Label htmlFor="courierComment">Комментарий курьеру</Label>
+                <Textarea 
+                  id="courierComment" 
+                  value={courierComment}
+                  onChange={(e) => setCourierComment(e.target.value)}
+                  placeholder="Код от двери, как найти подъезд, другие важные детали для доставки..." 
+                  rows={3}
+                  className="resize-none"
+                />
               </div>
             )}
           </div>
