@@ -1,5 +1,5 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface DeliveryTimeSlotsProps {
@@ -13,7 +13,6 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
   className,
   compact = false 
 }) => {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("12-30");
 
   // Time slots to match the image
@@ -25,18 +24,12 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
 
   return (
     <div className={cn("relative", className)}>
-      <div 
-        ref={scrollContainerRef}
-        className={cn(
-          "flex gap-3 scroll-smooth",
-          compact ? "px-0" : "px-1"
-        )}
-      >
+      <div className="flex gap-3 overflow-x-auto pb-1">
         {timeSlots.map(slot => (
           <div 
             key={slot.id}
             className={cn(
-              "text-sm py-2.5 px-5 rounded-full font-medium cursor-pointer transition-all duration-200",
+              "text-sm py-2.5 px-5 rounded-full font-medium cursor-pointer transition-all duration-200 whitespace-nowrap",
               selectedTimeSlot === slot.id 
                 ? "bg-gray-200 text-gray-800" 
                 : "bg-[#F8F8F8] hover:bg-[#F0F0F0] text-gray-700"
