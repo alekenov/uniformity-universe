@@ -1,56 +1,41 @@
 
 import React from 'react';
-import { Clock, MessageSquare } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import { DeliveryTime } from '@/components/DeliveryOptions';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
+import { Checkbox } from '@/components/ui/checkbox';
+import { cn } from '@/lib/utils';
 
 interface TimeSlotSelectorProps {
   selectedTime: DeliveryTime;
-  manualTimeSlot: boolean;
   askRecipientForTime: boolean;
-  handleTimeSelectionMode: (mode: 'manual' | 'ask') => void;
+  setAskRecipientForTime: (value: boolean) => void;
 }
 
 const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
   selectedTime,
-  manualTimeSlot,
   askRecipientForTime,
-  handleTimeSelectionMode,
+  setAskRecipientForTime,
 }) => {
   return (
     <div className="space-y-4">
-      <div className="flex items-center text-sm text-gray-500 mb-1">
-        <Clock size={16} className="mr-2" />
-        Время доставки
+      <div className="flex items-center gap-2 mb-1">
+        <Checkbox 
+          id="ask-recipient"
+          checked={askRecipientForTime}
+          onCheckedChange={(checked) => setAskRecipientForTime(checked as boolean)}
+        />
+        <label 
+          htmlFor="ask-recipient" 
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+        >
+          Мы сами свяжемся с получателем и уточним удобное время
+        </label>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div 
-          className={`delivery-option ${manualTimeSlot ? 'delivery-option-selected' : ''}`}
-          onClick={() => handleTimeSelectionMode('manual')}
-        >
-          <span className="text-sm font-medium">Выбрать интервал</span>
-        </div>
-        
-        <div 
-          className={`delivery-option ${askRecipientForTime ? 'delivery-option-selected' : ''}`}
-          onClick={() => handleTimeSelectionMode('ask')}
-        >
-          <span className="text-sm font-medium">Уточнить у получателя</span>
-        </div>
-      </div>
-      
-      {manualTimeSlot ? (
+      {!askRecipientForTime && (
         <div className="mt-2">
-          <p className="text-xs text-gray-500 mb-2">Выберите удобное время</p>
           <DeliveryTimeSlots selectedDay={selectedTime} />
-        </div>
-      ) : askRecipientForTime && (
-        <div className="bg-gray-50 p-3 rounded-md mt-2">
-          <p className="text-sm text-gray-500 flex items-center">
-            <MessageSquare size={14} className="mr-2" />
-            Мы сами уточним удобное время с получателем
-          </p>
         </div>
       )}
     </div>

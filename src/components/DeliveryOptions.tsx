@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DeliveryTypeSelector from './delivery/DeliveryTypeSelector';
 import DeliveryTimeSelector from './delivery/DeliveryTimeSelector';
 import DeliveryTimeSlots from './delivery/DeliveryTimeSlots';
@@ -21,8 +21,14 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   onTypeChange,
   onTimeChange,
 }) => {
-  const [manualTimeSlot, setManualTimeSlot] = useState(true); // Default to manual selection
-  const [askRecipientForTime, setAskRecipientForTime] = useState(false);
+  const [manualTimeSlot, setManualTimeSlot] = useState(false); // Changed default to false
+  const [askRecipientForTime, setAskRecipientForTime] = useState(true); // Default to true
+
+  // Ensure our defaults are set when component mounts
+  useEffect(() => {
+    setManualTimeSlot(false);
+    setAskRecipientForTime(true);
+  }, []);
 
   return (
     <div className="panel">

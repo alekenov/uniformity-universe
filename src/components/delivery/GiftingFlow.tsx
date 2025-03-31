@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DeliveryTime } from '@/components/DeliveryOptions';
 import { Separator } from '@/components/ui/separator';
 import DateSelector from './DateSelector';
@@ -34,37 +34,31 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
   const [askRecipientForAddress, setAskRecipientForAddress] = useState(false);
   const [showCourierComment, setShowCourierComment] = useState(false);
   
-  const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
-
-  const handleTimeSelectionMode = (mode: 'manual' | 'ask') => {
-    if (mode === 'manual') {
-      setManualTimeSlot(true);
-      setAskRecipientForTime(false);
-    } else {
-      setManualTimeSlot(false);
+  // Set askRecipientForTime to true by default
+  useEffect(() => {
+    if (!askRecipientForTime) {
       setAskRecipientForTime(true);
     }
-  };
+  }, [askRecipientForTime, setAskRecipientForTime]);
+  
+  const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="space-y-4">
         <DateSelector 
           selectedTime={selectedTime}
           onTimeChange={onTimeChange}
           selectedDate={selectedDate}
           setSelectedDate={setSelectedDate}
         />
+        
+        <TimeSlotSelector
+          selectedTime={selectedTime}
+          askRecipientForTime={askRecipientForTime}
+          setAskRecipientForTime={setAskRecipientForTime}
+        />
       </div>
-      
-      <Separator className="bg-gray-100" />
-
-      <TimeSlotSelector
-        selectedTime={selectedTime}
-        manualTimeSlot={manualTimeSlot}
-        askRecipientForTime={askRecipientForTime}
-        handleTimeSelectionMode={handleTimeSelectionMode}
-      />
       
       <Separator className="bg-gray-100" />
 
