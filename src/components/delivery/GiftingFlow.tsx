@@ -7,12 +7,14 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, Clock, User, Phone, MapPin } from 'lucide-react';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Calendar as CalendarIcon, Clock, User, Phone, MapPin, MessageSquare } from 'lucide-react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface GiftingFlowProps {
   selectedTime: DeliveryTime;
@@ -96,40 +98,50 @@ const GiftingFlow: React.FC<GiftingFlowProps> = ({
       
       <Separator className="bg-gray-100" />
 
-      {/* Время доставки */}
+      {/* Время доставки - новый дизайн */}
       <div className="space-y-3">
-        <div className="flex items-center text-sm text-gray-500 mb-1">
+        <div className="flex items-center text-sm text-gray-500 mb-2">
           <Clock size={16} className="mr-2" />
           Время доставки
         </div>
 
-        <div className="flex gap-2 mb-3">
-          <Button
-            variant={manualTimeSlot ? "default" : "outline"}
-            size="sm"
-            onClick={() => {
+        <RadioGroup 
+          defaultValue={manualTimeSlot ? "manual" : "ask"}
+          className="grid grid-cols-2 gap-2"
+          onValueChange={(value) => {
+            if (value === "manual") {
               setManualTimeSlot(true);
               setAskRecipientForTime(false);
-            }}
-            className={`flex-1 ${manualTimeSlot ? "" : "border-dashed"}`}
-          >
-            Выбрать интервал
-          </Button>
-          <Button
-            variant={askRecipientForTime ? "default" : "outline"}
-            size="sm"
-            onClick={() => {
+            } else {
               setAskRecipientForTime(true);
               setManualTimeSlot(false);
-            }}
-            className={`flex-1 ${askRecipientForTime ? "" : "border-dashed"}`}
-          >
-            Уточнить у получателя
-          </Button>
-        </div>
+            }
+          }}
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="manual" id="manual" />
+            <Label htmlFor="manual" className="cursor-pointer">Выбрать интервал</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="ask" id="ask" />
+            <Label htmlFor="ask" className="cursor-pointer">Уточнить у получателя</Label>
+          </div>
+        </RadioGroup>
         
         {/* Показать временные слоты только при ручном выборе */}
-        {manualTimeSlot && <DeliveryTimeSlots selectedDay={selectedTime} />}
+        {manualTimeSlot ? (
+          <div className="mt-3">
+            <p className="text-xs text-gray-500 mb-2">Выберите удобное время</p>
+            <DeliveryTimeSlots selectedDay={selectedTime} />
+          </div>
+        ) : askRecipientForTime && (
+          <div className="bg-gray-50 p-3 rounded-md mt-2">
+            <p className="text-sm text-gray-500 flex items-center">
+              <MessageSquare size={14} className="mr-2" />
+              Мы сами уточним удобное время с получателем
+            </p>
+          </div>
+        )}
       </div>
       
       <Separator className="bg-gray-100" />

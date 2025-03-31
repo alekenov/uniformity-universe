@@ -21,7 +21,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   onTypeChange,
   onTimeChange,
 }) => {
-  const [manualTimeSlot, setManualTimeSlot] = useState(false);
+  const [manualTimeSlot, setManualTimeSlot] = useState(true); // Default to manual selection
   const [askRecipientForTime, setAskRecipientForTime] = useState(false);
 
   return (
