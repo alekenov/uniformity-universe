@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import DeliveryTypeSelector from './delivery/DeliveryTypeSelector';
 import DeliveryTimeSelector from './delivery/DeliveryTimeSelector';
 import DeliveryTimeSlots from './delivery/DeliveryTimeSlots';
+import GiftingFlow from './delivery/GiftingFlow';
 
 export type DeliveryType = 'other' | 'self' | 'pickup';
 export type DeliveryTime = 'today' | 'tomorrow';
@@ -20,6 +21,9 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   onTypeChange,
   onTimeChange,
 }) => {
+  const [manualTimeSlot, setManualTimeSlot] = useState(false);
+  const [askRecipientForTime, setAskRecipientForTime] = useState(false);
+
   return (
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Доставка</h2>
@@ -29,12 +33,25 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
         onTypeChange={onTypeChange} 
       />
       
-      <DeliveryTimeSelector 
-        selectedTime={selectedTime} 
-        onTimeChange={onTimeChange} 
-      />
-      
-      <DeliveryTimeSlots selectedDay={selectedTime} />
+      {selectedType === 'other' ? (
+        <GiftingFlow 
+          selectedTime={selectedTime}
+          onTimeChange={onTimeChange}
+          manualTimeSlot={manualTimeSlot}
+          setManualTimeSlot={setManualTimeSlot}
+          askRecipientForTime={askRecipientForTime}
+          setAskRecipientForTime={setAskRecipientForTime}
+        />
+      ) : (
+        <>
+          <DeliveryTimeSelector 
+            selectedTime={selectedTime} 
+            onTimeChange={onTimeChange} 
+          />
+          
+          <DeliveryTimeSlots selectedDay={selectedTime} />
+        </>
+      )}
     </div>
   );
 };

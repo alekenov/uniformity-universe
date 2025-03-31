@@ -123,17 +123,20 @@ const Index: React.FC = () => {
               onTimeChange={setDeliveryTime}
             />
             
-            <AddressPanel
-              address={address}
-              onChange={handleAddressChange}
-              onEdit={() => {
-                toast({
-                  title: "Редактирование адреса",
-                  description: "Здесь будет форма редактирования адреса",
-                });
-              }}
-              deliveryType={deliveryType}
-            />
+            {/* Only show address panel for 'self' delivery type */}
+            {deliveryType === 'self' && (
+              <AddressPanel
+                address={address}
+                onChange={handleAddressChange}
+                onEdit={() => {
+                  toast({
+                    title: "Редактирование адреса",
+                    description: "Здесь будет форма редактирования адреса",
+                  });
+                }}
+                deliveryType={deliveryType}
+              />
+            )}
             
             <PaymentOptions
               cards={paymentCards}
