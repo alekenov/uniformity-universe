@@ -6,6 +6,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { DeliveryTime } from '@/components/DeliveryOptions';
+import { cn } from '@/lib/utils';
 
 interface DateSelectorProps {
   selectedTime: DeliveryTime;
@@ -21,34 +22,38 @@ const DateSelector: React.FC<DateSelectorProps> = ({
   setSelectedDate,
 }) => {
   return (
-    <div className="bg-[#F8F8F8] rounded-full p-1 flex items-center">
+    <div className="grid grid-cols-3 gap-3">
       <button
-        className={`flex-1 px-4 py-2 text-sm rounded-full transition-all duration-200 ${
-          selectedTime === 'today'
-            ? "bg-white shadow-sm font-medium" 
-            : "text-gray-600 hover:bg-white/50"
-        }`}
+        className={cn(
+          "delivery-option py-3 transition-all duration-200 border-2 hover:shadow-sm rounded-lg overflow-hidden",
+          selectedTime === 'today' 
+            ? "border-primary bg-secondary shadow-sm" 
+            : "border-gray-100 hover:border-gray-200"
+        )}
         onClick={() => onTimeChange('today')}
       >
-        Сегодня
+        <span className="text-sm font-medium">Сегодня</span>
       </button>
+      
       <button
-        className={`flex-1 px-4 py-2 text-sm rounded-full transition-all duration-200 ${
-          selectedTime === 'tomorrow'
-            ? "bg-white shadow-sm font-medium"
-            : "text-gray-600 hover:bg-white/50"
-        }`}
+        className={cn(
+          "delivery-option py-3 transition-all duration-200 border-2 hover:shadow-sm rounded-lg overflow-hidden",
+          selectedTime === 'tomorrow' 
+            ? "border-primary bg-secondary shadow-sm" 
+            : "border-gray-100 hover:border-gray-200"
+        )}
         onClick={() => onTimeChange('tomorrow')}
       >
-        Завтра
+        <span className="text-sm font-medium">Завтра</span>
       </button>
+      
       <Popover>
         <PopoverTrigger asChild>
           <button
-            className="flex-1 px-4 py-2 text-sm rounded-full transition-all duration-200 text-gray-600 hover:bg-white/50"
+            className="delivery-option py-3 transition-all duration-200 border-2 border-gray-100 hover:border-gray-200 hover:shadow-sm rounded-lg overflow-hidden flex items-center justify-center gap-2"
           >
-            <CalendarIcon size={16} className="inline-block mr-1" />
-            Выбрать
+            <CalendarIcon size={16} />
+            <span className="text-sm font-medium">Выбрать</span>
           </button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="center">
