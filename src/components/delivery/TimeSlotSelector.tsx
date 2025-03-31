@@ -10,13 +10,17 @@ interface TimeSlotSelectorProps {
   askRecipientForTime: boolean;
   setAskRecipientForTime: (value: boolean) => void;
   deliveryType?: 'other' | 'self' | 'pickup';
+  selectedHour?: string;
+  onHourSelect?: (hour: string) => void;
 }
 
 const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
   selectedTime,
   askRecipientForTime,
   setAskRecipientForTime,
-  deliveryType = 'other'
+  deliveryType = 'other',
+  selectedHour,
+  onHourSelect
 }) => {
   // For "self" delivery type, show only time slots without checkbox
   if (deliveryType === 'self') {
@@ -31,7 +35,13 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
   if (deliveryType === 'pickup') {
     return (
       <div className="space-y-4">
-        <DeliveryTimeSlots selectedDay={selectedTime} compact={true} forPickup={true} />
+        <DeliveryTimeSlots 
+          selectedDay={selectedTime} 
+          compact={true} 
+          forPickup={true}
+          selectedHour={selectedHour}
+          onHourSelect={onHourSelect}
+        />
       </div>
     );
   }
