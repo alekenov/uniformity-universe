@@ -9,7 +9,6 @@ import { AddressDetails } from './address/AddressDetails';
 import { Button } from './ui/button';
 import { Checkbox } from './ui/checkbox';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
-import RegionCitySelector from './address/RegionCitySelector';
 
 interface AddressPanelProps {
   address: AddressInfo;
@@ -70,12 +69,7 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Куда доставить</h2>
       
-      {/* Region and City Display */}
-      <RegionCitySelector 
-        selectedRegion={selectedRegion}
-        selectedCity={selectedCity}
-        onCityChange={handleCityChange}
-      />
+      {/* Region and City Display - REMOVED */}
       
       {/* Delivery Method Tabs */}
       <Tabs defaultValue="delivery" className="w-full mb-4" onValueChange={(value) => setDeliveryMethod(value as 'delivery' | 'pickup')}>
