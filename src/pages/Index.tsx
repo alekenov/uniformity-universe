@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2, PackageCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -84,7 +85,7 @@ const Index: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <header className="bg-white sticky top-0 z-10 shadow-sm">
-        <div className="container max-w-3xl mx-auto px-4 py-4 flex items-center">
+        <div className="container max-w-6xl mx-auto px-4 py-4 flex items-center">
           <Link to="/cart" className="p-2 -ml-2 mr-2">
             <ArrowLeft size={20} />
           </Link>
@@ -107,37 +108,58 @@ const Index: React.FC = () => {
         </div>
       </header>
       
-      <main className="container max-w-3xl mx-auto px-4 py-6 pb-24">
+      <main className="container max-w-6xl mx-auto px-4 py-6 pb-24">
         {products.length > 0 ? (
-          <>
-            <DeliveryOptions
-              selectedType={deliveryType}
-              selectedTime={deliveryTime}
-              onTypeChange={setDeliveryType}
-              onTimeChange={setDeliveryTime}
-            />
+          <div className="flex flex-col md:flex-row md:space-x-6">
+            {/* Левая колонка с информацией о доставке */}
+            <div className="w-full md:w-2/3">
+              <DeliveryOptions
+                selectedType={deliveryType}
+                selectedTime={deliveryTime}
+                onTypeChange={setDeliveryType}
+                onTimeChange={setDeliveryTime}
+              />
+              
+              <div className="panel mt-6">
+                <h2 className="text-xl font-medium mb-4">Ваш заказ</h2>
+                <div className="divide-y divide-[#F0F0F0]">
+                  {products.map((product) => (
+                    <CartItem
+                      key={product.id}
+                      {...product}
+                      onQuantityChange={handleQuantityChange}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
             
-            <PaymentOptions
-              cards={paymentCards}
-              selectedCard={paymentMethod}
-              onCardSelect={setPaymentMethod}
-              onAddPromocode={() => {
-                toast({
-                  title: "Промокод",
-                  description: "Здесь будет форма добавления промокода",
-                });
-              }}
-            />
-            
-            <OrderSummary
-              subtotal={subtotal}
-              deliveryFee={deliveryFee}
-              serviceFee={serviceFee}
-              total={total}
-              onSubmit={handleSubmit}
-              buttonText="Оформить заказ"
-            />
-          </>
+            {/* Правая колонка с оплатой и итогами */}
+            <div className="w-full md:w-1/3 mt-6 md:mt-0">
+              <div className="md:sticky md:top-24">
+                <PaymentOptions
+                  cards={paymentCards}
+                  selectedCard={paymentMethod}
+                  onCardSelect={setPaymentMethod}
+                  onAddPromocode={() => {
+                    toast({
+                      title: "Промокод",
+                      description: "Здесь будет форма добавления промокода",
+                    });
+                  }}
+                />
+                
+                <OrderSummary
+                  subtotal={subtotal}
+                  deliveryFee={deliveryFee}
+                  serviceFee={serviceFee}
+                  total={total}
+                  onSubmit={handleSubmit}
+                  buttonText="Оформить заказ"
+                />
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="panel text-center py-12">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#F0F0F0] flex items-center justify-center">
@@ -155,6 +177,21 @@ const Index: React.FC = () => {
           </div>
         )}
       </main>
+      
+      {/* Мобильная кнопка оформления заказа внизу экрана */}
+      {products.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0] md:hidden">
+          <div className="container max-w-3xl mx-auto">
+            <Button 
+              onClick={handleSubmit}
+              className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale flex items-center justify-center gap-2"
+            >
+              <span>Оформить заказ</span>
+              <PackageCheck size={18} className="ml-1" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
