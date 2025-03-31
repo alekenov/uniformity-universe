@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -238,18 +237,6 @@ const Cart: React.FC = () => {
               onSubmit={handleCheckout}
               buttonText="Перейти к оформлению"
             />
-            
-            <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0] md:hidden">
-              <div className="container max-w-3xl mx-auto">
-                <Button 
-                  onClick={handleCheckout}
-                  className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale flex items-center justify-center gap-2"
-                >
-                  <span>Перейти к оформлению</span>
-                  <ShoppingCart size={18} className="ml-1" />
-                </Button>
-              </div>
-            </div>
           </>
         ) : (
           <EmptyCart />
