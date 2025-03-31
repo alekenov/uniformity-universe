@@ -3,12 +3,10 @@ import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CartItem from '@/components/CartItem';
 import DeliveryOptions, { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
-import AddressPanel from '@/components/AddressPanel';
 import PaymentOptions from '@/components/PaymentOptions';
 import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
 
-// Sample product data - flower bouquets
 const initialProducts = [
   {
     id: '1',
@@ -30,7 +28,6 @@ const initialProducts = [
   },
 ];
 
-// Sample payment cards
 const paymentCards = [
   { id: 'card1', last4: '3375', type: 'visa' as const },
   { id: 'card2', last4: '2037', type: 'visa' as const },
@@ -55,14 +52,12 @@ const Index: React.FC = () => {
   
   const handleQuantityChange = (id: string, quantity: number) => {
     if (quantity === 0) {
-      // Remove the product if quantity is 0
       setProducts(products.filter(product => product.id !== id));
       toast({
         title: "Товар удален из корзины",
         description: "Товар был удален из вашего заказа",
       });
     } else {
-      // Update the quantity
       setProducts(products.map(product => 
         product.id === id ? { ...product, quantity } : product
       ));
@@ -80,9 +75,8 @@ const Index: React.FC = () => {
     });
   };
   
-  // Calculate order summary
   const subtotal = products.reduce((sum, product) => sum + (product.price * product.quantity), 0);
-  const deliveryFee = 0; // Free delivery
+  const deliveryFee = 0;
   const serviceFee = 990;
   const total = subtotal + deliveryFee + serviceFee;
   
@@ -120,18 +114,6 @@ const Index: React.FC = () => {
               selectedTime={deliveryTime}
               onTypeChange={setDeliveryType}
               onTimeChange={setDeliveryTime}
-            />
-            
-            <AddressPanel
-              address={address}
-              onChange={handleAddressChange}
-              onEdit={() => {
-                toast({
-                  title: "Редактирование адреса",
-                  description: "Здесь будет форма редактирования адреса",
-                });
-              }}
-              deliveryType={deliveryType}
             />
             
             <PaymentOptions
