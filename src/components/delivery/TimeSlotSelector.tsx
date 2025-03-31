@@ -1,11 +1,10 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Clock } from 'lucide-react';
 import { DeliveryTime } from '@/components/DeliveryOptions';
 import DeliveryTimeSlots from './DeliveryTimeSlots';
 import { Checkbox } from '@/components/ui/checkbox';
 import { cn } from '@/lib/utils';
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 interface TimeSlotSelectorProps {
   selectedTime: DeliveryTime;
@@ -25,7 +24,10 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
         <Checkbox 
           id="ask-recipient"
           checked={askRecipientForTime}
-          onCheckedChange={(checked) => setAskRecipientForTime(checked as boolean)}
+          onCheckedChange={(checked) => {
+            // Explicitly convert to boolean to ensure it toggles properly
+            setAskRecipientForTime(checked === true);
+          }}
         />
         <label 
           htmlFor="ask-recipient" 
