@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowLeft, Trash2, PackageCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,6 +8,7 @@ import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import CardMessage from '@/components/cart/CardMessage';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const initialProducts = [
   {
@@ -39,6 +39,7 @@ const paymentCards = [
 
 const Index: React.FC = () => {
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [products, setProducts] = useState(initialProducts);
   const [deliveryType, setDeliveryType] = useState<DeliveryType>('other');
   const [deliveryTime, setDeliveryTime] = useState<DeliveryTime>('today');
@@ -116,27 +117,29 @@ const Index: React.FC = () => {
           <div className="flex flex-col md:flex-row md:space-x-6">
             {/* Левая колонка с информацией о доставке */}
             <div className="w-full md:w-2/3">
-              {/* Moved "Your Order" section above the delivery section */}
-              <div className="panel mb-6">
-                <h2 className="text-xl font-medium mb-4">Ваш заказ</h2>
-                <div className="divide-y divide-[#F0F0F0]">
-                  {products.map((product) => (
-                    <CartItem
-                      key={product.id}
-                      {...product}
-                      onQuantityChange={handleQuantityChange}
-                    />
-                  ))}
+              {/* Блок "Ваш заказ" только для десктопной версии */}
+              {!isMobile && (
+                <div className="panel mb-6">
+                  <h2 className="text-xl font-medium mb-4">Ваш заказ</h2>
+                  <div className="divide-y divide-[#F0F0F0]">
+                    {products.map((product) => (
+                      <CartItem
+                        key={product.id}
+                        {...product}
+                        onQuantityChange={handleQuantityChange}
+                      />
+                    ))}
+                  </div>
+                  
+                  {/* Добавляем компонент CardMessage для открытки */}
+                  <CardMessage
+                    cardMessage={cardMessage}
+                    setCardMessage={setCardMessage}
+                    showCardMessageInput={showCardMessageInput}
+                    setShowCardMessageInput={setShowCardMessageInput}
+                  />
                 </div>
-                
-                {/* Added Card Message component from cart page */}
-                <CardMessage
-                  cardMessage={cardMessage}
-                  setCardMessage={setCardMessage}
-                  showCardMessageInput={showCardMessageInput}
-                  setShowCardMessageInput={setShowCardMessageInput}
-                />
-              </div>
+              )}
               
               <DeliveryOptions
                 selectedType={deliveryType}
@@ -191,8 +194,8 @@ const Index: React.FC = () => {
       </main>
       
       {/* Мобильная кнопка оформления заказа внизу экрана */}
-      {products.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0] md:hidden">
+      {products.length > 0 && isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] border-t border-[#F0F0F0]">
           <div className="container max-w-3xl mx-auto">
             <Button 
               onClick={handleSubmit}
