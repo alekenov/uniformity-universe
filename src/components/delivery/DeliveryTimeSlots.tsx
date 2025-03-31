@@ -16,13 +16,11 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("12-30");
 
-  // Updated time slots with nearest delivery time instead of "asap"
+  // Updated time slots to match the image
   const timeSlots = [
     { id: "12-30", label: "12:30" },
     { id: "12-15", label: "12-15 час" },
-    { id: "15-18", label: "15-18 час" },
-    { id: "18-21", label: "18-21 час" },
-    { id: "21-23", label: "21-23 час" }
+    { id: "15-18", label: "15-18 час" }
   ];
 
   return (
