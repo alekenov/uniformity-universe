@@ -22,12 +22,12 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   onTimeChange,
 }) => {
   const [manualTimeSlot, setManualTimeSlot] = useState(false); // Changed default to false
-  const [askRecipientForTime, setAskRecipientForTime] = useState(true); // Default to true
+  const [askRecipientForTime, setAskRecipientForTime] = useState(false); // Changed default to false
 
   // Ensure our defaults are set when component mounts
   useEffect(() => {
     setManualTimeSlot(false);
-    setAskRecipientForTime(true);
+    setAskRecipientForTime(false); // Changed default to false
   }, []);
 
   return (
