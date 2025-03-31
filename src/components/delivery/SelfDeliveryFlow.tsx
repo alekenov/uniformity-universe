@@ -4,24 +4,16 @@ import { DeliveryTime } from '@/components/DeliveryOptions';
 import { Separator } from '@/components/ui/separator';
 import DateSelector from './DateSelector';
 import TimeSlotSelector from './TimeSlotSelector';
-import { Store, Navigation, Clock, Check, X } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
-import { cn } from '@/lib/utils';
-import DeliveryAddress from './DeliveryAddress';
+import SelfDeliveryAddressSection from './SelfDeliveryAddressSection';
+import PickupLocationsList from './pickup/PickupLocationsList';
+import { PickupLocation } from './pickup/PickupLocationItem';
+import { isStoreOpen } from './pickup/PickupStoreUtils';
 
 interface SelfDeliveryFlowProps {
   selectedTime: DeliveryTime;
   onTimeChange: (time: DeliveryTime) => void;
-}
-
-interface PickupLocation {
-  id: string;
-  name: string;
-  address: string;
-  openTime: string;
-  closingTime: string;
-  isReady?: boolean;
 }
 
 const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
@@ -61,21 +53,6 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
 
   const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
 
-  // Check if store is open at the selected time
-  const isStoreOpen = (location: PickupLocation, hour: string) => {
-    // Convert times to comparable numbers (e.g., "13:00" -> 1300)
-    const timeToNumber = (timeStr: string) => {
-      const [hours, minutes] = timeStr.split(':').map(Number);
-      return hours * 100 + minutes;
-    };
-
-    const selectedTimeNum = timeToNumber(hour);
-    const openTimeNum = timeToNumber(location.openTime);
-    const closeTimeNum = timeToNumber(location.closingTime);
-
-    return selectedTimeNum >= openTimeNum && selectedTimeNum <= closeTimeNum;
-  };
-
   // Set default hour based on date selection
   useEffect(() => {
     if (selectedTime === 'today') {
@@ -102,12 +79,8 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
             variant={deliveryMethod === 'delivery' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setDeliveryMethod('delivery')}
-            className={cn(
-              "flex-1 text-sm",
-              deliveryMethod === 'delivery' && "bg-primary text-primary-foreground"
-            )}
+            className={deliveryMethod === 'delivery' ? "flex-1 text-sm bg-primary text-primary-foreground" : "flex-1 text-sm"}
           >
-            <Store size={16} className="mr-2" />
             Доставка
           </Button>
           <Button
@@ -115,12 +88,8 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
             variant={deliveryMethod === 'pickup' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setDeliveryMethod('pickup')}
-            className={cn(
-              "flex-1 text-sm",
-              deliveryMethod === 'pickup' && "bg-primary text-primary-foreground"
-            )}
+            className={deliveryMethod === 'pickup' ? "flex-1 text-sm bg-primary text-primary-foreground" : "flex-1 text-sm"}
           >
-            <Store size={16} className="mr-2" />
             Самовывоз
           </Button>
         </div>
@@ -152,29 +121,19 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
             />
           </div>
           
-          <Separator className="bg-gray-100" />
-          
-          {/* Delivery Address */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="text-sm font-medium">Адрес доставки</Label>
-            </div>
-            
-            <DeliveryAddress
-              address={address}
-              setAddress={setAddress}
-              apartment={apartment}
-              setApartment={setApartment}
-              floor={floor}
-              setFloor={setFloor}
-              courierComment={comment}
-              setCourierComment={setComment}
-              askRecipientForAddress={false}
-              setAskRecipientForAddress={() => {}} // No-op function
-              showCourierComment={showCourierComment}
-              toggleCourierComment={toggleCourierComment}
-            />
-          </div>
+          {/* Delivery Address Section */}
+          <SelfDeliveryAddressSection 
+            address={address}
+            setAddress={setAddress}
+            apartment={apartment}
+            setApartment={setApartment}
+            floor={floor}
+            setFloor={setFloor}
+            comment={comment}
+            setComment={setComment}
+            showCourierComment={showCourierComment}
+            toggleCourierComment={toggleCourierComment}
+          />
         </>
       ) : (
         <>
@@ -218,72 +177,13 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
               <Label className="text-sm font-medium">Пункт самовывоза</Label>
             </div>
             
-            <div className="space-y-2">
-              {pickupLocations.map(location => {
-                const isOpen = isStoreOpen(location, selectedHour);
-                
-                return (
-                  <div 
-                    key={location.id}
-                    className={cn(
-                      "border rounded-lg p-3 cursor-pointer transition-all",
-                      selectedLocation === location.id 
-                        ? "border-primary bg-primary/5" 
-                        : "border-gray-200 hover:border-gray-300",
-                      !isOpen && "opacity-80"
-                    )}
-                    onClick={() => {
-                      if (isOpen) setSelectedLocation(location.id);
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Store size={16} className="text-gray-600" />
-                      <span className="font-medium text-sm">{location.name}</span>
-                      {selectedLocation === location.id && (
-                        <div className="ml-auto w-5 h-5 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                          <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M1 5L4 8L11 1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-1 text-sm text-gray-600">{location.address}</div>
-                    <div className="mt-2 text-xs flex items-center">
-                      {isOpen ? (
-                        <>
-                          <div className="flex items-center text-green-600">
-                            <Check size={14} className="mr-1" />
-                            <span>Можно забрать в {selectedHour}</span>
-                          </div>
-                          <div className="ml-2 text-gray-500">
-                            Открыто до {location.closingTime}
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="flex items-center text-red-500">
-                            <X size={14} className="mr-1" />
-                            <span>В {selectedHour} магазин закрыт</span>
-                          </div>
-                          <div className="ml-2 text-gray-500">
-                            Открыто до {location.closingTime}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full text-sm"
-            >
-              <Navigation size={16} className="mr-2" />
-              Показать на карте
-            </Button>
+            <PickupLocationsList 
+              locations={pickupLocations}
+              selectedLocation={selectedLocation}
+              selectedHour={selectedHour}
+              onLocationSelect={setSelectedLocation}
+              isStoreOpen={(location, hour) => isStoreOpen(location, hour)}
+            />
           </div>
         </>
       )}
