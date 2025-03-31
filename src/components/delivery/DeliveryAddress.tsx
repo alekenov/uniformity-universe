@@ -43,27 +43,30 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
         Адрес доставки
       </div>
       
-      <div className="flex items-center space-x-2 mb-2">
-        <Checkbox 
-          id="askRecipientAddress"
-          checked={askRecipientForAddress}
-          onCheckedChange={(checked) => {
-            setAskRecipientForAddress(checked === true);
-            if (checked === true) {
-              setAddress('');
-              setApartment('');
-              setFloor('');
-              setCourierComment('');
-            }
-          }}
-        />
-        <label
-          htmlFor="askRecipientAddress"
-          className="text-sm leading-none"
-        >
-          Уточнить адрес у получателя по телефону
-        </label>
-      </div>
+      {/* Only show the checkbox if needed (not in "self" delivery flow) */}
+      {setAskRecipientForAddress !== (() => {}) && (
+        <div className="flex items-center space-x-2 mb-2">
+          <Checkbox 
+            id="askRecipientAddress"
+            checked={askRecipientForAddress}
+            onCheckedChange={(checked) => {
+              setAskRecipientForAddress(checked === true);
+              if (checked === true) {
+                setAddress('');
+                setApartment('');
+                setFloor('');
+                setCourierComment('');
+              }
+            }}
+          />
+          <label
+            htmlFor="askRecipientAddress"
+            className="text-sm leading-none"
+          >
+            Уточнить адрес у получателя по телефону
+          </label>
+        </div>
+      )}
 
       {!askRecipientForAddress && (
         <div className="space-y-4">

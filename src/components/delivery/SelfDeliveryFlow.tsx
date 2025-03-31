@@ -169,8 +169,8 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
               setFloor={setFloor}
               courierComment={comment}
               setCourierComment={setComment}
-              askRecipientForAddress={false} // Never show this checkbox for self delivery
-              setAskRecipientForAddress={() => {}} // No-op function since we don't show the checkbox
+              askRecipientForAddress={false}
+              setAskRecipientForAddress={() => {}} // No-op function
               showCourierComment={showCourierComment}
               toggleCourierComment={toggleCourierComment}
             />
