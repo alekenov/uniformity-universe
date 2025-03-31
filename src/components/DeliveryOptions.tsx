@@ -4,6 +4,8 @@ import DeliveryTypeSelector from './delivery/DeliveryTypeSelector';
 import DeliveryTimeSelector from './delivery/DeliveryTimeSelector';
 import DeliveryTimeSlots from './delivery/DeliveryTimeSlots';
 import GiftingFlow from './delivery/GiftingFlow';
+import SelfDeliveryFlow from './delivery/SelfDeliveryFlow';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export type DeliveryType = 'other' | 'self' | 'pickup';
 export type DeliveryTime = 'today' | 'tomorrow';
@@ -22,12 +24,13 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   onTimeChange,
 }) => {
   const [manualTimeSlot, setManualTimeSlot] = useState(false);
-  const [askRecipientForTime, setAskRecipientForTime] = useState(false); // Default to false
+  const [askRecipientForTime, setAskRecipientForTime] = useState(false);
+  const isMobile = useIsMobile();
 
   // Ensure our defaults are set when component mounts
   useEffect(() => {
     setManualTimeSlot(false);
-    setAskRecipientForTime(false); // Default to false
+    setAskRecipientForTime(false);
   }, []);
 
   return (
@@ -49,14 +52,10 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
           setAskRecipientForTime={setAskRecipientForTime}
         />
       ) : (
-        <>
-          <DeliveryTimeSelector 
-            selectedTime={selectedTime} 
-            onTimeChange={onTimeChange} 
-          />
-          
-          <DeliveryTimeSlots selectedDay={selectedTime} />
-        </>
+        <SelfDeliveryFlow
+          selectedTime={selectedTime}
+          onTimeChange={onTimeChange}
+        />
       )}
     </div>
   );

@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { DeliveryType } from '@/components/DeliveryOptions';
-import { Gift, User } from 'lucide-react';
+import { Gift, User, Truck, Store } from 'lucide-react';
 
 interface DeliveryOption {
   id: DeliveryType;
@@ -23,13 +23,13 @@ const deliveryOptions: DeliveryOption[] = [
     id: 'other',
     title: 'Хочу подарить',
     color: '#E5DEFF',
-    icon: <Gift size={18} />,
+    icon: <Gift size={16} />,
   },
   {
     id: 'self',
     title: 'Заказываю себе',
     color: '#FEF7CD',
-    icon: <User size={18} />,
+    icon: <User size={16} />,
   },
 ];
 
