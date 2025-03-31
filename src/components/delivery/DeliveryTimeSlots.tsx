@@ -1,7 +1,11 @@
 
 import React, { useState } from 'react';
 import TimeSlotsContainer from './timeslots/TimeSlotsContainer';
-import { generateDeliveryTimeSlots, generatePickupHourSlots } from './timeslots/TimeSlotUtils';
+import { 
+  generateDeliveryTimeSlots, 
+  generatePickupTimeSlots, 
+  generatePickupHourSlots 
+} from './timeslots/TimeSlotUtils';
 
 interface DeliveryTimeSlotsProps {
   selectedDay: string; // 'today' | 'tomorrow' or a custom date
@@ -10,6 +14,7 @@ interface DeliveryTimeSlotsProps {
   forPickup?: boolean; // Prop to indicate if this is for pickup locations
   selectedHour?: string;
   onHourSelect?: (hour: string) => void;
+  useHourlyFormat?: boolean; // New prop to determine whether to use hourly format
 }
 
 const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({ 
@@ -18,12 +23,15 @@ const DeliveryTimeSlots: React.FC<DeliveryTimeSlotsProps> = ({
   compact = false,
   forPickup = false,
   selectedHour,
-  onHourSelect
+  onHourSelect,
+  useHourlyFormat = false
 }) => {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("12-30");
   
-  // Choose which time slots to show based on the forPickup flag
-  const timeSlots = forPickup ? generatePickupHourSlots() : generateDeliveryTimeSlots();
+  // Choose which time slots to show based on the forPickup flag and useHourlyFormat
+  const timeSlots = forPickup 
+    ? (useHourlyFormat ? generatePickupHourSlots() : generatePickupTimeSlots()) 
+    : generateDeliveryTimeSlots();
 
   const handleTimeSlotSelection = (slotId: string) => {
     if (forPickup && onHourSelect) {

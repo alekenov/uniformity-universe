@@ -31,7 +31,7 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
     );
   }
 
-  // For pickup type, show time slots specific for pickup locations
+  // For pickup type, show time slots similar to delivery
   if (deliveryType === 'pickup') {
     return (
       <div className="space-y-4">
@@ -41,6 +41,7 @@ const TimeSlotSelector: React.FC<TimeSlotSelectorProps> = ({
           forPickup={true}
           selectedHour={selectedHour}
           onHourSelect={onHourSelect}
+          useHourlyFormat={false} // Using the new range format instead of hourly
         />
       </div>
     );

@@ -29,7 +29,7 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
   const [showCourierComment, setShowCourierComment] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<string | null>('loc1'); // Default to first location
   const [askRecipientForTime, setAskRecipientForTime] = useState(false);
-  const [selectedHour, setSelectedHour] = useState<string>("12:00");
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>("12-30");
 
   // Updated pickup locations with more detailed information
   const pickupLocations: PickupLocation[] = [
@@ -53,16 +53,12 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
 
   const toggleCourierComment = () => setShowCourierComment(!showCourierComment);
 
-  // Set default hour based on date selection
+  // Set default time slot based on date selection
   useEffect(() => {
     if (selectedTime === 'today') {
-      // Set to current hour + 1 rounded up to closest hour
-      const now = new Date();
-      const nextHour = Math.ceil(now.getHours() + 1);
-      setSelectedHour(`${nextHour < 10 ? '0' + nextHour : nextHour}:00`);
+      setSelectedTimeSlot("12-30");
     } else {
-      // For tomorrow or future dates, set to early business hour
-      setSelectedHour("10:00");
+      setSelectedTimeSlot("12-15");
     }
   }, [selectedTime, selectedDate]);
 
@@ -137,10 +133,10 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
         </>
       ) : (
         <>
-          {/* Date Selection for Pickup */}
+          {/* Date and Time Selection for Pickup - Using the same format as Delivery */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
-              <Label className="text-sm font-medium">Дата самовывоза</Label>
+              <Label className="text-sm font-medium">Дата и время самовывоза</Label>
             </div>
             
             <DateSelector 
@@ -149,23 +145,14 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
               selectedDate={selectedDate}
               setSelectedDate={setSelectedDate}
             />
-          </div>
-          
-          <Separator className="bg-gray-100" />
-
-          {/* Time Selection for Pickup */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Label className="text-sm font-medium">Когда забрать?</Label>
-            </div>
             
             <TimeSlotSelector
               selectedTime={selectedTime}
               askRecipientForTime={false}
               setAskRecipientForTime={() => {}}
               deliveryType="pickup"
-              selectedHour={selectedHour}
-              onHourSelect={setSelectedHour}
+              selectedHour={selectedTimeSlot}
+              onHourSelect={setSelectedTimeSlot}
             />
           </div>
           
@@ -180,7 +167,7 @@ const SelfDeliveryFlow: React.FC<SelfDeliveryFlowProps> = ({
             <PickupLocationsList 
               locations={pickupLocations}
               selectedLocation={selectedLocation}
-              selectedHour={selectedHour}
+              selectedHour={selectedTimeSlot}
               onLocationSelect={setSelectedLocation}
               isStoreOpen={(location, hour) => isStoreOpen(location, hour)}
             />

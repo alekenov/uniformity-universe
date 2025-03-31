@@ -10,6 +10,15 @@ export const generateDeliveryTimeSlots = (): TimeSlotData[] => {
   ];
 };
 
+// Generate time slots for pickup - updated to match delivery format
+export const generatePickupTimeSlots = (): TimeSlotData[] => {
+  return [
+    { id: "12-30", label: "12:30", isNearest: true },
+    { id: "12-15", label: "12–15", isNearest: false },
+    { id: "15-18", label: "15–18", isNearest: false }
+  ];
+};
+
 // Generate time slots for pickup
 export const generatePickupHourSlots = (): TimeSlotData[] => {
   return [
