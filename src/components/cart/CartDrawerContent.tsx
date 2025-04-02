@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
@@ -65,9 +64,7 @@ const CartDrawerContent: React.FC = () => {
   };
   
   const subtotal = getCartTotal();
-  const deliveryFee = 0; // Бесплатная доставка
-  const serviceFee = 990;
-  const total = subtotal + deliveryFee + serviceFee;
+  const total = subtotal; // Removed the service fee
   
   if (cartItems.length === 0) {
     return (
@@ -193,32 +190,18 @@ const CartDrawerContent: React.FC = () => {
         />
       </div>
       
-      {/* Итоги и кнопка заказа */}
+      {/* Simplified summary and checkout button */}
       <div className="sticky bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] mt-auto">
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Товары</span>
-            <span>{subtotal} ₸</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Доставка</span>
-            <span className="text-green-600">Бесплатно</span>
-          </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Сервисный сбор</span>
-            <span>{serviceFee} ₸</span>
-          </div>
-          <div className="flex justify-between font-medium text-base pt-2 border-t border-gray-100 mt-1">
-            <span>Итого</span>
-            <span>{total} ₸</span>
-          </div>
-          <Button
-            className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED] mt-2"
-            onClick={handleCheckout}
-          >
-            Оформить заказ
-          </Button>
+        <div className="flex items-center justify-between mb-2">
+          <span className="font-medium">Итого</span>
+          <span className="font-medium">{total} ₸</span>
         </div>
+        <Button
+          className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
+          onClick={handleCheckout}
+        >
+          Оформить заказ
+        </Button>
       </div>
     </div>
   );
