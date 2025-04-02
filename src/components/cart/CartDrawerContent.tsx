@@ -85,62 +85,64 @@ const CartDrawerContent: React.FC = () => {
   }
   
   return (
-    <div className="px-4 pb-24">
-      {/* Заголовок */}
-      <div className="flex items-center justify-between py-4 sticky top-0 bg-background z-10">
-        <h3 className="text-lg font-medium">Ваша корзина</h3>
-        <button 
-          className="text-sm text-gray-500 hover:text-red-500 flex items-center"
-          onClick={clearCart}
-        >
-          Очистить
-        </button>
-      </div>
-      
-      {/* Время доставки */}
-      <div className="bg-green-50 p-3 rounded-md mb-4 flex items-center">
-        <Clock size={18} className="text-green-600 mr-2" />
-        <div>
-          <p className="text-sm text-green-800 font-medium">Доставка через 40-60 минут</p>
-          <p className="text-xs text-green-700">Ближайший слот доставки сегодня 12:00-14:00</p>
+    <div className="relative h-full">
+      <div className="px-4">
+        {/* Заголовок */}
+        <div className="flex items-center justify-between py-4 sticky top-0 bg-background z-10">
+          <h3 className="text-lg font-medium">Ваша корзина</h3>
+          <button 
+            className="text-sm text-gray-500 hover:text-red-500 flex items-center"
+            onClick={clearCart}
+          >
+            Очистить
+          </button>
         </div>
-      </div>
-      
-      {/* Товары в корзине */}
-      <div className="mb-4 rounded-md border border-gray-100 overflow-hidden">
-        <div className="divide-y divide-[#F0F0F0]">
-          {cartItems.map(item => (
-            <CartItem
-              key={item.id}
-              id={item.id}
-              name={item.name}
-              price={item.price}
-              quantity={item.quantity}
-              image={item.image}
-              onQuantityChange={handleQuantityChange}
-            />
-          ))}
+        
+        {/* Время доставки */}
+        <div className="bg-green-50 p-3 rounded-md mb-4 flex items-center">
+          <Clock size={18} className="text-green-600 mr-2" />
+          <div>
+            <p className="text-sm text-green-800 font-medium">Доставка через 40-60 минут</p>
+            <p className="text-xs text-green-700">Ближайший слот доставки сегодня 12:00-14:00</p>
+          </div>
         </div>
-      </div>
-      
-      {/* Текст открытки */}
-      <div className="mb-4">
-        <CardMessage
-          cardMessage={cardMessage}
-          setCardMessage={setCardMessage}
-          showCardMessageInput={showCardMessageInput}
-          setShowCardMessageInput={setShowCardMessageInput}
+        
+        {/* Товары в корзине */}
+        <div className="mb-4 rounded-md border border-gray-100 overflow-hidden">
+          <div className="divide-y divide-[#F0F0F0]">
+            {cartItems.map(item => (
+              <CartItem
+                key={item.id}
+                id={item.id}
+                name={item.name}
+                price={item.price}
+                quantity={item.quantity}
+                image={item.image}
+                onQuantityChange={handleQuantityChange}
+              />
+            ))}
+          </div>
+        </div>
+        
+        {/* Текст открытки */}
+        <div className="mb-4">
+          <CardMessage
+            cardMessage={cardMessage}
+            setCardMessage={setCardMessage}
+            showCardMessageInput={showCardMessageInput}
+            setShowCardMessageInput={setShowCardMessageInput}
+          />
+        </div>
+        
+        {/* Рекомендуемые товары */}
+        <SuggestionProducts 
+          products={suggestionProducts} 
+          addToCart={addSuggestionToCart} 
         />
       </div>
       
-      {/* Рекомендуемые товары */}
-      <SuggestionProducts 
-        products={suggestionProducts} 
-        addToCart={addSuggestionToCart} 
-      />
-      
       {/* Итоги и кнопка заказа */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+      <div className="sticky bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] mt-4">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Товары</span>

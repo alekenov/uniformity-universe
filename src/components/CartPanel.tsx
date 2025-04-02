@@ -45,10 +45,10 @@ const CartPanel: React.FC = () => {
                 Корзина
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="max-h-[85vh]">
-              <ScrollArea className="h-full max-h-[80vh]">
+            <DrawerContent className="h-[85vh] overflow-hidden">
+              <div className="h-full overflow-y-auto pb-safe">
                 <CartDrawerContent />
-              </ScrollArea>
+              </div>
             </DrawerContent>
           </Drawer>
         </div>
