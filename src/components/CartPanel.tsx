@@ -5,6 +5,7 @@ import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import CartDrawerContent from './cart/CartDrawerContent';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const CartPanel: React.FC = () => {
   const { 
@@ -45,7 +46,9 @@ const CartPanel: React.FC = () => {
               </Button>
             </DrawerTrigger>
             <DrawerContent className="max-h-[85vh]">
-              <CartDrawerContent />
+              <ScrollArea className="h-full max-h-[80vh]">
+                <CartDrawerContent />
+              </ScrollArea>
             </DrawerContent>
           </Drawer>
         </div>
