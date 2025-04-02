@@ -23,7 +23,7 @@ const SuggestionProducts: React.FC<SuggestionProductsProps> = ({
   };
   
   return (
-    <div className="mb-16">
+    <div className="mb-8">
       <h2 className="text-lg font-medium mb-3">Что-то ещё?</h2>
       <div className="grid grid-cols-3 gap-3">
         {products.map(product => (

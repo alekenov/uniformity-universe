@@ -5,10 +5,12 @@ import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import CartItem from '@/components/CartItem';
 import { Button } from '@/components/ui/button';
-import { Clock, ShoppingBag } from 'lucide-react';
+import { Clock, ShoppingBag, Truck, Store } from 'lucide-react';
 import SuggestionProducts from '@/components/cart/SuggestionProducts';
 import CardMessage from '@/components/cart/CardMessage';
 import { Product } from '@/types/cart';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 
 // Примерные данные для рекомендуемых товаров
 const suggestionProducts = [
@@ -44,6 +46,7 @@ const CartDrawerContent: React.FC = () => {
   const navigate = useNavigate();
   const [showCardMessageInput, setShowCardMessageInput] = useState(false);
   const [cardMessage, setCardMessage] = useState('');
+  const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
   
   const handleQuantityChange = (id: string, quantity: number) => {
     updateQuantity(id, quantity);
@@ -85,8 +88,8 @@ const CartDrawerContent: React.FC = () => {
   }
   
   return (
-    <div className="relative h-full">
-      <div className="px-4">
+    <div className="relative h-full flex flex-col">
+      <div className="px-4 flex-grow overflow-y-auto">
         {/* Заголовок */}
         <div className="flex items-center justify-between py-4 sticky top-0 bg-background z-10">
           <h3 className="text-lg font-medium">Ваша корзина</h3>
@@ -98,14 +101,63 @@ const CartDrawerContent: React.FC = () => {
           </button>
         </div>
         
-        {/* Время доставки */}
-        <div className="bg-green-50 p-3 rounded-md mb-4 flex items-center">
-          <Clock size={18} className="text-green-600 mr-2" />
-          <div>
-            <p className="text-sm text-green-800 font-medium">Доставка через 40-60 минут</p>
-            <p className="text-xs text-green-700">Ближайший слот доставки сегодня 12:00-14:00</p>
-          </div>
+        {/* Delivery Method Selection */}
+        <div className="mb-4">
+          <RadioGroup 
+            value={deliveryMethod}
+            onValueChange={(value: 'delivery' | 'pickup') => setDeliveryMethod(value as 'delivery' | 'pickup')}
+            className="flex space-x-2 bg-[#F8F8F8] p-1 rounded-lg"
+          >
+            <div className={`flex-1 rounded-md transition-colors ${deliveryMethod === 'delivery' ? 'bg-white shadow-sm' : ''}`}>
+              <RadioGroupItem 
+                value="delivery" 
+                id="cart-delivery" 
+                className="sr-only" 
+              />
+              <Label 
+                htmlFor="cart-delivery" 
+                className={`w-full p-2 flex items-center justify-center cursor-pointer text-sm ${deliveryMethod === 'delivery' ? 'font-medium' : 'text-gray-600'}`}
+              >
+                <Truck size={16} className="mr-1.5" />
+                Доставка
+              </Label>
+            </div>
+            
+            <div className={`flex-1 rounded-md transition-colors ${deliveryMethod === 'pickup' ? 'bg-white shadow-sm' : ''}`}>
+              <RadioGroupItem 
+                value="pickup" 
+                id="cart-pickup" 
+                className="sr-only" 
+              />
+              <Label 
+                htmlFor="cart-pickup" 
+                className={`w-full p-2 flex items-center justify-center cursor-pointer text-sm ${deliveryMethod === 'pickup' ? 'font-medium' : 'text-gray-600'}`}
+              >
+                <Store size={16} className="mr-1.5" />
+                Самовывоз
+              </Label>
+            </div>
+          </RadioGroup>
         </div>
+        
+        {/* Время доставки */}
+        {deliveryMethod === 'delivery' ? (
+          <div className="bg-green-50 p-3 rounded-md mb-4 flex items-center">
+            <Clock size={18} className="text-green-600 mr-2" />
+            <div>
+              <p className="text-sm text-green-800 font-medium">Доставка через 40-60 минут</p>
+              <p className="text-xs text-green-700">Ближайший слот доставки сегодня 12:00-14:00</p>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-blue-50 p-3 rounded-md mb-4 flex items-center">
+            <Store size={18} className="text-blue-600 mr-2" />
+            <div>
+              <p className="text-sm text-blue-800 font-medium">Самовывоз сегодня</p>
+              <p className="text-xs text-blue-700">Заказ будет готов через 30-40 минут</p>
+            </div>
+          </div>
+        )}
         
         {/* Товары в корзине */}
         <div className="mb-4 rounded-md border border-gray-100 overflow-hidden">
@@ -142,7 +194,7 @@ const CartDrawerContent: React.FC = () => {
       </div>
       
       {/* Итоги и кнопка заказа */}
-      <div className="sticky bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] mt-4">
+      <div className="sticky bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] mt-auto">
         <div className="flex flex-col gap-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Товары</span>

@@ -5,7 +5,6 @@ import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import CartDrawerContent from './cart/CartDrawerContent';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const CartPanel: React.FC = () => {
   const { 
@@ -45,10 +44,8 @@ const CartPanel: React.FC = () => {
                 Корзина
               </Button>
             </DrawerTrigger>
-            <DrawerContent className="h-[85vh] overflow-hidden">
-              <div className="h-full overflow-y-auto pb-safe">
-                <CartDrawerContent />
-              </div>
+            <DrawerContent className="h-[85vh]">
+              <CartDrawerContent />
             </DrawerContent>
           </Drawer>
         </div>
