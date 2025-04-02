@@ -27,7 +27,11 @@ const SuggestionProducts: React.FC<SuggestionProductsProps> = ({
       <h2 className="text-lg font-medium mb-3">Что-то ещё?</h2>
       <div className="grid grid-cols-3 gap-3">
         {products.map(product => (
-          <div key={product.id} className="panel p-0 overflow-hidden hover-shadow">
+          <div 
+            key={product.id} 
+            className="panel p-0 overflow-hidden hover:shadow-md transition-shadow cursor-pointer active:scale-[0.98]"
+            onClick={() => handleAddProduct(product)}
+          >
             <div className="aspect-square bg-[#f9f9f9] flex items-center justify-center">
               <img 
                 src={product.image} 
@@ -38,13 +42,7 @@ const SuggestionProducts: React.FC<SuggestionProductsProps> = ({
             <div className="p-2">
               <div className="font-medium text-sm">{product.price} ₸</div>
               <div className="text-xs line-clamp-1">{product.name}</div>
-              <div className="text-xs text-gray-500 mb-1">{product.description}</div>
-              <button 
-                onClick={() => handleAddProduct(product)}
-                className="w-full flex items-center justify-center py-1.5 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 text-xs active-scale"
-              >
-                <span className="text-lg">+</span>
-              </button>
+              <div className="text-xs text-gray-500">{product.description}</div>
             </div>
           </div>
         ))}
