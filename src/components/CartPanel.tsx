@@ -3,7 +3,8 @@ import React from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import CartDrawerContent from './cart/CartDrawerContent';
 
 const CartPanel: React.FC = () => {
   const { 
@@ -35,14 +36,18 @@ const CartPanel: React.FC = () => {
             </div>
           </div>
           
-          <Link to="/cart">
-            <Button 
-              className="bg-[#8B5CF6] hover:bg-[#7C3AED] px-3 py-1.5 h-8 text-xs"
-              onClick={() => setCartPanelOpen(false)}
-            >
-              Корзина
-            </Button>
-          </Link>
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button 
+                className="bg-[#8B5CF6] hover:bg-[#7C3AED] px-3 py-1.5 h-8 text-xs"
+              >
+                Корзина
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent className="max-h-[85vh]">
+              <CartDrawerContent />
+            </DrawerContent>
+          </Drawer>
         </div>
       </div>
     </div>
