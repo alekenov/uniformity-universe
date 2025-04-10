@@ -1,7 +1,9 @@
 
-import React from 'react';
-import { ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export type PaymentMethod = string;
 
@@ -15,14 +17,16 @@ interface PaymentOptionsProps {
   cards: PaymentCard[];
   selectedCard: PaymentMethod;
   onCardSelect: (id: PaymentMethod) => void;
-  onAddPromocode: () => void;
+  customerPhone: string;
+  onCustomerPhoneChange: (phone: string) => void;
 }
 
 const PaymentOptions: React.FC<PaymentOptionsProps> = ({
   cards,
   selectedCard,
   onCardSelect,
-  onAddPromocode,
+  customerPhone,
+  onCustomerPhoneChange,
 }) => {
   return (
     <div className="panel">
@@ -62,20 +66,25 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
         ))}
       </div>
       
-      <button
-        onClick={onAddPromocode}
-        className="w-full flex items-center justify-between bg-[#F8F8F8] py-3 px-4 rounded-md text-gray-600 hover:bg-[#F0F0F0] transition-colors"
-      >
-        <div className="flex items-center">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
-            <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M12 12H12.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="currentColor" strokeWidth="2"/>
-          </svg>
-          <span>Промокод</span>
+      <div className="space-y-2 max-w-md">
+        <Label htmlFor="customerPhone" className="text-sm text-gray-500">
+          Номер телефона заказчика
+        </Label>
+        <div className="relative">
+          <Input
+            id="customerPhone"
+            type="tel"
+            value={customerPhone}
+            onChange={(e) => onCustomerPhoneChange(e.target.value)}
+            placeholder="+7 (___) ___-__-__"
+            className="pr-10"
+          />
+          <Phone size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
-        <ChevronRight size={18} className="text-gray-400" />
-      </button>
+        <p className="text-xs text-gray-500 flex items-center">
+          <Phone size={12} className="inline mr-1" /> Свяжемся для подтверждения заказа
+        </p>
+      </div>
     </div>
   );
 };

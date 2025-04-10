@@ -30,6 +30,7 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   const [paymentMethod, setPaymentMethod] = useState('card1');
   const [cardMessage, setCardMessage] = useState('');
   const [showCardMessageInput, setShowCardMessageInput] = useState(false);
+  const [customerPhone, setCustomerPhone] = useState('');
   
   // State for city selection
   const [selectedRegion, setSelectedRegion] = useState(initialRegion);
@@ -145,6 +146,8 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
               serviceFee={serviceFee}
               total={total}
               onSubmit={handleSubmit}
+              customerPhone={customerPhone}
+              onCustomerPhoneChange={setCustomerPhone}
             />
           </div>
         ) : (

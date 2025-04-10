@@ -13,6 +13,8 @@ interface CheckoutSidebarProps {
   serviceFee: number;
   total: number;
   onSubmit: () => void;
+  customerPhone: string;
+  onCustomerPhoneChange: (phone: string) => void;
 }
 
 const CheckoutSidebar: React.FC<CheckoutSidebarProps> = ({
@@ -23,7 +25,9 @@ const CheckoutSidebar: React.FC<CheckoutSidebarProps> = ({
   deliveryFee,
   serviceFee,
   total,
-  onSubmit
+  onSubmit,
+  customerPhone,
+  onCustomerPhoneChange
 }) => {
   const { toast } = useToast();
   
@@ -34,12 +38,8 @@ const CheckoutSidebar: React.FC<CheckoutSidebarProps> = ({
           cards={paymentCards}
           selectedCard={selectedCard}
           onCardSelect={onCardSelect}
-          onAddPromocode={() => {
-            toast({
-              title: "Промокод",
-              description: "Здесь будет форма добавления промокода",
-            });
-          }}
+          customerPhone={customerPhone}
+          onCustomerPhoneChange={onCustomerPhoneChange}
         />
         
         <OrderSummary
