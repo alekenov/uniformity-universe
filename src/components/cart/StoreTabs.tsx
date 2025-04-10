@@ -2,7 +2,6 @@
 import React from 'react';
 import { Store } from '@/types/cart';
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tag } from 'lucide-react';
 
 interface StoreTabsProps {
   stores: Store[];
@@ -27,14 +26,11 @@ const StoreTabs: React.FC<StoreTabsProps> = ({
             <TabsTrigger 
               key={store.id}
               value={store.id}
-              className="flex items-center py-1.5 px-3 h-auto text-xs text-gray-600 border border-gray-200 rounded-full transition-all duration-200 whitespace-nowrap
+              className="py-2 px-4 h-auto text-sm text-gray-600 border border-gray-200 rounded-full transition-all duration-200 whitespace-nowrap
                        hover:border-gray-300
                        data-[state=active]:bg-transparent data-[state=active]:text-gray-800 data-[state=active]:border-gray-300"
             >
-              <span className="flex items-center gap-1">
-                <Tag size={10} className="text-gray-500" />
-                {store.name}
-              </span>
+              {store.name}
             </TabsTrigger>
           ))}
         </TabsList>
