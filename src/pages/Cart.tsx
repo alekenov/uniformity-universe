@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -160,7 +161,13 @@ const Cart: React.FC = () => {
   const addSuggestionToCart = (product: Product) => {
     const updatedStores = stores.map(store => {
       if (store.id === activeStoreId) {
-        const updatedProducts = [...store.products, {...product, id: `${product.id}-${Date.now()}`}];
+        // Create a unique ID for the new product to avoid conflicts
+        const newProduct = {
+          ...product, 
+          id: `${product.id}-${Date.now()}`
+        };
+        
+        const updatedProducts = [...store.products, newProduct];
         return { 
           ...store, 
           products: updatedProducts,

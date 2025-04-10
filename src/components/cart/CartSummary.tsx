@@ -12,8 +12,11 @@ const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
   const navigate = useNavigate();
   
   const handleCheckout = () => {
-    navigate('/checkout');
-    // Drawer will be closed automatically by using DrawerClose
+    // We need to manually navigate and then close the drawer
+    // This ensures the navigation happens correctly on mobile
+    setTimeout(() => {
+      navigate('/checkout');
+    }, 100);
   };
   
   return (

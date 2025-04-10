@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
 import { Product } from '@/types/cart';
+import { useNavigate } from 'react-router-dom';
 import EmptyCartDrawer from './EmptyCartDrawer';
 import DeliveryMethodSelector from './DeliveryMethodSelector';
 import DeliveryTimeInfo from './DeliveryTimeInfo';
@@ -40,8 +41,9 @@ const suggestionProducts = [
 ];
 
 const CartDrawerContent: React.FC = () => {
-  const { cartItems, updateQuantity, clearCart, getCartTotal } = useCart();
+  const { cartItems, updateQuantity, clearCart, getCartTotal, addToCart } = useCart();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [showCardMessageInput, setShowCardMessageInput] = useState(false);
   const [cardMessage, setCardMessage] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
@@ -51,7 +53,20 @@ const CartDrawerContent: React.FC = () => {
   };
   
   const addSuggestionToCart = (product: Product) => {
-    // Здесь будет логика добавления рекомендуемого товара в корзину
+    // Convert the suggestion product to CartProduct format
+    const cartProduct = {
+      id: `${product.id}-${Date.now()}`, // Ensure unique ID
+      name: product.name,
+      price: product.price,
+      image: product.image || '',
+      quantity: product.quantity || 1,
+      shopId: 'default-shop',
+      shopName: 'Магазин'
+    };
+    
+    // Add to cart using the context function
+    addToCart(cartProduct);
+    
     toast({
       title: "Товар добавлен",
       description: `${product.name} добавлен в корзину`,
