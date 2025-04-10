@@ -142,6 +142,13 @@ const Index: React.FC = () => {
                   selectedTime={deliveryTime}
                   onTypeChange={setDeliveryType}
                   onTimeChange={setDeliveryTime}
+                  // Добавляем новые пропсы для мобильной версии
+                  products={isMobile ? products : []}
+                  onQuantityChange={handleQuantityChange}
+                  cardMessage={cardMessage}
+                  setCardMessage={setCardMessage}
+                  showCardMessageInput={showCardMessageInput}
+                  setShowCardMessageInput={setShowCardMessageInput}
                 />
               </div>
             </div>

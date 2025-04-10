@@ -16,14 +16,13 @@ const CartPanel: React.FC = () => {
   } = useCart();
   
   const location = useLocation();
-  const isCartPage = location.pathname === '/cart';
   const isCheckoutPage = location.pathname === '/checkout';
   
   const count = getCartCount();
   const total = getCartTotal();
 
-  // Hide the cart panel if it's not open, cart is empty, or we're on the cart/checkout page
-  if (!isCartPanelOpen || count === 0 || isCartPage || isCheckoutPage) {
+  // Hide the cart panel if it's not open, cart is empty, or we're on the checkout page
+  if (!isCartPanelOpen || count === 0 || isCheckoutPage) {
     return null;
   }
 

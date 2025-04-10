@@ -1,10 +1,10 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
-import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
 import AddressSelection from "./pages/AddressSelection";
 import FlowerShop from "./pages/FlowerShop";
@@ -28,7 +28,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/checkout" element={<Index />} />
-            <Route path="/cart" element={<Cart />} />
+            <Route path="/cart" element={<Navigate to="/checkout" replace />} />
             <Route path="/address-selection" element={<AddressSelection />} />
             <Route path="/flower-shop" element={<FlowerShop />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
