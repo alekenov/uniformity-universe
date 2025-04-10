@@ -31,7 +31,6 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   const [showCardMessageInput, setShowCardMessageInput] = useState(false);
   const [customerPhone, setCustomerPhone] = useState('');
   
-  // State for city selection
   const [selectedRegion, setSelectedRegion] = useState(initialRegion);
   const [selectedCity, setSelectedCity] = useState(initialCity);
   
@@ -104,9 +103,7 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
       <main className="container max-w-6xl mx-auto px-4 py-6 pb-24">
         {products.length > 0 ? (
           <div className="flex flex-col md:flex-row md:space-x-6">
-            {/* Левая колонка с информацией о доставке */}
             <div className="w-full md:w-2/3">
-              {/* Блок "Ваш заказ" для обеих версий - десктопной и мобильной */}
               <OrderItemsSection
                 products={products}
                 onQuantityChange={handleQuantityChange}
@@ -116,7 +113,6 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
                 setShowCardMessageInput={setShowCardMessageInput}
               />
               
-              {/* Блок "Доставка" с селектором города */}
               <div className="panel">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-medium">Доставка</h2>
@@ -136,7 +132,6 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
               </div>
             </div>
             
-            {/* Правая колонка с оплатой и итогами */}
             <CheckoutSidebar
               paymentCards={paymentCards}
               selectedCard={paymentMethod}

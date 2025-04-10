@@ -12,6 +12,8 @@ const initialProducts = [
     oldPrice: 19900,
     quantity: 1,
     image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig',
+    storeId: 'store1',
+    storeName: 'Цветочный Рай'
   },
   {
     id: '2',
@@ -21,6 +23,29 @@ const initialProducts = [
     oldPrice: 22400,
     quantity: 1,
     image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
+    storeId: 'store1',
+    storeName: 'Цветочный Рай'
+  },
+  {
+    id: '3',
+    name: 'Сыр "Пармезан" выдержанный 24 месяца',
+    description: 'Италия, 250 г',
+    price: 12900,
+    oldPrice: 14500,
+    quantity: 1,
+    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
+    storeId: 'store2',
+    storeName: 'METRO'
+  },
+  {
+    id: '4',
+    name: 'Виноград красный "Кишмиш"',
+    description: 'Узбекистан, 1 кг',
+    price: 8800,
+    quantity: 1,
+    image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig',
+    storeId: 'store2',
+    storeName: 'METRO'
   },
 ];
 

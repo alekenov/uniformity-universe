@@ -9,6 +9,8 @@ export interface Product {
   unit?: string;
   image?: string;
   weight?: string;
+  storeId?: string;
+  storeName?: string;
 }
 
 export interface Store {
