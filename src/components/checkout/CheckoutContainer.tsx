@@ -24,6 +24,18 @@ interface CheckoutContainerProps {
   initialCity?: string;
 }
 
+interface StoreAddressState {
+  street: string;
+  city: string;
+  entrance: string;
+  apartment: string;
+  floor: string;
+  intercom: string;
+  courierComment: string;
+  askRecipientForAddress: boolean;
+  showCourierComment: boolean;
+}
+
 const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   products,
   setProducts,
@@ -48,21 +60,11 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   const [selectedCity, setSelectedCity] = useState(initialCity);
   
   // State for delivery addresses (one for each store)
-  const [storeAddresses, setStoreAddresses] = useState<Record<string, {
-    street: string;
-    city: string;
-    entrance: string;
-    apartment: string;
-    floor: string;
-    intercom: string;
-    courierComment: string;
-    askRecipientForAddress: boolean;
-    showCourierComment: boolean;
-  }>>({});
+  const [storeAddresses, setStoreAddresses] = useState<Record<string, StoreAddressState>>({});
 
   // Initialize store addresses
   useEffect(() => {
-    const newStoreAddresses: Record<string, any> = { ...storeAddresses };
+    const newStoreAddresses: Record<string, StoreAddressState> = { ...storeAddresses };
     
     stores.forEach(store => {
       if (!newStoreAddresses[store.id]) {
@@ -90,24 +92,34 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
     { id: 'card4', type: 'money' as const },
   ];
   
-  const handleAddressChange = (storeId: string, field: string, value: string) => {
-    setStoreAddresses(prev => ({
-      ...prev,
-      [storeId]: {
-        ...prev[storeId],
-        [field]: value
+  const handleAddressChange = (storeId: string, field: keyof StoreAddressState, value: string | boolean) => {
+    setStoreAddresses(prev => {
+      const updatedStore = { ...prev[storeId] };
+      
+      // Type assertion to handle both string and boolean values
+      if (typeof value === 'boolean') {
+        (updatedStore[field] as boolean) = value;
+      } else {
+        (updatedStore[field] as string) = value;
       }
-    }));
+      
+      return {
+        ...prev,
+        [storeId]: updatedStore
+      };
+    });
     
     // Update store address in parent component
     if (['street', 'city', 'entrance', 'apartment', 'floor', 'intercom'].includes(field)) {
-      const { street, city, entrance, apartment, floor, intercom } = {
-        ...storeAddresses[storeId],
-        [field]: value
-      };
+      const storeAddress = storeAddresses[storeId];
       
       onUpdateStoreAddress(storeId, {
-        street, city, entrance, apartment, floor, intercom
+        street: field === 'street' ? value as string : storeAddress.street,
+        city: field === 'city' ? value as string : storeAddress.city,
+        entrance: field === 'entrance' ? value as string : storeAddress.entrance,
+        apartment: field === 'apartment' ? value as string : storeAddress.apartment,
+        floor: field === 'floor' ? value as string : storeAddress.floor,
+        intercom: field === 'intercom' ? value as string : storeAddress.intercom
       });
     }
   };
@@ -218,7 +230,7 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
                         courierComment={activeAddress.courierComment}
                         setCourierComment={(value) => handleAddressChange(activeStoreId, 'courierComment', value)}
                         askRecipientForAddress={activeAddress.askRecipientForAddress}
-                        setAskRecipientForAddress={(value) => handleAddressChange(activeStoreId, 'askRecipientForAddress', value ? 'true' : 'false')}
+                        setAskRecipientForAddress={(value) => handleAddressChange(activeStoreId, 'askRecipientForAddress', value)}
                         showCourierComment={activeAddress.showCourierComment}
                         toggleCourierComment={() => toggleCourierComment(activeStoreId)}
                       />
