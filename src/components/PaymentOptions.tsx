@@ -81,9 +81,6 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
           />
           <Phone size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
         </div>
-        <p className="text-xs text-gray-500 flex items-center">
-          <Phone size={12} className="inline mr-1" /> Свяжемся для подтверждения заказа
-        </p>
       </div>
     </div>
   );
