@@ -23,7 +23,7 @@ const CheckoutHeader: React.FC<CheckoutHeaderProps> = ({ hasProducts, clearCart 
   return (
     <header className="bg-white sticky top-0 z-10 shadow-sm">
       <div className="container max-w-6xl mx-auto px-4 py-4 flex items-center">
-        <Link to="/cart" className="p-2 -ml-2 mr-2">
+        <Link to="/flower-shop" className="p-2 -ml-2 mr-2">
           <ArrowLeft size={20} />
         </Link>
         <h1 className="text-2xl font-medium">Оформление заказа</h1>
