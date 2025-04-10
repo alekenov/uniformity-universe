@@ -10,6 +10,7 @@ import CardMessage from '@/components/cart/CardMessage';
 import { Product } from '@/types/cart';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { DrawerClose } from '@/components/ui/drawer';
 
 // Примерные данные для рекомендуемых товаров
 const suggestionProducts = [
@@ -61,6 +62,7 @@ const CartDrawerContent: React.FC = () => {
   
   const handleCheckout = () => {
     navigate('/checkout');
+    // Drawer will be closed automatically by using DrawerClose
   };
   
   const subtotal = getCartTotal();
@@ -196,12 +198,14 @@ const CartDrawerContent: React.FC = () => {
           <span className="font-medium">Итого</span>
           <span className="font-medium">{total} ₸</span>
         </div>
-        <Button
-          className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
-          onClick={handleCheckout}
-        >
-          Оформить заказ
-        </Button>
+        <DrawerClose asChild>
+          <Button
+            className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
+            onClick={handleCheckout}
+          >
+            Оформить заказ
+          </Button>
+        </DrawerClose>
       </div>
     </div>
   );
