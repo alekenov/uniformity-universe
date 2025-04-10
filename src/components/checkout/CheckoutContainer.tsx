@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import DeliveryOptions, { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
 import { useToast } from '@/hooks/use-toast';
@@ -8,7 +7,6 @@ import OrderItemsSection from '@/components/checkout/OrderItemsSection';
 import EmptyCheckout from '@/components/checkout/EmptyCheckout';
 import CheckoutSidebar from '@/components/checkout/CheckoutSidebar';
 import RegionCitySelector from '@/components/address/RegionCitySelector';
-import DeliveryAddress from '@/components/delivery/DeliveryAddress';
 import { Product, Store } from '@/types/cart';
 import { Tabs } from "@/components/ui/tabs";
 
@@ -218,23 +216,6 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
                       onTypeChange={setDeliveryType}
                       onTimeChange={setDeliveryTime}
                     />
-                    
-                    <div className="mt-6">
-                      <DeliveryAddress
-                        address={activeAddress.street}
-                        setAddress={(value) => handleAddressChange(activeStoreId, 'street', value)}
-                        apartment={activeAddress.apartment}
-                        setApartment={(value) => handleAddressChange(activeStoreId, 'apartment', value)}
-                        floor={activeAddress.floor}
-                        setFloor={(value) => handleAddressChange(activeStoreId, 'floor', value)}
-                        courierComment={activeAddress.courierComment}
-                        setCourierComment={(value) => handleAddressChange(activeStoreId, 'courierComment', value)}
-                        askRecipientForAddress={activeAddress.askRecipientForAddress}
-                        setAskRecipientForAddress={(value) => handleAddressChange(activeStoreId, 'askRecipientForAddress', value)}
-                        showCourierComment={activeAddress.showCourierComment}
-                        toggleCourierComment={() => toggleCourierComment(activeStoreId)}
-                      />
-                    </div>
                   </div>
                 )}
               </Tabs>
