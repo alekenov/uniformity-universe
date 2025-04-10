@@ -34,14 +34,14 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
             key={card.id}
             onClick={() => onCardSelect(card.id)}
             className={cn(
-              "flex-shrink-0 py-2 px-3 border rounded-xl cursor-pointer transition-all",
+              "flex-shrink-0 py-2 px-4 border rounded-xl cursor-pointer transition-all",
               selectedCard === card.id
                 ? "border-primary bg-secondary"
                 : "border-[#E0E0E0] hover:border-gray-300"
             )}
           >
-            <div className="flex flex-col items-center gap-1">
-              <div className="w-10 h-6">
+            <div className="flex items-center gap-2">
+              <div className="w-12 h-7">
                 {card.type === 'visa' && (
                   <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M44 24C44 35.0457 35.0457 44 24 44C12.9543 44 4 35.0457 4 24C4 12.9543 12.9543 4 24 4C35.0457 4 44 12.9543 44 24Z" fill="#1434CB"/>
@@ -59,11 +59,6 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
                 )}
               </div>
               <div className="text-xs font-medium">•• {card.last4}</div>
-              
-              <div className={cn(
-                "h-1.5 w-1.5 rounded-full transition-all",
-                selectedCard === card.id ? "bg-primary" : "bg-gray-200"
-              )}></div>
             </div>
           </div>
         ))}
