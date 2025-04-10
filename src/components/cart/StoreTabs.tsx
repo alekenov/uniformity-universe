@@ -28,7 +28,7 @@ const StoreTabs: React.FC<StoreTabsProps> = ({
               value={store.id}
               className="py-2 px-4 h-auto text-sm text-gray-600 border border-gray-200 rounded-full transition-all duration-200 whitespace-nowrap
                        hover:border-gray-300
-                       data-[state=active]:bg-transparent data-[state=active]:text-gray-800 data-[state=active]:border-gray-300"
+                       data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary"
             >
               {store.name}
             </TabsTrigger>
