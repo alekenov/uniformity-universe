@@ -41,7 +41,6 @@ const RecipientInfo: React.FC<RecipientInfoProps> = ({
               placeholder="Телефон получателя" 
               className="mt-1"
             />
-            <Phone size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
           </div>
           <p className="text-xs text-gray-500 mt-1 flex items-center">
             <Phone size={12} className="inline mr-1" /> Свяжемся для согласования доставки
