@@ -1,14 +1,12 @@
+
 import React, { useState, useEffect } from 'react';
-import DeliveryOptions, { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
 import CheckoutHeader from '@/components/checkout/CheckoutHeader';
-import OrderItemsSection from '@/components/checkout/OrderItemsSection';
-import EmptyCheckout from '@/components/checkout/EmptyCheckout';
-import CheckoutSidebar from '@/components/checkout/CheckoutSidebar';
-import RegionCitySelector from '@/components/address/RegionCitySelector';
+import CheckoutLayout from '@/components/checkout/CheckoutLayout';
 import { Product, Store } from '@/types/cart';
-import { Tabs } from "@/components/ui/tabs";
+import { useStoreAddresses } from './useStoreAddresses';
+import { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
 
 interface CheckoutContainerProps {
   products: Product[];
@@ -20,18 +18,6 @@ interface CheckoutContainerProps {
   onUpdateStoreAddress: (storeId: string, address: Store['address']) => void;
   initialRegion?: string;
   initialCity?: string;
-}
-
-interface StoreAddressState {
-  street: string;
-  city: string;
-  entrance: string;
-  apartment: string;
-  floor: string;
-  intercom: string;
-  courierComment: string;
-  askRecipientForAddress: boolean;
-  showCourierComment: boolean;
 }
 
 const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
@@ -53,84 +39,21 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   const [cardMessage, setCardMessage] = useState('');
   const [showCardMessageInput, setShowCardMessageInput] = useState(false);
   const [customerPhone, setCustomerPhone] = useState('');
-  
   const [selectedRegion, setSelectedRegion] = useState(initialRegion);
-  const [selectedCity, setSelectedCity] = useState(initialCity);
   
-  // State for delivery addresses (one for each store)
-  const [storeAddresses, setStoreAddresses] = useState<Record<string, StoreAddressState>>({});
-
-  // Initialize store addresses
-  useEffect(() => {
-    const newStoreAddresses: Record<string, StoreAddressState> = { ...storeAddresses };
-    
-    stores.forEach(store => {
-      if (!newStoreAddresses[store.id]) {
-        newStoreAddresses[store.id] = {
-          street: store.address?.street || '',
-          city: store.address?.city || selectedCity,
-          entrance: store.address?.entrance || '',
-          apartment: store.address?.apartment || '',
-          floor: store.address?.floor || '',
-          intercom: store.address?.intercom || '',
-          courierComment: '',
-          askRecipientForAddress: false,
-          showCourierComment: false,
-        };
-      }
-    });
-    
-    setStoreAddresses(newStoreAddresses);
-  }, [stores, selectedCity]);
-
-  const paymentCards = [
-    { id: 'card1', type: 'kaspi' as const },
-    { id: 'card2', type: 'visa' as const },
-    { id: 'card3', type: 'paypal' as const },
-    { id: 'card4', type: 'money' as const },
-  ];
-  
-  const handleAddressChange = (storeId: string, field: keyof StoreAddressState, value: string | boolean) => {
-    setStoreAddresses(prev => {
-      const updatedStore = { ...prev[storeId] };
-      
-      // Type assertion to handle both string and boolean values
-      if (typeof value === 'boolean') {
-        (updatedStore[field] as boolean) = value;
-      } else {
-        (updatedStore[field] as string) = value;
-      }
-      
-      return {
-        ...prev,
-        [storeId]: updatedStore
-      };
-    });
-    
-    // Update store address in parent component
-    if (['street', 'city', 'entrance', 'apartment', 'floor', 'intercom'].includes(field)) {
-      const storeAddress = storeAddresses[storeId];
-      
-      onUpdateStoreAddress(storeId, {
-        street: field === 'street' ? value as string : storeAddress.street,
-        city: field === 'city' ? value as string : storeAddress.city,
-        entrance: field === 'entrance' ? value as string : storeAddress.entrance,
-        apartment: field === 'apartment' ? value as string : storeAddress.apartment,
-        floor: field === 'floor' ? value as string : storeAddress.floor,
-        intercom: field === 'intercom' ? value as string : storeAddress.intercom
-      });
-    }
-  };
-  
-  const toggleCourierComment = (storeId: string) => {
-    setStoreAddresses(prev => ({
-      ...prev,
-      [storeId]: {
-        ...prev[storeId],
-        showCourierComment: !prev[storeId].showCourierComment
-      }
-    }));
-  };
+  // Use our custom hook for address management
+  const {
+    selectedCity,
+    handleAddressChange,
+    toggleCourierComment,
+    handleCityChange,
+    getActiveAddress
+  } = useStoreAddresses({
+    stores,
+    activeStoreId,
+    initialCity,
+    onUpdateStoreAddress
+  });
   
   const handleSubmit = () => {
     toast({
@@ -142,20 +65,6 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   const clearCart = () => {
     setProducts([]);
   };
-
-  const handleCityChange = (city: string) => {
-    setSelectedCity(city);
-    
-    // Update city for all store addresses
-    Object.keys(storeAddresses).forEach(storeId => {
-      handleAddressChange(storeId, 'city', city);
-    });
-    
-    toast({
-      title: "Город изменен",
-      description: "Обратите внимание, что ассортимент и цены могут отличаться в разных городах",
-    });
-  };
   
   const subtotal = products.reduce((sum, product) => sum + (product.price * product.quantity), 0);
   const deliveryFee = 0;
@@ -163,17 +72,7 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   const total = subtotal + deliveryFee + serviceFee;
   
   const activeStore = stores.find(store => store.id === activeStoreId);
-  const activeAddress = storeAddresses[activeStoreId] || {
-    street: '',
-    city: selectedCity,
-    entrance: '',
-    apartment: '',
-    floor: '',
-    intercom: '',
-    courierComment: '',
-    askRecipientForAddress: false,
-    showCourierComment: false,
-  };
+  const activeAddress = getActiveAddress();
   
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
@@ -183,60 +82,37 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
       />
       
       <main className="container max-w-6xl mx-auto px-4 py-6 pb-24">
-        {products.length > 0 ? (
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <div className="w-full md:w-2/3">
-              <Tabs value={activeStoreId} onValueChange={onStoreChange}>
-                <OrderItemsSection
-                  stores={stores}
-                  activeStoreId={activeStoreId}
-                  onStoreChange={onStoreChange}
-                  onQuantityChange={onQuantityChange}
-                  cardMessage={cardMessage}
-                  setCardMessage={setCardMessage}
-                  showCardMessageInput={showCardMessageInput}
-                  setShowCardMessageInput={setShowCardMessageInput}
-                />
-                
-                {activeStore && (
-                  <div className="panel">
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-xl font-medium">Доставка</h2>
-                      <RegionCitySelector
-                        selectedRegion={selectedRegion}
-                        selectedCity={selectedCity}
-                        onCityChange={handleCityChange}
-                        compact={true}
-                      />
-                    </div>
-                    
-                    <DeliveryOptions
-                      selectedType={deliveryType}
-                      selectedTime={deliveryTime}
-                      onTypeChange={setDeliveryType}
-                      onTimeChange={setDeliveryTime}
-                    />
-                  </div>
-                )}
-              </Tabs>
-            </div>
-            
-            <CheckoutSidebar
-              paymentCards={paymentCards}
-              selectedCard={paymentMethod}
-              onCardSelect={setPaymentMethod}
-              subtotal={subtotal}
-              deliveryFee={deliveryFee}
-              serviceFee={serviceFee}
-              total={total}
-              onSubmit={handleSubmit}
-              customerPhone={customerPhone}
-              onCustomerPhoneChange={setCustomerPhone}
-            />
-          </div>
-        ) : (
-          <EmptyCheckout />
-        )}
+        <CheckoutLayout
+          products={products}
+          stores={stores}
+          activeStoreId={activeStoreId}
+          activeStore={activeStore}
+          activeAddress={activeAddress}
+          deliveryType={deliveryType}
+          deliveryTime={deliveryTime}
+          paymentMethod={paymentMethod}
+          cardMessage={cardMessage}
+          showCardMessageInput={showCardMessageInput}
+          customerPhone={customerPhone}
+          selectedRegion={selectedRegion}
+          selectedCity={selectedCity}
+          subtotal={subtotal}
+          deliveryFee={deliveryFee}
+          serviceFee={serviceFee}
+          total={total}
+          onStoreChange={onStoreChange}
+          onQuantityChange={onQuantityChange}
+          onDeliveryTypeChange={setDeliveryType}
+          onDeliveryTimeChange={setDeliveryTime}
+          onPaymentMethodChange={setPaymentMethod}
+          onCardMessageChange={setCardMessage}
+          setShowCardMessageInput={setShowCardMessageInput}
+          onCustomerPhoneChange={setCustomerPhone}
+          onCityChange={handleCityChange}
+          handleAddressChange={handleAddressChange}
+          toggleCourierComment={toggleCourierComment}
+          onSubmit={handleSubmit}
+        />
       </main>
     </div>
   );
