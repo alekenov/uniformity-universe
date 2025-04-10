@@ -76,7 +76,7 @@ const PaymentOptions: React.FC<PaymentOptionsProps> = ({
             type="tel"
             value={customerPhone}
             onChange={(e) => onCustomerPhoneChange(e.target.value)}
-            placeholder="+7 (___) ___-__-__"
+            placeholder="+ __ ___ ___ ____"
             className="pr-10"
           />
           <Phone size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
