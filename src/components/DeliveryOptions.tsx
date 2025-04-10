@@ -23,8 +23,6 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   onTypeChange,
   onTimeChange,
 }) => {
-  console.log('DeliveryOptions rendering with:', { selectedType, selectedTime });
-  
   const [manualTimeSlot, setManualTimeSlot] = useState(false);
   const [askRecipientForTime, setAskRecipientForTime] = useState(false);
   const isMobile = useIsMobile();
