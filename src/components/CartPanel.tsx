@@ -5,6 +5,7 @@ import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import CartDrawerContent from './cart/CartDrawerContent';
+import { useLocation } from 'react-router-dom';
 
 const CartPanel: React.FC = () => {
   const { 
@@ -14,10 +15,14 @@ const CartPanel: React.FC = () => {
     getCartTotal 
   } = useCart();
   
+  const location = useLocation();
+  const isCartPage = location.pathname === '/cart';
+  
   const count = getCartCount();
   const total = getCartTotal();
 
-  if (!isCartPanelOpen || count === 0) {
+  // Hide the cart panel if it's not open, cart is empty, or we're on the cart page
+  if (!isCartPanelOpen || count === 0 || isCartPage) {
     return null;
   }
 
