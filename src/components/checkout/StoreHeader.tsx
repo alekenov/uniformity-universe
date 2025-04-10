@@ -9,7 +9,7 @@ interface StoreHeaderProps {
 
 const StoreHeader: React.FC<StoreHeaderProps> = ({ storeName, status = "Открыто" }) => {
   return (
-    <div className="flex items-center py-2 px-1">
+    <div className="flex items-center py-3 px-2 bg-gray-50 rounded-t-md border-b border-gray-100">
       <div className="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center mr-2">
         <StoreIcon size={16} className="text-purple-600" />
       </div>

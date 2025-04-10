@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CheckoutContainer from '@/components/checkout/CheckoutContainer';
-import { Product } from '@/types/cart';
+import { Product, Store } from '@/types/cart';
 
 const initialProducts = [
   {
@@ -51,11 +51,75 @@ const initialProducts = [
 
 const Index: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [stores, setStores] = useState<Store[]>([]);
+  const [activeStoreId, setActiveStoreId] = useState<string>('');
+
+  // Group products by store
+  useEffect(() => {
+    const storeMap: Record<string, Store> = {};
+    
+    products.forEach(product => {
+      const storeId = product.storeId || 'unknown';
+      const storeName = product.storeName || 'Магазин';
+      
+      if (!storeMap[storeId]) {
+        storeMap[storeId] = {
+          id: storeId,
+          name: storeName,
+          status: 'Открыто',
+          total: 0,
+          products: [],
+          address: {
+            street: '',
+            city: 'Нур-Султан',
+          }
+        };
+      }
+      
+      storeMap[storeId].products.push(product);
+      storeMap[storeId].total += product.price * product.quantity;
+    });
+    
+    const storeArray = Object.values(storeMap);
+    setStores(storeArray);
+    
+    // Set active store to first store if not set or if current active store no longer exists
+    if (!activeStoreId || !storeMap[activeStoreId]) {
+      setActiveStoreId(storeArray.length > 0 ? storeArray[0].id : '');
+    }
+  }, [products, activeStoreId]);
+
+  const handleStoreChange = (storeId: string) => {
+    setActiveStoreId(storeId);
+  };
+
+  const handleQuantityChange = (id: string, quantity: number) => {
+    if (quantity === 0) {
+      setProducts(products.filter(product => product.id !== id));
+    } else {
+      setProducts(products.map(product => 
+        product.id === id ? { ...product, quantity } : product
+      ));
+    }
+  };
+
+  const updateStoreAddress = (storeId: string, address: Store['address']) => {
+    setStores(prevStores => 
+      prevStores.map(store => 
+        store.id === storeId ? { ...store, address } : store
+      )
+    );
+  };
 
   return (
     <CheckoutContainer 
       products={products}
       setProducts={setProducts}
+      stores={stores}
+      activeStoreId={activeStoreId}
+      onStoreChange={handleStoreChange}
+      onQuantityChange={handleQuantityChange}
+      onUpdateStoreAddress={updateStoreAddress}
     />
   );
 };

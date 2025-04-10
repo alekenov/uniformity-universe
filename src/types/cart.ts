@@ -19,4 +19,12 @@ export interface Store {
   status: string;
   total: number;
   products: Product[];
+  address?: {
+    street: string;
+    city: string;
+    entrance?: string;
+    apartment?: string;
+    floor?: string;
+    intercom?: string;
+  };
 }

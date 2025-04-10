@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import DeliveryOptions, { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
 import { useToast } from '@/hooks/use-toast';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -7,11 +8,18 @@ import OrderItemsSection from '@/components/checkout/OrderItemsSection';
 import EmptyCheckout from '@/components/checkout/EmptyCheckout';
 import CheckoutSidebar from '@/components/checkout/CheckoutSidebar';
 import RegionCitySelector from '@/components/address/RegionCitySelector';
-import { Product } from '@/types/cart';
+import DeliveryAddress from '@/components/delivery/DeliveryAddress';
+import { Product, Store } from '@/types/cart';
+import { Tabs } from "@/components/ui/tabs";
 
 interface CheckoutContainerProps {
   products: Product[];
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  stores: Store[];
+  activeStoreId: string;
+  onStoreChange: (storeId: string) => void;
+  onQuantityChange: (id: string, quantity: number) => void;
+  onUpdateStoreAddress: (storeId: string, address: Store['address']) => void;
   initialRegion?: string;
   initialCity?: string;
 }
@@ -19,6 +27,11 @@ interface CheckoutContainerProps {
 const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   products,
   setProducts,
+  stores,
+  activeStoreId,
+  onStoreChange,
+  onQuantityChange,
+  onUpdateStoreAddress,
   initialRegion = 'Казахстан',
   initialCity = 'Нур-Султан',
 }) => {
@@ -34,14 +47,41 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   const [selectedRegion, setSelectedRegion] = useState(initialRegion);
   const [selectedCity, setSelectedCity] = useState(initialCity);
   
-  const [address, setAddress] = useState({
-    street: 'улица Достоевского, 3с2',
-    city: selectedCity,
-    entrance: '',
-    apartment: '12',
-    floor: '',
-    intercom: '',
-  });
+  // State for delivery addresses (one for each store)
+  const [storeAddresses, setStoreAddresses] = useState<Record<string, {
+    street: string;
+    city: string;
+    entrance: string;
+    apartment: string;
+    floor: string;
+    intercom: string;
+    courierComment: string;
+    askRecipientForAddress: boolean;
+    showCourierComment: boolean;
+  }>>({});
+
+  // Initialize store addresses
+  useEffect(() => {
+    const newStoreAddresses: Record<string, any> = { ...storeAddresses };
+    
+    stores.forEach(store => {
+      if (!newStoreAddresses[store.id]) {
+        newStoreAddresses[store.id] = {
+          street: store.address?.street || '',
+          city: store.address?.city || selectedCity,
+          entrance: store.address?.entrance || '',
+          apartment: store.address?.apartment || '',
+          floor: store.address?.floor || '',
+          intercom: store.address?.intercom || '',
+          courierComment: '',
+          askRecipientForAddress: false,
+          showCourierComment: false,
+        };
+      }
+    });
+    
+    setStoreAddresses(newStoreAddresses);
+  }, [stores, selectedCity]);
 
   const paymentCards = [
     { id: 'card1', type: 'kaspi' as const },
@@ -50,22 +90,36 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
     { id: 'card4', type: 'money' as const },
   ];
   
-  const handleQuantityChange = (id: string, quantity: number) => {
-    if (quantity === 0) {
-      setProducts(products.filter(product => product.id !== id));
-      toast({
-        title: "Товар удален из корзины",
-        description: "Товар был удален из вашего заказа",
+  const handleAddressChange = (storeId: string, field: string, value: string) => {
+    setStoreAddresses(prev => ({
+      ...prev,
+      [storeId]: {
+        ...prev[storeId],
+        [field]: value
+      }
+    }));
+    
+    // Update store address in parent component
+    if (['street', 'city', 'entrance', 'apartment', 'floor', 'intercom'].includes(field)) {
+      const { street, city, entrance, apartment, floor, intercom } = {
+        ...storeAddresses[storeId],
+        [field]: value
+      };
+      
+      onUpdateStoreAddress(storeId, {
+        street, city, entrance, apartment, floor, intercom
       });
-    } else {
-      setProducts(products.map(product => 
-        product.id === id ? { ...product, quantity } : product
-      ));
     }
   };
   
-  const handleAddressChange = (field: keyof typeof address, value: string) => {
-    setAddress({ ...address, [field]: value });
+  const toggleCourierComment = (storeId: string) => {
+    setStoreAddresses(prev => ({
+      ...prev,
+      [storeId]: {
+        ...prev[storeId],
+        showCourierComment: !prev[storeId].showCourierComment
+      }
+    }));
   };
   
   const handleSubmit = () => {
@@ -81,7 +135,12 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
 
   const handleCityChange = (city: string) => {
     setSelectedCity(city);
-    setAddress(prev => ({ ...prev, city }));
+    
+    // Update city for all store addresses
+    Object.keys(storeAddresses).forEach(storeId => {
+      handleAddressChange(storeId, 'city', city);
+    });
+    
     toast({
       title: "Город изменен",
       description: "Обратите внимание, что ассортимент и цены могут отличаться в разных городах",
@@ -92,6 +151,19 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   const deliveryFee = 0;
   const serviceFee = 990;
   const total = subtotal + deliveryFee + serviceFee;
+  
+  const activeStore = stores.find(store => store.id === activeStoreId);
+  const activeAddress = storeAddresses[activeStoreId] || {
+    street: '',
+    city: selectedCity,
+    entrance: '',
+    apartment: '',
+    floor: '',
+    intercom: '',
+    courierComment: '',
+    askRecipientForAddress: false,
+    showCourierComment: false,
+  };
   
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
@@ -104,32 +176,56 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
         {products.length > 0 ? (
           <div className="flex flex-col md:flex-row md:space-x-6">
             <div className="w-full md:w-2/3">
-              <OrderItemsSection
-                products={products}
-                onQuantityChange={handleQuantityChange}
-                cardMessage={cardMessage}
-                setCardMessage={setCardMessage}
-                showCardMessageInput={showCardMessageInput}
-                setShowCardMessageInput={setShowCardMessageInput}
-              />
-              
-              <div className="panel">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-medium">Доставка</h2>
-                  <RegionCitySelector
-                    selectedRegion={selectedRegion}
-                    selectedCity={selectedCity}
-                    onCityChange={handleCityChange}
-                    compact={true}
-                  />
-                </div>
-                <DeliveryOptions
-                  selectedType={deliveryType}
-                  selectedTime={deliveryTime}
-                  onTypeChange={setDeliveryType}
-                  onTimeChange={setDeliveryTime}
+              <Tabs value={activeStoreId} onValueChange={onStoreChange}>
+                <OrderItemsSection
+                  stores={stores}
+                  activeStoreId={activeStoreId}
+                  onStoreChange={onStoreChange}
+                  onQuantityChange={onQuantityChange}
+                  cardMessage={cardMessage}
+                  setCardMessage={setCardMessage}
+                  showCardMessageInput={showCardMessageInput}
+                  setShowCardMessageInput={setShowCardMessageInput}
                 />
-              </div>
+                
+                {activeStore && (
+                  <div className="panel">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-xl font-medium">Доставка для {activeStore.name}</h2>
+                      <RegionCitySelector
+                        selectedRegion={selectedRegion}
+                        selectedCity={selectedCity}
+                        onCityChange={handleCityChange}
+                        compact={true}
+                      />
+                    </div>
+                    
+                    <DeliveryOptions
+                      selectedType={deliveryType}
+                      selectedTime={deliveryTime}
+                      onTypeChange={setDeliveryType}
+                      onTimeChange={setDeliveryTime}
+                    />
+                    
+                    <div className="mt-6">
+                      <DeliveryAddress
+                        address={activeAddress.street}
+                        setAddress={(value) => handleAddressChange(activeStoreId, 'street', value)}
+                        apartment={activeAddress.apartment}
+                        setApartment={(value) => handleAddressChange(activeStoreId, 'apartment', value)}
+                        floor={activeAddress.floor}
+                        setFloor={(value) => handleAddressChange(activeStoreId, 'floor', value)}
+                        courierComment={activeAddress.courierComment}
+                        setCourierComment={(value) => handleAddressChange(activeStoreId, 'courierComment', value)}
+                        askRecipientForAddress={activeAddress.askRecipientForAddress}
+                        setAskRecipientForAddress={(value) => handleAddressChange(activeStoreId, 'askRecipientForAddress', value ? 'true' : 'false')}
+                        showCourierComment={activeAddress.showCourierComment}
+                        toggleCourierComment={() => toggleCourierComment(activeStoreId)}
+                      />
+                    </div>
+                  </div>
+                )}
+              </Tabs>
             </div>
             
             <CheckoutSidebar
