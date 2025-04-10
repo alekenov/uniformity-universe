@@ -8,6 +8,8 @@ import OrderItemsSection from '@/components/checkout/OrderItemsSection';
 import EmptyCheckout from '@/components/checkout/EmptyCheckout';
 import CheckoutSidebar from '@/components/checkout/CheckoutSidebar';
 import RegionCitySelector from '@/components/address/RegionCitySelector';
+import CartItem from '@/components/CartItem';
+import CardMessage from '@/components/cart/CardMessage';
 
 const initialProducts = [
   {
@@ -114,17 +116,26 @@ const Index: React.FC = () => {
           <div className="flex flex-col md:flex-row md:space-x-6">
             {/* Левая колонка с информацией о доставке */}
             <div className="w-full md:w-2/3">
-              {/* Блок "Ваш заказ" только для десктопной версии */}
-              {!isMobile && (
-                <OrderItemsSection
-                  products={products}
-                  onQuantityChange={handleQuantityChange}
+              {/* Блок "Ваш заказ" для обеих версий - десктопной и мобильной */}
+              <div className="panel mb-6">
+                <h2 className="text-xl font-medium mb-4">Ваш заказ</h2>
+                <div className="divide-y divide-[#F0F0F0]">
+                  {products.map((product) => (
+                    <CartItem
+                      key={product.id}
+                      {...product}
+                      onQuantityChange={handleQuantityChange}
+                    />
+                  ))}
+                </div>
+                
+                <CardMessage
                   cardMessage={cardMessage}
                   setCardMessage={setCardMessage}
                   showCardMessageInput={showCardMessageInput}
                   setShowCardMessageInput={setShowCardMessageInput}
                 />
-              )}
+              </div>
               
               {/* Блок "Доставка" с селектором города */}
               <div className="panel">
@@ -142,13 +153,6 @@ const Index: React.FC = () => {
                   selectedTime={deliveryTime}
                   onTypeChange={setDeliveryType}
                   onTimeChange={setDeliveryTime}
-                  // Добавляем новые пропсы для мобильной версии
-                  products={isMobile ? products : []}
-                  onQuantityChange={handleQuantityChange}
-                  cardMessage={cardMessage}
-                  setCardMessage={setCardMessage}
-                  showCardMessageInput={showCardMessageInput}
-                  setShowCardMessageInput={setShowCardMessageInput}
                 />
               </div>
             </div>
