@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import DeliveryTypeSelector from './delivery/DeliveryTypeSelector';
 import DeliveryTimeSelector from './delivery/DeliveryTimeSelector';
@@ -15,12 +16,6 @@ interface DeliveryOptionsProps {
   selectedTime: DeliveryTime;
   onTypeChange: (type: DeliveryType) => void;
   onTimeChange: (time: DeliveryTime) => void;
-  products?: Product[];
-  onQuantityChange?: (id: string, quantity: number) => void;
-  cardMessage?: string;
-  setCardMessage?: (message: string) => void;
-  showCardMessageInput?: boolean;
-  setShowCardMessageInput?: (show: boolean) => void;
 }
 
 const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
@@ -28,12 +23,6 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   selectedTime,
   onTypeChange,
   onTimeChange,
-  products = [],
-  onQuantityChange = () => {},
-  cardMessage = '',
-  setCardMessage = () => {},
-  showCardMessageInput = false,
-  setShowCardMessageInput = () => {}
 }) => {
   const [manualTimeSlot, setManualTimeSlot] = useState(false);
   const [askRecipientForTime, setAskRecipientForTime] = useState(false);
