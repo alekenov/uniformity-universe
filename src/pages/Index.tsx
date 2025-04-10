@@ -4,6 +4,7 @@ import CheckoutContainer from '@/components/checkout/CheckoutContainer';
 import { Product, Store } from '@/types/cart';
 
 const initialProducts = [
+  // Store 1: Цветочный Рай
   {
     id: '1',
     name: 'Букет "Нежная весна" из розовых тюльпанов',
@@ -26,6 +27,8 @@ const initialProducts = [
     storeId: 'store1',
     storeName: 'Цветочный Рай'
   },
+  
+  // Store 2: METRO
   {
     id: '3',
     name: 'Сыр "Пармезан" выдержанный 24 месяца',
@@ -47,6 +50,28 @@ const initialProducts = [
     storeId: 'store2',
     storeName: 'METRO'
   },
+  
+  // Store 3: Аптека 36.6
+  {
+    id: '5',
+    name: 'Витамин C',
+    description: '60 таблеток',
+    price: 3900,
+    quantity: 1,
+    image: 'https://avatars.mds.yandex.net/get-eda/371306/2f0969b0bd0c397c78ec42a34c36a16a/orig',
+    storeId: 'store3',
+    storeName: 'Аптека 36.6'
+  },
+  {
+    id: '6',
+    name: 'Ибупрофен',
+    description: '20 таблеток',
+    price: 2400,
+    quantity: 1,
+    image: 'https://avatars.mds.yandex.net/get-eda/3735388/b59c7629ff7e50c3b198494f4d9d3fe4/orig',
+    storeId: 'store3',
+    storeName: 'Аптека 36.6'
+  }
 ];
 
 const Index: React.FC = () => {
