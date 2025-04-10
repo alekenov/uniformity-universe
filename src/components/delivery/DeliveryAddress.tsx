@@ -71,7 +71,7 @@ const DeliveryAddress: React.FC<DeliveryAddressProps> = ({
       )}
 
       {!askRecipientForAddress && (
-        <div className="space-y-4">
+        <div className="space-y-4 max-w-md">
           <div>
             <Input 
               value={address} 

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ChevronRight, Navigation } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -73,8 +74,6 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
     <div className="panel">
       <h2 className="text-xl font-medium mb-4">Куда доставить</h2>
       
-      {/* Region and City Display - REMOVED */}
-      
       {/* Delivery Method Tabs */}
       <Tabs defaultValue="delivery" className="w-full mb-4" onValueChange={(value) => setDeliveryMethod(value as 'delivery' | 'pickup')}>
         <TabsList className="grid w-full grid-cols-2 mb-4">
@@ -103,17 +102,19 @@ const AddressPanel: React.FC<AddressPanelProps> = ({
               Адрес будет уточнен у получателя. Курьер свяжется для согласования деталей доставки.
             </p>
           ) : (
-            <AddressInput
-              address={address}
-              onChange={onChange}
-              verifyAddress={verifyAddress}
-              onVerifyAddressChange={setVerifyAddress}
-              onAddressClick={handleAddressClick}
-              onCityChange={handleCityChange}
-              onShowNearbyStores={handleShowNearbyStores}
-              deliveryMethod={deliveryMethod}
-              onDeliveryMethodChange={setDeliveryMethod}
-            />
+            <div className="max-w-md">
+              <AddressInput
+                address={address}
+                onChange={onChange}
+                verifyAddress={verifyAddress}
+                onVerifyAddressChange={setVerifyAddress}
+                onAddressClick={handleAddressClick}
+                onCityChange={handleCityChange}
+                onShowNearbyStores={handleShowNearbyStores}
+                deliveryMethod={deliveryMethod}
+                onDeliveryMethodChange={setDeliveryMethod}
+              />
+            </div>
           )}
           
           {/* Address details (only visible when address is set, no verification needed, and not city-only mode) */}

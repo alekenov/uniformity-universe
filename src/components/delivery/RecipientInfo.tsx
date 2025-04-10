@@ -23,7 +23,7 @@ const RecipientInfo: React.FC<RecipientInfoProps> = ({
         Информация о получателе
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-4 max-w-md">
         <div>
           <Input 
             value={recipientName} 

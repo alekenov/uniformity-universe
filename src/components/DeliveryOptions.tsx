@@ -35,7 +35,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   }, []);
 
   return (
-    <>      
+    <div className="max-w-2xl">      
       <DeliveryTypeSelector 
         selectedType={selectedType} 
         onTypeChange={onTypeChange} 
@@ -56,7 +56,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
           onTimeChange={onTimeChange}
         />
       )}
-    </>
+    </div>
   );
 };
 

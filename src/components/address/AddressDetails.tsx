@@ -12,7 +12,7 @@ export const AddressDetails: React.FC<AddressDetailsProps> = ({
   onChange
 }) => {
   return (
-    <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-4 p-3 bg-[#F9F9F9] rounded-lg border border-[#EEEEEE]">
+    <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-4 p-3 bg-[#F9F9F9] rounded-lg border border-[#EEEEEE] max-w-md">
       <div>
         <label className="block text-sm text-gray-500 mb-1 font-medium">Подъезд</label>
         <input
