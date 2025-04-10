@@ -1,16 +1,15 @@
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/hooks/use-toast';
-import CartItem from '@/components/CartItem';
-import { Button } from '@/components/ui/button';
-import { Clock, ShoppingBag, Truck, Store } from 'lucide-react';
-import SuggestionProducts from '@/components/cart/SuggestionProducts';
-import CardMessage from '@/components/cart/CardMessage';
 import { Product } from '@/types/cart';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { DrawerClose } from '@/components/ui/drawer';
+import EmptyCartDrawer from './EmptyCartDrawer';
+import DeliveryMethodSelector from './DeliveryMethodSelector';
+import DeliveryTimeInfo from './DeliveryTimeInfo';
+import CartItemsList from './CartItemsList';
+import CartSummary from './CartSummary';
+import CardMessage from './CardMessage';
+import SuggestionProducts from './SuggestionProducts';
 
 // Примерные данные для рекомендуемых товаров
 const suggestionProducts = [
@@ -43,7 +42,6 @@ const suggestionProducts = [
 const CartDrawerContent: React.FC = () => {
   const { cartItems, updateQuantity, clearCart, getCartTotal } = useCart();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [showCardMessageInput, setShowCardMessageInput] = useState(false);
   const [cardMessage, setCardMessage] = useState('');
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
@@ -60,30 +58,11 @@ const CartDrawerContent: React.FC = () => {
     });
   };
   
-  const handleCheckout = () => {
-    navigate('/checkout');
-    // Drawer will be closed automatically by using DrawerClose
-  };
-  
   const subtotal = getCartTotal();
   const total = subtotal; // Removed the service fee
   
   if (cartItems.length === 0) {
-    return (
-      <div className="p-6 text-center">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#F0F0F0] flex items-center justify-center">
-          <ShoppingBag size={24} className="text-gray-400" />
-        </div>
-        <h3 className="text-lg font-medium mb-2">Ваша корзина пуста</h3>
-        <p className="text-gray-500 mb-4">Добавьте товары для оформления заказа</p>
-        <Button 
-          onClick={() => navigate('/flower-shop')}
-          className="bg-[#8B5CF6] hover:bg-[#7C3AED]"
-        >
-          Перейти в каталог
-        </Button>
-      </div>
-    );
+    return <EmptyCartDrawer />;
   }
   
   return (
@@ -101,79 +80,19 @@ const CartDrawerContent: React.FC = () => {
         </div>
         
         {/* Delivery Method Selection */}
-        <div className="mb-4">
-          <RadioGroup 
-            value={deliveryMethod}
-            onValueChange={(value: 'delivery' | 'pickup') => setDeliveryMethod(value as 'delivery' | 'pickup')}
-            className="flex space-x-2 bg-[#F8F8F8] p-1 rounded-lg"
-          >
-            <div className={`flex-1 rounded-md transition-colors ${deliveryMethod === 'delivery' ? 'bg-white shadow-sm' : ''}`}>
-              <RadioGroupItem 
-                value="delivery" 
-                id="cart-delivery" 
-                className="sr-only" 
-              />
-              <Label 
-                htmlFor="cart-delivery" 
-                className={`w-full p-2 flex items-center justify-center cursor-pointer text-sm ${deliveryMethod === 'delivery' ? 'font-medium' : 'text-gray-600'}`}
-              >
-                <Truck size={16} className="mr-1.5" />
-                Доставка
-              </Label>
-            </div>
-            
-            <div className={`flex-1 rounded-md transition-colors ${deliveryMethod === 'pickup' ? 'bg-white shadow-sm' : ''}`}>
-              <RadioGroupItem 
-                value="pickup" 
-                id="cart-pickup" 
-                className="sr-only" 
-              />
-              <Label 
-                htmlFor="cart-pickup" 
-                className={`w-full p-2 flex items-center justify-center cursor-pointer text-sm ${deliveryMethod === 'pickup' ? 'font-medium' : 'text-gray-600'}`}
-              >
-                <Store size={16} className="mr-1.5" />
-                Самовывоз
-              </Label>
-            </div>
-          </RadioGroup>
-        </div>
+        <DeliveryMethodSelector 
+          deliveryMethod={deliveryMethod} 
+          setDeliveryMethod={setDeliveryMethod} 
+        />
         
         {/* Время доставки */}
-        {deliveryMethod === 'delivery' ? (
-          <div className="bg-green-50 p-3 rounded-md mb-4 flex items-center">
-            <Clock size={18} className="text-green-600 mr-2" />
-            <div>
-              <p className="text-sm text-green-800 font-medium">Доставка через 40-60 минут</p>
-              <p className="text-xs text-green-700">Ближайший слот доставки сегодня 12:00-14:00</p>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-blue-50 p-3 rounded-md mb-4 flex items-center">
-            <Store size={18} className="text-blue-600 mr-2" />
-            <div>
-              <p className="text-sm text-blue-800 font-medium">Самовывоз сегодня</p>
-              <p className="text-xs text-blue-700">Заказ будет готов через 30-40 минут</p>
-            </div>
-          </div>
-        )}
+        <DeliveryTimeInfo deliveryMethod={deliveryMethod} />
         
         {/* Товары в корзине */}
-        <div className="mb-4 rounded-md border border-gray-100 overflow-hidden">
-          <div className="divide-y divide-[#F0F0F0]">
-            {cartItems.map(item => (
-              <CartItem
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                price={item.price}
-                quantity={item.quantity}
-                image={item.image}
-                onQuantityChange={handleQuantityChange}
-              />
-            ))}
-          </div>
-        </div>
+        <CartItemsList 
+          cartItems={cartItems} 
+          onQuantityChange={handleQuantityChange} 
+        />
         
         {/* Текст открытки */}
         <div className="mb-4">
@@ -192,21 +111,8 @@ const CartDrawerContent: React.FC = () => {
         />
       </div>
       
-      {/* Simplified summary and checkout button */}
-      <div className="sticky bottom-0 left-0 right-0 bg-white p-4 border-t border-gray-100 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] mt-auto">
-        <div className="flex items-center justify-between mb-2">
-          <span className="font-medium">Итого</span>
-          <span className="font-medium">{total} ₸</span>
-        </div>
-        <DrawerClose asChild>
-          <Button
-            className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
-            onClick={handleCheckout}
-          >
-            Оформить заказ
-          </Button>
-        </DrawerClose>
-      </div>
+      {/* Summary and checkout button */}
+      <CartSummary total={total} />
     </div>
   );
 };
