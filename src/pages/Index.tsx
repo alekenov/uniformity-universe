@@ -36,15 +36,6 @@ const paymentCards = [
   { id: 'card3', last4: '8001', type: 'visa' as const },
 ];
 
-// PLACEMENT OPTION 1: The city selector will be shown in a fixed location at the top of the page
-const OPTION_1_ENABLED = true;
-
-// PLACEMENT OPTION 2: The city selector will be shown inside the DeliveryOptions component
-const OPTION_2_ENABLED = true;
-
-// PLACEMENT OPTION 3: The city selector will be shown in a floating panel
-const OPTION_3_ENABLED = true;
-
 const Index: React.FC = () => {
   const { toast } = useToast();
   const isMobile = useIsMobile();
@@ -100,6 +91,10 @@ const Index: React.FC = () => {
   const handleCityChange = (city: string) => {
     setSelectedCity(city);
     setAddress(prev => ({ ...prev, city }));
+    toast({
+      title: "Город изменен",
+      description: "Обратите внимание, что ассортимент и цены могут отличаться в разных городах",
+    });
   };
   
   const subtotal = products.reduce((sum, product) => sum + (product.price * product.quantity), 0);
@@ -113,17 +108,6 @@ const Index: React.FC = () => {
         hasProducts={products.length > 0} 
         clearCart={clearCart} 
       />
-      
-      {/* PLACEMENT OPTION 1: City selector at the top of the page */}
-      {OPTION_1_ENABLED && products.length > 0 && (
-        <div className="container max-w-6xl mx-auto px-4 pt-4">
-          <RegionCitySelector
-            selectedRegion={selectedRegion}
-            selectedCity={selectedCity}
-            onCityChange={handleCityChange}
-          />
-        </div>
-      )}
       
       <main className="container max-w-6xl mx-auto px-4 py-6 pb-24">
         {products.length > 0 ? (
@@ -142,36 +126,24 @@ const Index: React.FC = () => {
                 />
               )}
               
-              {/* PLACEMENT OPTION 2: City selector inside DeliveryOptions component */}
-              {OPTION_2_ENABLED && (
-                <div className="panel mb-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-medium">Доставка</h2>
-                    <RegionCitySelector
-                      selectedRegion={selectedRegion}
-                      selectedCity={selectedCity}
-                      onCityChange={handleCityChange}
-                      compact={true}
-                    />
-                  </div>
-                  <DeliveryOptions
-                    selectedType={deliveryType}
-                    selectedTime={deliveryTime}
-                    onTypeChange={setDeliveryType}
-                    onTimeChange={setDeliveryTime}
+              {/* Блок "Доставка" с селектором города */}
+              <div className="panel">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-medium">Доставка</h2>
+                  <RegionCitySelector
+                    selectedRegion={selectedRegion}
+                    selectedCity={selectedCity}
+                    onCityChange={handleCityChange}
+                    compact={true}
                   />
                 </div>
-              )}
-
-              {/* If OPTION_2 is not enabled, show the regular DeliveryOptions */}
-              {!OPTION_2_ENABLED && (
                 <DeliveryOptions
                   selectedType={deliveryType}
                   selectedTime={deliveryTime}
                   onTypeChange={setDeliveryType}
                   onTimeChange={setDeliveryTime}
                 />
-              )}
+              </div>
             </div>
             
             {/* Правая колонка с оплатой и итогами */}
@@ -190,21 +162,6 @@ const Index: React.FC = () => {
           <EmptyCheckout />
         )}
       </main>
-
-      {/* PLACEMENT OPTION 3: Floating city selector */}
-      {OPTION_3_ENABLED && products.length > 0 && (
-        <div className="fixed top-20 right-4 z-30">
-          <div className="bg-white shadow-md rounded-lg border border-gray-200 p-1">
-            <RegionCitySelector
-              selectedRegion={selectedRegion}
-              selectedCity={selectedCity}
-              onCityChange={handleCityChange}
-              compact={true}
-              className="m-0"
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -34,9 +34,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
   }, []);
 
   return (
-    <div className="panel">
-      <h2 className="text-xl font-medium mb-4">Доставка</h2>
-      
+    <>      
       <DeliveryTypeSelector 
         selectedType={selectedType} 
         onTypeChange={onTypeChange} 
@@ -57,7 +55,7 @@ const DeliveryOptions: React.FC<DeliveryOptionsProps> = ({
           onTimeChange={onTimeChange}
         />
       )}
-    </div>
+    </>
   );
 };
 
