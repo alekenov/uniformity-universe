@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { User, Phone } from 'lucide-react';
+import { User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
 interface RecipientInfoProps {
@@ -42,9 +42,6 @@ const RecipientInfo: React.FC<RecipientInfoProps> = ({
               className="mt-1"
             />
           </div>
-          <p className="text-xs text-gray-500 mt-1 flex items-center">
-            <Phone size={12} className="inline mr-1" /> Свяжемся для согласования доставки
-          </p>
         </div>
       </div>
     </div>
