@@ -2,7 +2,6 @@
 import React from 'react';
 import CartItem from '@/components/CartItem';
 import CardMessage from '@/components/cart/CardMessage';
-import StoreHeader from '@/components/checkout/StoreHeader';
 import { Product, Store } from '@/types/cart';
 import { TabsContent } from "@/components/ui/tabs";
 import StoreTabs from '@/components/cart/StoreTabs';
@@ -46,11 +45,6 @@ const OrderItemsSection: React.FC<OrderItemsSectionProps> = ({
           value={store.id}
           className="mt-4 border border-gray-100 rounded-md overflow-hidden"
         >
-          <StoreHeader 
-            storeName={store.name} 
-            status="Открыто"
-          />
-          
           <div className="divide-y divide-[#F0F0F0]">
             {store.products.map((product) => (
               <CartItem
