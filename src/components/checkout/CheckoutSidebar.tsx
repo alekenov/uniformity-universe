@@ -5,7 +5,7 @@ import OrderSummary from '@/components/OrderSummary';
 import { useToast } from '@/hooks/use-toast';
 
 interface CheckoutSidebarProps {
-  paymentCards: { id: string; last4: string; type: 'visa' | 'mastercard' }[];
+  paymentCards: { id: string; type: 'visa' | 'mastercard' | 'kaspi' | 'paypal' | 'money' }[];
   selectedCard: string;
   onCardSelect: (id: string) => void;
   subtotal: number;

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import DeliveryOptions, { DeliveryType, DeliveryTime } from '@/components/DeliveryOptions';
 import { useToast } from '@/hooks/use-toast';
@@ -46,9 +45,10 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
   });
 
   const paymentCards = [
-    { id: 'card1', last4: '3375', type: 'visa' as const },
-    { id: 'card2', last4: '2037', type: 'visa' as const },
-    { id: 'card3', last4: '8001', type: 'visa' as const },
+    { id: 'card1', type: 'kaspi' as const },
+    { id: 'card2', type: 'visa' as const },
+    { id: 'card3', type: 'paypal' as const },
+    { id: 'card4', type: 'money' as const },
   ];
   
   const handleQuantityChange = (id: string, quantity: number) => {
