@@ -203,7 +203,7 @@ const CheckoutContainer: React.FC<CheckoutContainerProps> = ({
                 {activeStore && (
                   <div className="panel">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-xl font-medium">Доставка для {activeStore.name}</h2>
+                      <h2 className="text-xl font-medium">Доставка</h2>
                       <RegionCitySelector
                         selectedRegion={selectedRegion}
                         selectedCity={selectedCity}
