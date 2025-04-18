@@ -35,9 +35,6 @@ const TimeSlot: React.FC<TimeSlotProps> = ({
     >
       {slot.isNearest && <MapPin size={14} className="icon-sm" />}
       {slot.label}
-      {slot.isNearest && (
-        <span className="text-xs text-gray-500 hidden sm:inline ml-1">(ближайшее)</span>
-      )}
     </button>
   );
 };
