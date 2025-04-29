@@ -24,7 +24,10 @@ const CartPanel: React.FC = () => {
   // Close cart panel when navigating to checkout
   useEffect(() => {
     if (isCheckoutPage && isCartPanelOpen) {
-      setCartPanelOpen(false);
+      // Force cart panel to close with small delay to ensure UI consistency
+      setTimeout(() => {
+        setCartPanelOpen(false);
+      }, 100);
     }
   }, [isCheckoutPage, isCartPanelOpen, setCartPanelOpen]);
 

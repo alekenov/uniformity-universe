@@ -29,11 +29,11 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       e.preventDefault();
     }
     
-    // Add a small delay on mobile to ensure any UI transitions complete
+    // Add a larger delay on mobile to ensure any UI transitions complete fully
     if (isMobile) {
       setTimeout(() => {
         onSubmit();
-      }, 50);
+      }, 200); // Increased from 50ms to 200ms for better reliability
     } else {
       onSubmit();
     }

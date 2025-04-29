@@ -16,10 +16,10 @@ const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
   const handleCheckout = () => {
     // On mobile, we need to ensure the drawer closes properly before navigation
     if (isMobile) {
-      // Increase timeout to ensure drawer has time to close first
+      // Significantly increase timeout to ensure drawer has fully closed first
       setTimeout(() => {
         navigate('/checkout');
-      }, 300); // Increased from 100ms to 300ms for better reliability on slower devices
+      }, 500); // Increased from 300ms to 500ms for better reliability
     } else {
       // On desktop, we can navigate immediately
       navigate('/checkout');
