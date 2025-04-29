@@ -24,10 +24,10 @@ const CartPanel: React.FC = () => {
   // Close cart panel when navigating to checkout
   useEffect(() => {
     if (isCheckoutPage && isCartPanelOpen) {
-      // Force cart panel to close with small delay to ensure UI consistency
+      // Безусловно закрываем панель корзины с большой задержкой
       setTimeout(() => {
         setCartPanelOpen(false);
-      }, 100);
+      }, 300);
     }
   }, [isCheckoutPage, isCartPanelOpen, setCartPanelOpen]);
 

@@ -14,16 +14,11 @@ const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
   const isMobile = useIsMobile();
   
   const handleCheckout = () => {
-    // On mobile, we need to ensure the drawer closes properly before navigation
-    if (isMobile) {
-      // Significantly increase timeout to ensure drawer has fully closed first
-      setTimeout(() => {
-        navigate('/checkout');
-      }, 500); // Increased from 300ms to 500ms for better reliability
-    } else {
-      // On desktop, we can navigate immediately
+    // Простая и надежная логика - вместо использования DrawerClose в качестве родителя для кнопки,
+    // мы будем программно переходить на страницу checkout безусловно
+    setTimeout(() => {
       navigate('/checkout');
-    }
+    }, 700); // Установим достаточно долгую задержку, чтобы drawer успел закрыться
   };
   
   return (
@@ -32,14 +27,12 @@ const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
         <span className="font-medium">Итого</span>
         <span className="font-medium">{total} ₸</span>
       </div>
-      <DrawerClose asChild>
-        <Button
-          className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
-          onClick={handleCheckout}
-        >
-          Оформить заказ
-        </Button>
-      </DrawerClose>
+      <Button
+        className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
+        onClick={handleCheckout}
+      >
+        Оформить заказ
+      </Button>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
@@ -24,19 +23,13 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   const isMobile = useIsMobile();
   
   const handleSubmit = (e: React.MouseEvent) => {
-    // Prevent any default actions if needed
-    if (isMobile) {
-      e.preventDefault();
-    }
+    // Предотвращаем любые действия по умолчанию
+    e.preventDefault();
     
-    // Add a larger delay on mobile to ensure any UI transitions complete fully
-    if (isMobile) {
-      setTimeout(() => {
-        onSubmit();
-      }, 200); // Increased from 50ms to 200ms for better reliability
-    } else {
+    // Безусловно вызываем onSubmit с достаточной задержкой на мобильных устройствах
+    setTimeout(() => {
       onSubmit();
-    }
+    }, 500); // Установим значительную задержку для гарантированного срабатывания
   };
   
   return (
