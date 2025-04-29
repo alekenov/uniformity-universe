@@ -1,6 +1,6 @@
 
-import React, { useEffect } from 'react';
-import { ShoppingBag } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ShoppingBag, Loader2 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
@@ -17,17 +17,21 @@ const CartPanel: React.FC = () => {
   
   const location = useLocation();
   const isCheckoutPage = location.pathname === '/checkout';
+  const [isClosing, setIsClosing] = useState(false);
   
   const count = getCartCount();
   const total = getCartTotal();
 
-  // Close cart panel when navigating to checkout
+  // Close cart panel when navigating to checkout with improved reliability
   useEffect(() => {
     if (isCheckoutPage && isCartPanelOpen) {
-      // Безусловно закрываем панель корзины с большой задержкой
+      setIsClosing(true);
+      
+      // Use a very significant delay to ensure the panel closes properly
       setTimeout(() => {
         setCartPanelOpen(false);
-      }, 300);
+        setIsClosing(false);
+      }, 500);
     }
   }, [isCheckoutPage, isCartPanelOpen, setCartPanelOpen]);
 
@@ -55,8 +59,16 @@ const CartPanel: React.FC = () => {
             <DrawerTrigger asChild>
               <Button 
                 className="bg-[#8B5CF6] hover:bg-[#7C3AED] px-3 py-1.5 h-8 text-xs"
+                disabled={isClosing}
               >
-                Корзина
+                {isClosing ? (
+                  <>
+                    <Loader2 size={12} className="animate-spin mr-1" />
+                    Загрузка
+                  </>
+                ) : (
+                  'Корзина'
+                )}
               </Button>
             </DrawerTrigger>
             <DrawerContent className="h-[85vh]">

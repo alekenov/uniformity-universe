@@ -1,7 +1,8 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import { DrawerClose } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -12,13 +13,21 @@ interface CartSummaryProps {
 const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [isNavigating, setIsNavigating] = useState(false);
   
   const handleCheckout = () => {
-    // Простая и надежная логика - вместо использования DrawerClose в качестве родителя для кнопки,
-    // мы будем программно переходить на страницу checkout безусловно
+    // Prevent multiple clicks
+    if (isNavigating) return;
+    
+    // Show loading state
+    setIsNavigating(true);
+    
+    // For mobile: use a very reliable approach with DrawerClose component
+    // and navigation with significant delay to ensure UI transitions complete
     setTimeout(() => {
+      // Navigate programmatically after drawer has had time to close
       navigate('/checkout');
-    }, 700); // Установим достаточно долгую задержку, чтобы drawer успел закрыться
+    }, 1000);
   };
   
   return (
@@ -27,12 +36,22 @@ const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
         <span className="font-medium">Итого</span>
         <span className="font-medium">{total} ₸</span>
       </div>
-      <Button
-        className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
-        onClick={handleCheckout}
-      >
-        Оформить заказ
-      </Button>
+      <DrawerClose asChild>
+        <Button
+          className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
+          onClick={handleCheckout}
+          disabled={isNavigating}
+        >
+          {isNavigating ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Переход...
+            </>
+          ) : (
+            'Оформить заказ'
+          )}
+        </Button>
+      </DrawerClose>
     </div>
   );
 };

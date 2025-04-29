@@ -1,6 +1,8 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
+import { Loader2 } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface OrderSummaryProps {
@@ -21,15 +23,24 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   buttonText = "Оформить заказ"
 }) => {
   const isMobile = useIsMobile();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const handleSubmit = (e: React.MouseEvent) => {
-    // Предотвращаем любые действия по умолчанию
+    // Prevent multiple clicks and default behavior
     e.preventDefault();
+    if (isSubmitting) return;
     
-    // Безусловно вызываем onSubmit с достаточной задержкой на мобильных устройствах
+    // Show loading state
+    setIsSubmitting(true);
+    
+    // Use a reliable approach with significant delay
     setTimeout(() => {
       onSubmit();
-    }, 500); // Установим значительную задержку для гарантированного срабатывания
+      // Reset state after a delay to handle potential navigation issues
+      setTimeout(() => {
+        setIsSubmitting(false);
+      }, 500);
+    }, 800);
   };
   
   return (
@@ -63,8 +74,16 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       <Button 
         onClick={handleSubmit} 
         className="w-full py-3 bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale"
+        disabled={isSubmitting}
       >
-        {buttonText}
+        {isSubmitting ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Оформление...
+          </>
+        ) : (
+          buttonText
+        )}
       </Button>
     </div>
   );
