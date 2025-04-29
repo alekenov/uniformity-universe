@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,13 @@ const CartPanel: React.FC = () => {
   
   const count = getCartCount();
   const total = getCartTotal();
+
+  // Close cart panel when navigating to checkout
+  useEffect(() => {
+    if (isCheckoutPage && isCartPanelOpen) {
+      setCartPanelOpen(false);
+    }
+  }, [isCheckoutPage, isCartPanelOpen, setCartPanelOpen]);
 
   // Hide the cart panel if it's not open, cart is empty, or we're on the checkout page
   if (!isCartPanelOpen || count === 0 || isCheckoutPage) {

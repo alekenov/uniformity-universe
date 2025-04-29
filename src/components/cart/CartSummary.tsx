@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { DrawerClose } from '@/components/ui/drawer';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface CartSummaryProps {
   total: number;
@@ -10,13 +11,19 @@ interface CartSummaryProps {
 
 const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   const handleCheckout = () => {
-    // We need to manually navigate and then close the drawer
-    // This ensures the navigation happens correctly on mobile
-    setTimeout(() => {
+    // On mobile, we need to ensure the drawer closes properly before navigation
+    if (isMobile) {
+      // Increase timeout to ensure drawer has time to close first
+      setTimeout(() => {
+        navigate('/checkout');
+      }, 300); // Increased from 100ms to 300ms for better reliability on slower devices
+    } else {
+      // On desktop, we can navigate immediately
       navigate('/checkout');
-    }, 100);
+    }
   };
   
   return (

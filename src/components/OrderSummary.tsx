@@ -2,6 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -20,6 +21,24 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   onSubmit,
   buttonText = "Оформить заказ"
 }) => {
+  const isMobile = useIsMobile();
+  
+  const handleSubmit = (e: React.MouseEvent) => {
+    // Prevent any default actions if needed
+    if (isMobile) {
+      e.preventDefault();
+    }
+    
+    // Add a small delay on mobile to ensure any UI transitions complete
+    if (isMobile) {
+      setTimeout(() => {
+        onSubmit();
+      }, 50);
+    } else {
+      onSubmit();
+    }
+  };
+  
   return (
     <div className="panel">
       <h3 className="font-medium text-lg mb-3">Детали заказа</h3>
@@ -49,7 +68,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       </div>
       
       <Button 
-        onClick={onSubmit} 
+        onClick={handleSubmit} 
         className="w-full py-3 bg-[#8B5CF6] hover:bg-[#7C3AED] active-scale"
       >
         {buttonText}
