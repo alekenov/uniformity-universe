@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { DrawerClose } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useCart } from '@/contexts/CartContext';
 
 interface CartSummaryProps {
   total: number;
@@ -14,20 +14,30 @@ const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [isNavigating, setIsNavigating] = useState(false);
+  const { setDrawerOpen } = useCart();
   
   const handleCheckout = () => {
     // Prevent multiple clicks
     if (isNavigating) return;
     
+    console.log('[CartSummary] Starting checkout process, isMobile:', isMobile);
+    
     // Show loading state
     setIsNavigating(true);
     
-    // For mobile: use a very reliable approach with DrawerClose component
-    // and navigation with significant delay to ensure UI transitions complete
+    // First close the drawer programmatically
+    console.log('[CartSummary] Closing drawer');
+    setDrawerOpen(false);
+    
+    // Use different timing strategies for mobile vs desktop
+    const delay = isMobile ? 1200 : 800;
+    
+    console.log('[CartSummary] Navigating to checkout in', delay, 'ms');
     setTimeout(() => {
-      // Navigate programmatically after drawer has had time to close
+      console.log('[CartSummary] Executing navigation to /checkout');
       navigate('/checkout');
-    }, 1000);
+      setIsNavigating(false);
+    }, delay);
   };
   
   return (
@@ -36,22 +46,31 @@ const CartSummary: React.FC<CartSummaryProps> = ({ total }) => {
         <span className="font-medium">Итого</span>
         <span className="font-medium">{total} ₸</span>
       </div>
-      <DrawerClose asChild>
-        <Button
-          className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
-          onClick={handleCheckout}
-          disabled={isNavigating}
-        >
-          {isNavigating ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Переход...
-            </>
-          ) : (
-            'Оформить заказ'
-          )}
-        </Button>
-      </DrawerClose>
+      <Button
+        className="w-full bg-[#8B5CF6] hover:bg-[#7C3AED]"
+        onClick={handleCheckout}
+        disabled={isNavigating}
+        onTouchStart={(e) => {
+          console.log('[CartSummary] Touch start event');
+          e.preventDefault();
+        }}
+        onTouchEnd={(e) => {
+          console.log('[CartSummary] Touch end event');
+          e.preventDefault();
+          if (!isNavigating) {
+            handleCheckout();
+          }
+        }}
+      >
+        {isNavigating ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Переход...
+          </>
+        ) : (
+          'Оформить заказ'
+        )}
+      </Button>
     </div>
   );
 };

@@ -22,6 +22,8 @@ interface CartContextType {
   getCartTotal: () => number;
   isCartPanelOpen: boolean;
   setCartPanelOpen: (isOpen: boolean) => void;
+  isDrawerOpen: boolean;
+  setDrawerOpen: (isOpen: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,6 +31,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartProduct[]>([]);
   const [isCartPanelOpen, setIsCartPanelOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { toast } = useToast();
 
   const addToCart = (product: CartProduct) => {
@@ -104,6 +107,11 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsCartPanelOpen(isOpen);
   };
 
+  const setDrawerOpen = (isOpen: boolean) => {
+    console.log('[CartContext] Setting drawer open:', isOpen);
+    setIsDrawerOpen(isOpen);
+  };
+
   return (
     <CartContext.Provider 
       value={{ 
@@ -115,7 +123,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         getCartCount,
         getCartTotal,
         isCartPanelOpen,
-        setCartPanelOpen
+        setCartPanelOpen,
+        isDrawerOpen,
+        setDrawerOpen
       }}
     >
       {children}

@@ -12,7 +12,9 @@ const CartPanel: React.FC = () => {
     isCartPanelOpen, 
     setCartPanelOpen, 
     getCartCount,
-    getCartTotal 
+    getCartTotal,
+    isDrawerOpen,
+    setDrawerOpen
   } = useCart();
   
   const location = useLocation();
@@ -55,11 +57,21 @@ const CartPanel: React.FC = () => {
             </div>
           </div>
           
-          <Drawer>
+          <Drawer 
+            open={isDrawerOpen} 
+            onOpenChange={(open) => {
+              console.log('[CartPanel] Drawer state changing:', open);
+              setDrawerOpen(open);
+            }}
+          >
             <DrawerTrigger asChild>
               <Button 
                 className="bg-[#8B5CF6] hover:bg-[#7C3AED] px-3 py-1.5 h-8 text-xs"
                 disabled={isClosing}
+                onClick={() => {
+                  console.log('[CartPanel] Opening drawer');
+                  setDrawerOpen(true);
+                }}
               >
                 {isClosing ? (
                   <>
